@@ -112,6 +112,7 @@
         </v-card>
       </v-col>
     </v-row>
+    <u1-support />
     <v-dialog :value="colorMenuSlot !== null" content-class="u1-dialog u1-unified-dialog" max-width="420" @input="!$event && (colorMenuSlot = null)">
       <v-card v-if="colorMenuSlot !== null" class="pa-4">
         <u1-dialog-close @close="colorMenuSlot = null" />
@@ -200,6 +201,7 @@ import U1Scheduler from '@/components/U1Scheduler.vue'
 import U1TimedPause from '@/components/U1TimedPause.vue'
 import U1PrintPlayer from '@/components/U1PrintPlayer.vue'
 import U1Recovery from '@/components/U1Recovery.vue'
+import U1Support from '@/components/U1Support.vue'
 import U1PrintErrors from '@/components/U1PrintErrors.vue'
 import U1PrintProfiles from '@/components/U1PrintProfiles.vue'
 import { calibrationSummary } from '@/utils/u1Calibration'
@@ -212,7 +214,7 @@ import { httpClientActions as http } from '@/api/httpClientActions'
 import { assertWritable, commands, materials, validatePreset, type FilamentPreset, type TaskConfig } from '@/utils/u1Filament'
 
 interface Status { print_stats: { state: string }; print_task_config: TaskConfig; extruder?: {pressure_advance?: number}; extruder1?: {pressure_advance?: number}; extruder2?: {pressure_advance?: number}; extruder3?: {pressure_advance?: number} }
-@Component({ components: { U1AI, QrcodeVue, U1FilamentLibrary, U1Nfc, U1SpoolInventory, U1SpoolUsage, U1DataBackup, U1Calibration, U1CalibrationRunner, U1ProgramSettings, U1PrintProfiles, U1PrintErrors, U1Dryer, U1Maintenance, U1Scheduler, U1TimedPause, U1PrintPlayer, U1Recovery } })
+@Component({ components: { U1Support, U1AI, QrcodeVue, U1FilamentLibrary, U1Nfc, U1SpoolInventory, U1SpoolUsage, U1DataBackup, U1Calibration, U1CalibrationRunner, U1ProgramSettings, U1PrintProfiles, U1PrintErrors, U1Dryer, U1Maintenance, U1Scheduler, U1TimedPause, U1PrintPlayer, U1Recovery } })
 export default class U1Filaments extends Vue {
   gptOpen = false
   gptVisited = false

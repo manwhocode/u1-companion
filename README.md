@@ -88,4 +88,6 @@ GPL-3.0; see LICENSE and NOTICE.md. Snapmaker and Fluidd retain their names and 
 
 Enjoying U1 Companion? Buy me a coffee! Your support helps me keep improving the product, add useful features, fix bugs and make it easier for everyone to use. Thank you for supporting the project!
 
-<a href="https://www.buymeacoffee.com/invite/snapIV"><img src="docs/assets/buy-me-a-coffee.png" alt="Buy me a coffee — support U1 Companion" height="60"></a>
+<a href="https://www.buymeacoffee.com/snapIV"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=snapIV&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+
+Follow my projects and models: [Instagram](https://www.instagram.com/3dlabstorex/) · [MakerWorld](https://makerworld.com/ru/@user_110109506) · [Snapmaker Space](https://space.snapmaker.com/en/creator/75133?tab=models).
