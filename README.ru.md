@@ -36,6 +36,6 @@ curl -fL https://raw.githubusercontent.com/manwhocode/u1-companion/main/install.
 
 Нравится U1 Companion? Угостите меня чашкой кофе! Ваша поддержка помогает мне развивать продукт, добавлять полезные функции, исправлять ошибки и делать приложение удобнее для всех. Спасибо, что поддерживаете проект!
 
-<a href="https://www.buymeacoffee.com/snapIV"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=snapIV&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+<a href="https://www.buymeacoffee.com/snapIV"><picture><source srcset="frontend/src/assets/buy-me-a-coffee.svg" type="image/svg+xml"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=snapIV&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></picture></a>
 
 Мои проекты и модели: [Instagram](https://www.instagram.com/3dlabstorex/) · [MakerWorld](https://makerworld.com/ru/@user_110109506) · [Snapmaker Space](https://space.snapmaker.com/en/creator/75133?tab=models).

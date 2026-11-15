@@ -4,7 +4,7 @@
     <p>{{ $u1t("Ваша поддержка помогает мне развивать U1 Companion, добавлять новые функции и исправлять ошибки. Спасибо!") }}</p>
     <div class="support-actions">
       <div class="support-donation">
-        <a href="https://www.buymeacoffee.com/snapIV"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=snapIV&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+        <a href="https://www.buymeacoffee.com/snapIV"><picture><source :srcset="coffeeButton" type="image/svg+xml"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=snapIV&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></picture></a>
       </div>
       <nav :aria-label="$u1t('Ссылки автора')" class="support-socials">
         <v-btn small outlined href="https://www.instagram.com/3dlabstorex/" target="_blank" rel="noopener noreferrer"><v-icon left small>{{ instagramIcon }}</v-icon>Instagram</v-btn>
@@ -19,9 +19,11 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { mdiInstagram, mdiCubeOutline, mdiPrinter3dNozzleOutline } from '@mdi/js'
+import coffeeButton from '@/assets/buy-me-a-coffee.svg'
 
 @Component
 export default class U1Support extends Vue {
+  coffeeButton = coffeeButton
   instagramIcon = mdiInstagram
   modelsIcon = mdiCubeOutline
   printerIcon = mdiPrinter3dNozzleOutline
