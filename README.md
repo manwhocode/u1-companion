@@ -81,3 +81,11 @@ Everyone may submit a Pull Request from a fork. The owner controls merges and re
 ## License
 
 GPL-3.0; see LICENSE and NOTICE.md. Snapmaker and Fluidd retain their names and upstream copyrights.
+
+---
+
+## Support development
+
+Enjoying U1 Companion? Buy me a coffee! Your support helps me keep improving the product, add useful features, fix bugs and make it easier for everyone to use. Thank you for supporting the project!
+
+<a href="https://www.buymeacoffee.com/invite/snapIV"><img src="docs/assets/buy-me-a-coffee.png" alt="Buy me a coffee — support U1 Companion" height="60"></a>
