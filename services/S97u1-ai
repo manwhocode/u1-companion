@@ -1,0 +1,9 @@
+#!/bin/sh
+# U1 Companion bounded AI. Entire AI process tree is capped; native services stay outside.
+worker=/home/lava/u1-addons/filament-ui/u1-ai-bounded-launch.py
+pid=/run/u1-ai.pid
+case "$1" in
+ start) start-stop-daemon -S -q -b -m -p "$pid" -x /usr/bin/python3 -- "$worker" ;;
+ stop) start-stop-daemon -K -q -p "$pid" -x /usr/bin/python3 || true; rm -f "$pid" ;;
+ *) exit 2 ;;
+esac

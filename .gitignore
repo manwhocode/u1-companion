@@ -1,0 +1,35 @@
+# Dependencies and build outputs
+**/node_modules/
+**/dist/
+**/dev-dist/
+**/__pycache__/
+*.py[cod]
+*.tsbuildinfo
+*.log
+# Secrets and local/device state
+.env
+.env.*
+!.env.example
+**/*-private/
+**/tls/
+**/*-data/
+**/*backup*/
+*.pem
+*.key
+*.pfx
+*.p12
+*.mobileconfig
+*.crt
+*.tar.gz
+*.zip
+*.gcode
+*.3mf
+*.stl
+**/config.local.json
+**/auth.json
+**/control.key
+**/pairing.json
+# Editor/runtime artifacts
+.vscode/
+.idea/
+.DS_Store

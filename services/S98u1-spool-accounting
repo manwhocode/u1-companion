@@ -1,0 +1,14 @@
+#!/bin/sh
+# U1 FILAMENT ADDON spool accounting
+worker=/home/lava/u1-addons/filament-ui/spool-accounting.py
+pid=/run/u1-spool-accounting.pid
+case "$1" in
+    start)
+        start-stop-daemon -S -q -b -m -p "$pid" -c lava -x /usr/bin/python3 -- "$worker"
+        ;;
+    stop)
+        start-stop-daemon -K -q -p "$pid" -x /usr/bin/python3 || true
+        rm -f "$pid"
+        ;;
+    *) exit 2 ;;
+esac

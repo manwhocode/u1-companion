@@ -1,0 +1,233 @@
+{
+  "fr": [
+    "Code d’accès",
+    "Créer un nouveau code",
+    "Copier le code",
+    "Se connecter",
+    "Se déconnecter",
+    "Le code est créé sur l’imprimante. Aucun e-mail ni compte Cloudflare nécessaire.",
+    "Le code n’est accessible que sur le réseau local de l’imprimante. Un nouveau code déconnectera toutes les sessions à distance.",
+    "Saisissez le code affiché dans les paramètres de U1 Companion sur l’imprimante.",
+    "Code incorrect ou trop de tentatives. Réessayez plus tard."
+  ],
+  "es": [
+    "Código de acceso",
+    "Crear un código nuevo",
+    "Copiar código",
+    "Iniciar sesión",
+    "Cerrar sesión",
+    "El código se genera en la impresora. No necesitas correo electrónico ni cuenta de Cloudflare.",
+    "El código solo está disponible en la red local de la impresora. Un código nuevo cerrará todas las sesiones remotas.",
+    "Introduce el código de los ajustes de U1 Companion en la impresora.",
+    "Código incorrecto o demasiados intentos. Vuelve a intentarlo más tarde."
+  ],
+  "it": [
+    "Codice di accesso",
+    "Crea un nuovo codice",
+    "Copia codice",
+    "Accedi",
+    "Esci",
+    "Il codice viene generato sulla stampante. Non servono un’email o un account Cloudflare.",
+    "Il codice è disponibile solo sulla rete locale della stampante. Un nuovo codice disconnetterà tutte le sessioni remote.",
+    "Inserisci il codice disponibile nelle impostazioni di U1 Companion sulla stampante.",
+    "Codice errato o troppi tentativi. Riprova più tardi."
+  ],
+  "pt": [
+    "Código de acesso",
+    "Criar novo código",
+    "Copiar código",
+    "Iniciar sessão",
+    "Terminar sessão",
+    "O código é gerado na impressora. Não precisa de email nem de uma conta Cloudflare.",
+    "O código só está disponível na rede local da impressora. Um novo código terminará todas as sessões remotas.",
+    "Introduza o código das definições do U1 Companion na impressora.",
+    "Código incorreto ou demasiadas tentativas. Tente novamente mais tarde."
+  ],
+  "nl": [
+    "Toegangscode",
+    "Nieuwe code maken",
+    "Code kopiëren",
+    "Aanmelden",
+    "Afmelden",
+    "De code wordt op de printer gemaakt. Een e-mailadres of Cloudflare-account is niet nodig.",
+    "De code is alleen beschikbaar op het lokale netwerk van de printer. Een nieuwe code beëindigt alle externe sessies.",
+    "Voer de code uit de U1 Companion-instellingen op de printer in.",
+    "Onjuiste code of te veel pogingen. Probeer het later opnieuw."
+  ],
+  "pl": [
+    "Kod dostępu",
+    "Utwórz nowy kod",
+    "Kopiuj kod",
+    "Zaloguj się",
+    "Wyloguj się",
+    "Kod jest generowany na drukarce. E-mail ani konto Cloudflare nie są potrzebne.",
+    "Kod jest dostępny tylko w sieci lokalnej drukarki. Nowy kod zakończy wszystkie sesje zdalne.",
+    "Wpisz kod z ustawień U1 Companion na drukarce.",
+    "Nieprawidłowy kod lub zbyt wiele prób. Spróbuj ponownie później."
+  ],
+  "cs": [
+    "Přístupový kód",
+    "Vytvořit nový kód",
+    "Kopírovat kód",
+    "Přihlásit se",
+    "Odhlásit se",
+    "Kód se vytváří na tiskárně. E-mail ani účet Cloudflare nejsou potřeba.",
+    "Kód je dostupný pouze v místní síti tiskárny. Nový kód ukončí všechny vzdálené relace.",
+    "Zadejte kód z nastavení U1 Companion na tiskárně.",
+    "Nesprávný kód nebo příliš mnoho pokusů. Zkuste to znovu později."
+  ],
+  "hu": [
+    "Hozzáférési kód",
+    "Új kód létrehozása",
+    "Kód másolása",
+    "Bejelentkezés",
+    "Kijelentkezés",
+    "A kód a nyomtatón jön létre. Nem szükséges e-mail-cím vagy Cloudflare-fiók.",
+    "A kód csak a nyomtató helyi hálózatán érhető el. Az új kód megszakítja az összes távoli munkamenetet.",
+    "Adja meg a nyomtatón található U1 Companion-beállításokban látható kódot.",
+    "Hibás kód vagy túl sok próbálkozás. Próbálja újra később."
+  ],
+  "sl": [
+    "Koda za dostop",
+    "Ustvari novo kodo",
+    "Kopiraj kodo",
+    "Prijava",
+    "Odjava",
+    "Koda se ustvari na tiskalniku. E-pošta in račun Cloudflare nista potrebna.",
+    "Koda je na voljo samo v lokalnem omrežju tiskalnika. Nova koda bo prekinila vse oddaljene seje.",
+    "Vnesite kodo iz nastavitev U1 Companion na tiskalniku.",
+    "Napačna koda ali preveč poskusov. Poskusite znova pozneje."
+  ],
+  "uk": [
+    "Код доступу",
+    "Створити новий код",
+    "Копіювати код",
+    "Увійти",
+    "Вийти",
+    "Код створюється на принтері. Пошта й обліковий запис Cloudflare не потрібні.",
+    "Код доступний лише в локальній мережі принтера. Новий код завершить усі зовнішні сеанси.",
+    "Введіть код із налаштувань U1 Companion на принтері.",
+    "Неправильний код або забагато спроб. Повторіть пізніше."
+  ],
+  "af": [
+    "Toegangskode",
+    "Skep 'n nuwe kode",
+    "Kopieer kode",
+    "Meld aan",
+    "Meld af",
+    "Die kode word op die drukker geskep. Geen e-pos of Cloudflare-rekening is nodig nie.",
+    "Die kode is slegs op die drukker se plaaslike netwerk beskikbaar. ’n Nuwe kode sal alle eksterne sessies beëindig.",
+    "Voer die kode uit die U1 Companion-instellings op die drukker in.",
+    "Verkeerde kode of te veel pogings. Probeer later weer."
+  ],
+  "ar": [
+    "رمز الوصول",
+    "إنشاء رمز جديد",
+    "نسخ الرمز",
+    "تسجيل الدخول",
+    "تسجيل الخروج",
+    "يُنشأ الرمز على الطابعة. لا تحتاج إلى بريد إلكتروني أو حساب Cloudflare.",
+    "الرمز متاح فقط على الشبكة المحلية للطابعة. سيؤدي إنشاء رمز جديد إلى إنهاء جميع الجلسات الخارجية.",
+    "أدخل الرمز من إعدادات U1 Companion على الطابعة.",
+    "الرمز غير صحيح أو جرت محاولات كثيرة جدًا. حاول مرة أخرى لاحقًا."
+  ],
+  "ja": [
+    "アクセスコード",
+    "新しいコードを作成",
+    "コードをコピー",
+    "ログイン",
+    "ログアウト",
+    "コードはプリンター上で作成されます。メールアドレスやCloudflareアカウントは不要です。",
+    "コードはプリンターのローカルネットワーク内でのみ確認できます。新しいコードを作成すると、すべての外部セッションが終了します。",
+    "プリンターのU1 Companion設定に表示されたコードを入力してください。",
+    "コードが正しくないか、試行回数が多すぎます。しばらくしてから再試行してください。"
+  ],
+  "ko": [
+    "접속 코드",
+    "새 코드 생성",
+    "코드 복사",
+    "로그인",
+    "로그아웃",
+    "코드는 프린터에서 생성됩니다. 이메일이나 Cloudflare 계정은 필요하지 않습니다.",
+    "코드는 프린터의 로컬 네트워크에서만 확인할 수 있습니다. 새 코드를 생성하면 모든 외부 세션이 종료됩니다.",
+    "프린터의 U1 Companion 설정에 표시된 코드를 입력하세요.",
+    "코드가 올바르지 않거나 시도 횟수가 너무 많습니다. 나중에 다시 시도하세요."
+  ],
+  "ta": [
+    "அணுகல் குறியீடு",
+    "புதிய குறியீட்டை உருவாக்கு",
+    "குறியீட்டை நகலெடு",
+    "உள்நுழை",
+    "வெளியேறு",
+    "குறியீடு அச்சுப்பொறியில் உருவாக்கப்படும். மின்னஞ்சலோ Cloudflare கணக்கோ தேவையில்லை.",
+    "அச்சுப்பொறியின் உள்ளூர் நெட்வொர்க்கில் மட்டுமே குறியீட்டைப் பார்க்க முடியும். புதிய குறியீட்டை உருவாக்கினால் அனைத்து வெளிப்புற அமர்வுகளும் முடிவடையும்.",
+    "அச்சுப்பொறியில் உள்ள U1 Companion அமைப்புகளில் காட்டப்படும் குறியீட்டை உள்ளிடவும்.",
+    "குறியீடு தவறானது அல்லது அதிக முறை முயற்சிக்கப்பட்டுள்ளது. பின்னர் மீண்டும் முயலவும்."
+  ],
+  "zh-CN": [
+    "访问码",
+    "生成新代码",
+    "复制代码",
+    "登录",
+    "退出登录",
+    "访问码在打印机上生成。无需邮箱或 Cloudflare 账户。",
+    "访问码仅在打印机的局域网中可查看。生成新代码将终止所有外部会话。",
+    "请输入打印机上 U1 Companion 设置中显示的访问码。",
+    "代码错误或尝试次数过多。请稍后重试。"
+  ],
+  "zh-HK": [
+    "存取碼",
+    "產生新代碼",
+    "複製代碼",
+    "登入",
+    "登出",
+    "存取碼在打印機上產生。無需電郵或 Cloudflare 帳戶。",
+    "存取碼只可在打印機的區域網絡內查看。產生新代碼會終止所有外部工作階段。",
+    "請輸入打印機上 U1 Companion 設定中顯示的存取碼。",
+    "代碼錯誤或嘗試次數過多。請稍後再試。"
+  ],
+  "ru": [
+    "Код доступа",
+    "Создать новый код",
+    "Копировать код",
+    "Войти",
+    "Выйти",
+    "Код создаётся на принтере. Почта и аккаунт Cloudflare не нужны.",
+    "Код доступен только в локальной сети принтера. Новый код отключит все внешние сеансы.",
+    "Введите код из настроек U1 Companion на принтере.",
+    "Неверный код или слишком много попыток. Повторите позже."
+  ],
+  "en": [
+    "Access code",
+    "Create a new code",
+    "Copy code",
+    "Sign in",
+    "Sign out",
+    "The code is generated on the printer. No email or Cloudflare account is needed.",
+    "The code is available only on the printer’s local network. A new code signs out all remote sessions.",
+    "Enter the code from U1 Companion settings on the printer.",
+    "Incorrect code or too many attempts. Try again later."
+  ],
+  "de": [
+    "Zugangscode",
+    "Neuen Code erstellen",
+    "Code kopieren",
+    "Anmelden",
+    "Abmelden",
+    "Der Code wird auf dem Drucker erstellt. E-Mail und Cloudflare-Konto sind nicht erforderlich.",
+    "Der Code ist nur im lokalen Netzwerk des Druckers verfügbar. Ein neuer Code beendet alle Fernzugriffssitzungen.",
+    "Geben Sie den Code aus den U1 Companion-Einstellungen auf dem Drucker ein.",
+    "Falscher Code oder zu viele Versuche. Versuchen Sie es später erneut."
+  ],
+  "tr": [
+    "Erişim kodu",
+    "Yeni kod oluştur",
+    "Kodu kopyala",
+    "Giriş yap",
+    "Çıkış yap",
+    "Kod yazıcıda oluşturulur. E-posta veya Cloudflare hesabı gerekmez.",
+    "Kod yalnızca yazıcının yerel ağında görüntülenebilir. Yeni kod tüm uzaktan erişim oturumlarını kapatır.",
+    "Yazıcıdaki U1 Companion ayarlarında bulunan kodu girin.",
+    "Kod yanlış veya çok fazla deneme yapıldı. Daha sonra tekrar deneyin."
+  ]
+}
