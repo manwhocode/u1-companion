@@ -252,8 +252,11 @@ class Installer:
         self.proxy_text(self.p('/etc/nginx/sites-available/fluidd').read_text())
         for name, (filename, contents) in MODULES.items():
             path = self.p('/oem/printer_data/config/' + filename)
-            if path.exists() and (path.is_symlink() or path.read_text().lstrip().splitlines()[-len(contents.splitlines()):] != contents.strip().splitlines()):
+            if path.is_symlink() or (path.exists() and [line.strip() for line in path.read_text().splitlines() if line.strip() and not line.lstrip().startswith('#')] != contents.strip().splitlines()):
                 raise ValueError('Modified include file: ' + filename)
+            link=self.p('/home/lava/klipper/klippy/extras/'+name+'.py')
+            if (link.exists() or link.is_symlink()) and (not link.is_symlink() or os.readlink(link)!=CORE+'/'+name+'.py'):
+                raise ValueError('Foreign Klipper module: '+name)
 
     @staticmethod
     def proxy_text(text):
@@ -355,7 +358,7 @@ class Installer:
             tx.write('/etc/nginx/sites-enabled/u1-companion-remote',gateway.encode(),0o600)
             for name in MODULES:
                 filename, contents = MODULES[name]; path = '/oem/printer_data/config/' + filename
-                if self.p(path).exists() and self.p(path).read_text().lstrip().splitlines()[-len(contents.splitlines()):] != contents.strip().splitlines(): raise ValueError('Modified include file: ' + filename)
+                if self.p(path).exists() and [line.strip() for line in self.p(path).read_text().splitlines() if line.strip() and not line.lstrip().startswith('#')] != contents.strip().splitlines(): raise ValueError('Modified include file: ' + filename)
                 tx.write(path,('# U1 Companion\n'+contents).encode())
                 link = '/home/lava/klipper/klippy/extras/' + name + '.py'
                 if self.p(link).exists() or self.p(link).is_symlink():
@@ -403,7 +406,7 @@ class Installer:
                     if self.p('/etc/init.d/'+name).exists(): self.stop(name)
                 tx.rollback()
                 self.run('nginx','-t'); self.run('nginx','-s','reload')
-                if restarted:self.api('/printer/restart',True)
+                if restarted:self.restore_ready()
                 for name in previous: self.run('/etc/init.d/'+name,'start')
             except BaseException as rollback_error:
                 raise RuntimeError('Installation failed; rollback requires review. Backup: '+str(backup)+'; '+str(rollback_error)) from original
@@ -445,6 +448,15 @@ class Installer:
             if info.get('klippy_state') in ('error','shutdown','disconnected','startup'): return
         self.preflight()
 
+    def restore_ready(self):
+        self.api('/printer/restart',True)
+        for _ in range(60):
+            try:
+                if self.api('/printer/objects/query?webhooks')['status']['webhooks']['state']=='ready': return
+            except Exception: pass
+            self.sleep(1)
+        raise ValueError('Restored files, but Klipper did not become ready; review the backup and printer error')
+
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -456,12 +468,14 @@ def main():
     args=p.parse_args()
     if platform.system()!='Linux' or platform.machine() not in ('aarch64','arm64') or os.geteuid()!=0: raise ValueError('Run as root over SSH on Snapmaker U1 (Linux ARM64)')
     if sys.version_info < (3,11): raise ValueError('Stock Python 3.11 or newer is required')
+    os.umask(0o077)
     # Do not let two install/rollback sessions race. A read-only check needs no lock.
     if args.install or args.rollback:
         import fcntl
         lock_path=no_links('/run/u1-companion-install.lock')
         lock=lock_path.open('a');lock_path.chmod(0o600)
-        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        try: fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError: raise ValueError('Another Companion installer is already running')
     for command in ['nginx','openssl','start-stop-daemon','python3']:
         if not shutil.which(command): raise ValueError('Missing required stock dependency: '+command)
     installer=Installer()
@@ -480,7 +494,7 @@ def main():
         if not isinstance(previous,list) or any(name not in SERVICES for name in previous): raise ValueError('Invalid service backup')
         for name in SERVICES:
             if installer.p('/etc/init.d/'+name).exists(): installer.stop(name)
-        tx.rollback();installer.run('nginx','-t');installer.run('nginx','-s','reload');installer.api('/printer/restart',True)
+        tx.rollback();installer.run('nginx','-t');installer.run('nginx','-s','reload');installer.restore_ready()
         for name in previous: installer.run('/etc/init.d/'+name,'start')
         print('Installation files restored; current user data preserved');return
     print('[1/7] Checking the printer and firmware...')

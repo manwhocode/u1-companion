@@ -1,0 +1,7 @@
+{
+  "alexa/node_modules/alexa-remote2/alexa-wsmqtt.js": {
+    "sha256": "c583f259cd939493c015c28d4fecffe7bf6824a10b1b112fcd9e32d54290c579",
+    "source": "https://registry.npmjs.org/alexa-remote2/-/alexa-remote2-8.1.1.tgz",
+    "note": "Public unchanged upstream MQTT client protocol fixture; not a user credential. MQTT is disabled in this bridge."
+  }
+}

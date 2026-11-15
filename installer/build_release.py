@@ -5,6 +5,7 @@ Never reads a printer, working backup, private state directory or .env file.
 from pathlib import Path
 import argparse
 import gzip
+import io
 import json
 import re
 import shutil
@@ -17,7 +18,7 @@ RUNTIMES = {
     'codex-arm64.gz': '37e96e48cd4635733d7654d126870ab7ae69c5d5a0e686cf46e29f119b9f844d',
     'cloudflared-linux-arm64': 'abe54a006acf9faf2d19ee9d953cb0d0804e92f59c5382a162e57b84d086f56f',
 }
-PRIVATE = re.compile(r'(?i)(?:^|/)(?:[^/]*-private|[^/]*backup[^/]*|[^/]*-data|\.env[^/]*|auth\.json|control\.key|pairing\.json)(?:/|$)')
+PRIVATE = re.compile(r'(?i)(?:^|/)(?:[^/]*-private|(?:local-)?backups?|filament-ui-data)(?:/|$)|(?:^|/)(?:\.env[^/]*|auth\.json|control\.key|pairing\.json)$')
 CREDENTIAL = re.compile(rb'-----BEGIN [A-Z ]*PRIVATE KEY-----|sk-(?:proj-)?[A-Za-z0-9_-]{24,}',re.I)
 
 
@@ -28,6 +29,7 @@ def main():
     parser.add_argument('--denylist',type=Path,help='Optional private local list of values that must never be shipped; not included in the release')
     args=parser.parse_args();repo=Path(__file__).resolve().parent.parent
     denied=[] if args.denylist is None else [v.strip().lower().encode() for v in args.denylist.read_text().splitlines() if v.strip()]
+    public_constants=json.loads((repo/'installer/public-vendor-constants.json').read_text())
     args.output.mkdir(parents=True,exist_ok=True)
     files={}
     tracked=subprocess.check_output(['git','ls-files','-z'],cwd=repo).decode().split('\0')
@@ -52,7 +54,7 @@ def main():
     for path in args.dependencies.rglob('*'):
         if path.is_file() and not path.is_symlink():
             name='alexa/node_modules/'+path.relative_to(args.dependencies).as_posix()
-            if path.suffix.lower() in ('.pem','.key','.node') or '/.bin/' in name:continue
+            if path.suffix.lower() in ('.pem','.key','.crt','.p12','.pfx','.node','.log') or '/.bin/' in name:continue
             files[name]=path
     files['alexa/node_modules/alexa-cookie2/alexa-cookie.js']=repo/'alexa/cookie.vendor.cjs'
     files['alexa/node_modules/alexa-cookie2/lib/proxy.js']=repo/'alexa/proxy.vendor.cjs'
@@ -62,18 +64,24 @@ def main():
             raise ValueError('Private/device artifact in payload: '+name)
         if path.stat().st_size<20*1024*1024:
             raw=path.read_bytes()
-            if CREDENTIAL.search(raw) or any(v in raw.lower() for v in denied):
+            upstream_constant=name in public_constants and sha(path)==public_constants[name]['sha256']
+            if (CREDENTIAL.search(raw) and not upstream_constant) or any(v in raw.lower() for v in denied):
                 raise ValueError('Private data / key pattern in payload: '+name)
     for required in ['backend/spool-accounting.py','backend/u1-alexa-bounded-launch.py','ui/index.html','alexa/bridge.cjs','remote/nginx-template.conf','licenses/Node.js-LICENSE.txt','licenses/Codex-LICENSE.txt','licenses/cloudflared-LICENSE.txt']:
         if required not in files:raise ValueError('Release source not staged: '+required)
     with (args.output/'u1-companion.tar.gz').open('wb') as raw,gzip.GzipFile(fileobj=raw,mode='wb',mtime=0,filename='') as gz,tarfile.open(fileobj=gz,mode='w') as tar:
         for name,path in sorted(files.items()):
             info=tarfile.TarInfo(name);info.size=path.stat().st_size;info.mode=0o644
-            with path.open('rb') as source:tar.addfile(info,source)
+            if name.startswith('services/'):
+                raw=path.read_bytes().replace(b'\r\n',b'\n');info.size=len(raw);tar.addfile(info,io.BytesIO(raw))
+            else:
+                with path.open('rb') as source:tar.addfile(info,source)
     for name,source in [('install.py',repo/'installer/install.py'),('install.sh',repo/'install.sh'),('u1-service-stop.py',repo/'installer/u1-service-stop.py'),
                         ('node-runtime.tar.gz',args.node_runtime),('codex-arm64.gz',args.codex_runtime),('cloudflared-linux-arm64',args.cloudflared_runtime)]:
         if name in RUNTIMES and sha(source)!=RUNTIMES[name]:raise ValueError('Unverified runtime: '+name)
-        shutil.copyfile(source,args.output/name)
+        if name in ('install.sh','install.py','u1-service-stop.py'):
+            (args.output/name).write_bytes(source.read_bytes().replace(b'\r\n',b'\n'))
+        else:shutil.copyfile(source,args.output/name)
     manifest={'version':VERSION,'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),
               'payloadFiles':len(files),'personalLibraries':'empty on fresh installation','catalog':'built-in Snapmaker catalog only',
               'assets':{p.name:sha(p) for p in sorted(args.output.iterdir()) if p.is_file() and p.name not in ('SHA256SUMS','release-manifest.json')}}

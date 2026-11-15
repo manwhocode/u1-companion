@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tarfile
 import tempfile
@@ -258,6 +259,25 @@ class StopService(Fixture):
         self.put('/run/u1-spool-accounting.pid',b'42');signals=[]
         self.assertFalse(stopper.stop('S98u1-spool-accounting',self.root,lambda _:None,lambda *args:signals.append(args)))
         self.assertFalse(signals)
+
+
+@unittest.skipUnless(shutil.which('openssl'),'OpenSSL integration check runs on Linux CI')
+class Certificates(Fixture):
+    def test_unique_local_ca_valid_chain_and_neutral_entry_configuration(self):
+        def command(*args):
+            if args[0]=='openssl':return subprocess.run(args,check=True,capture_output=True,text=True).stdout
+            return self.command(*args)
+        self.inst.run=command
+        tx=self.tx()
+        m.Installer.tls_and_proxy(self.inst,tx,self.package,self.work,'192.168.1.100',(0,0))
+        tls=self.p(m.CORE+'/tls')
+        subprocess.run(['openssl','verify','-CAfile',str(tls/'ca.crt'),str(tls/'server.crt')],check=True,capture_output=True)
+        cert=subprocess.check_output(['openssl','x509','-in',str(tls/'server.crt'),'-noout','-ext','subjectAltName'],text=True)
+        self.assertIn('192.168.1.100',cert)
+        self.assertNotEqual((tls/'ca.key').read_bytes(),(tls/'server.key').read_bytes())
+        site=self.p('/etc/nginx/sites-available/fluidd').read_text()
+        self.assertIn('/u1-filaments-ui/',site);self.assertIn('/u1-ai/api/',site)
+        self.assertEqual(json.loads(self.p(m.CORE+'/remote-config.json').read_text())['endpoints'],[])
 
 
 if __name__=='__main__':unittest.main()
