@@ -4,6 +4,6 @@ worker=/home/lava/u1-addons/filament-ui/u1-ai-bounded-launch.py
 pid=/run/u1-ai.pid
 case "$1" in
  start) start-stop-daemon -S -q -b -m -p "$pid" -x /usr/bin/python3 -- "$worker" ;;
- stop) start-stop-daemon -K -q -p "$pid" -x /usr/bin/python3 || true; rm -f "$pid" ;;
+ stop) /usr/bin/python3 /home/lava/u1-addons/filament-ui/u1-service-stop.py S97u1-ai ;;
  *) exit 2 ;;
 esac

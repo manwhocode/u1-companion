@@ -2,7 +2,27 @@
 
 Spools, printing and maintenance for Snapmaker U1. Unofficial companion UI built on Snapmaker Fluidd, with local Python services.
 
-**Development source snapshot — not a tested one-click installer.** The current system has been exercised on one U1. Fresh installation on another printer and broad firmware compatibility have not been verified. Do not copy a development folder directly over printer firmware. Back up first and test on an idle printer.
+**Full SSH installer, early access.** Installation and rollback are tested in an isolated Linux simulation. A clean install on another physical U1 has not yet been verified; unsupported firmware or conflicting custom setups are rejected before installation.
+
+[Русский](README.ru.md) · [Installation guide](INSTALL.md) · [Установка по-русски](INSTALL.ru.md)
+
+## Install
+
+Enable SSH/root access on your U1, keep it idle with heaters off, and connect from Windows Terminal or macOS Terminal:
+
+```sh
+ssh root@PRINTER_IP
+```
+
+Replace `PRINTER_IP` with your printer's address and enter its SSH password. Then paste **inside that SSH session**:
+
+```sh
+curl -fL https://raw.githubusercontent.com/manwhocode/u1-companion/main/install.sh -o /userdata/u1-companion-install.sh && sh /userdata/u1-companion-install.sh
+```
+
+Confirm the displayed plan once. The installer downloads all components, checks their hashes, backs up replaced files, installs the UI/services, restarts idle Klipper and prints the browser address. You do not need npm, Python or a desktop installer on your PC. See [INSTALL.md](INSTALL.md) for prerequisites, verification and rollback.
+
+**Fresh user libraries are empty.** Only the public Snapmaker catalog is built in. Configure your own GPT/Amazon accounts and external access after installation; no owner's email, spools, print history or credentials are shipped.
 
 ## Features
 
@@ -21,6 +41,7 @@ Spools, printing and maintenance for Snapmaker U1. Unofficial companion UI built
 - `remote-access/`: public gateway template and static resources. The control-key placeholder must be generated locally during installation.
 - `alexa/`: optional unofficial Alexa bridge source and npm lockfile.
 - `services/`: current service-launch references; they assume the tested U1 paths and require resource isolation.
+- `installer/` and `install.sh`: the complete guided SSH installer, release builder and simulated tests.
 - `tools/legacy/`: historical, incomplete installers, retained only as references.
 
 No printer database, user spool data, API key, Amazon cookie, pairing code, TLS key, device backup, log, print model or runtime binary is included.
@@ -51,7 +72,7 @@ Linux/device-specific checks are separate. A passing unit test or build does not
 
 ## Installation status
 
-A unified public installer for this full snapshot is not yet validated. Services target `/home/lava/u1-addons/filament-ui` and private state under `/userdata/u1-addons/`. They must be installed with backups, ownership, resource limits, nginx validation and rollback. Do not expose port 7125 directly. Runtime binaries must be obtained from their official sources and verified, not committed here.
+The installer includes the full UI, accounting and maintenance, profiles/calibration services, layer pauses, drying, cover-fan controls, and all dependencies for optional Alexa, Codex and external access. Integrations remain disconnected until you configure them. Services target `/home/lava/u1-addons/filament-ui` and private state under `/userdata/u1-addons/`. Runtime binaries are checksum-pinned release assets with upstream licenses, not Git source files. Do not expose port 7125 directly.
 
 ## Contributions
 

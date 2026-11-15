@@ -64,7 +64,7 @@ class Accounts:
             d=self.data();profile=p['profile'] or str(uuid.uuid4());d['profiles'].setdefault(profile,{}).update(client_id=client);atomic(self.path,d)
             t=network('/api/accounts/oauth/token',{'grant_type':'authorization_code','client_id':client,'code':q['code'][0],'code_verifier':p['verifier'],'redirect_uri':p['redirect'],'resource':RESOURCE})
             jwks=network('/.well-known/jwks.json')
-            node=Path('/userdata/u1-addons/alexa-bridge/runtime/node-v22.23.4-linux-arm64/bin/node')
+            node=Path('/userdata/u1-addons/alexa-bridge/runtime/node')
             r=subprocess.run([str(node),str(Path(__file__).with_name('verify-id.cjs'))],input=json.dumps({'token':t.get('id_token',''),'jwks':jwks,'client':client,'nonce':p['nonce']}),text=True,capture_output=True,timeout=10)
             if r.returncode:raise ValueError('Подпись или срок ID-токена OpenAI не подтверждены.')
             identity=json.loads(r.stdout);old=d['profiles'][profile]

@@ -2,6 +2,6 @@
 # U1 Companion remote addon; no printer service changes.
 case "$1" in
  start) start-stop-daemon -S -q -b -m -p /run/u1-remote.pid -x /usr/bin/python3 -- /home/lava/u1-addons/filament-ui/u1-remote-launch.py ;;
- stop) /usr/bin/python3 /home/lava/u1-addons/filament-ui/u1-remote-stop.py ;;
+ stop) /usr/bin/python3 /home/lava/u1-addons/filament-ui/u1-service-stop.py S96u1-remote ;;
  *) exit 2 ;;
 esac
