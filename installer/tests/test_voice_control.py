@@ -62,6 +62,38 @@ class Voice(unittest.TestCase):
         self.voice=v.Voice(self.moon,self.root,lambda:self.now);self.assertEqual(self.send(body),first)
         self.assertEqual(len(self.writes()),1)
         uuid.UUID(self.writes()[0][2]['request_id'])
+        self.assertEqual(self.writes()[0][2]['expires_at'],self.now+6)
+
+    def test_filament_fault_resume_requires_explicit_voice_confirmation(self):
+        original=self.moon.relay
+        def relay(op,payload,**kwargs):
+            if op=='print_player_state':return {'canResume':False,'canAcknowledgeFault':True,'pauseFaultToken':'fault1','currentJob':'job1'}
+            return original(op,payload,**kwargs)
+        self.moon.relay=relay
+        answer=self.send(self.body('ResumePrintIntent'))
+        self.assertFalse(answer['response']['shouldEndSession']);self.assertFalse(self.writes())
+        self.send(self.body('AMAZON.YesIntent'))
+        self.assertEqual(self.writes()[0][1],{'action':'ack_fault','currentJob':'job1','faultToken':'fault1','confirmed':True})
+
+    def test_error_status_includes_latched_print_stats_fault(self):
+        self.moon.api=lambda path:{'status':{'print_stats':{'state':'paused','exception':{'id':523,'code':38,'message':'detect filament tangled!'}},'virtual_sdcard':{'progress':.68},'exception_manager':{'exceptions':[]}}}
+        body=self.body('ErrorStatusIntent');body['request']['locale']='en-US'
+        self.assertIn('Filament tangling',self.send(body)['response']['outputSpeech']['text'])
+
+    def test_stale_mailbox_commands_are_rejected_before_dispatch(self):
+        from u1_data_store import DataStore
+        from u1_ai.gateway import Moonraker
+        for deadline in (self.now-1,True,None,float('nan'),float('inf'),'later'):
+            with patch('u1_data_store.time.time',return_value=self.now):
+                with self.assertRaisesRegex(ValueError,'expired'):
+                    DataStore.handle(None,'test',{'operation':'print_player_action','payload':{'action':'resume'},'expiresAt':deadline})
+        class Capture(Moonraker):
+            def api(self,path,payload=None,timeout=8):
+                if payload is not None:self.queued=payload['value'];return {}
+                return {'value':{'ok':True,'value':'accepted'}}
+        moon=Capture()
+        self.assertEqual(moon.relay('print_player_action',{'action':'pause'},expires_at=self.now+6),'accepted')
+        self.assertEqual(moon.queued['expiresAt'],self.now+6)
 
     def test_resume_cancel_lower_repeat_and_timer_need_same_session_confirmation(self):
         for name,slots,operation in [('ResumePrintIntent',{},'print_player_action'),('CancelPrintIntent',{},'print_player_action'),('PauseLowerIntent',{},'magnet_action'),('RepeatPrintIntent',{},'print_player_start'),('TimedPauseIntent',{'minutes':'10'},'timed_pause_arm'),('FavoritePrintIntent',{'model':'cube'},'print_player_start')]:

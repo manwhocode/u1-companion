@@ -90,7 +90,15 @@ class TimedPause:
                 and s.get('pause_resume', {}).get('is_paused') is True
                 and set('xy').issubset(s.get('toolhead', {}).get('homed_axes', '')))
 
-    def snapshot(self, safety=True, acknowledge_bed=False, manual=False):
+    def pause_fault_ack_allowed(self, s):
+        stats=s.get('print_stats',{});fault=stats.get('exception',{})
+        return (self.stock_bed_ack_supported() and stats.get('state')=='paused'
+                and isinstance(fault,dict) and all(type(fault.get(k)) is int for k in ('id','index','code','level'))
+                and any(fault=={'id':523,'index':i,'code':38,'message':'detect filament tangled!','level':2} for i in range(4))
+                and s.get('pause_resume',{}).get('is_paused') is True
+                and set('xyz').issubset(s.get('toolhead',{}).get('homed_axes','')))
+
+    def snapshot(self, safety=True, acknowledge_bed=False, manual=False, acknowledge_fault=False):
         s = self.api(self.QUERY)['status']
         history = self.api('/server/history/list?limit=1').get('jobs', [])
         stats = s.get('print_stats', {}); machine = s.get('machine_state_manager', {})
@@ -102,7 +110,8 @@ class TimedPause:
         main = machine.get('main_state'); action = machine.get('action_code')
         if safety and (not (main == 'PRINTING' or (type(main) is int and main == 1)) or not (action == 'IDLE' or (type(action) is int and action == 0))):
             raise ValueError('Дождитесь завершения штатной операции принтера.')
-        if safety and (s.get('exception_manager', {}).get('exceptions', [True]) or (stats.get('exception') and not (acknowledge_bed and self.bed_ack_allowed(s)))):
+        acknowledged=(acknowledge_bed and self.bed_ack_allowed(s)) or (manual and acknowledge_fault and self.pause_fault_ack_allowed(s))
+        if safety and (s.get('exception_manager', {}).get('exceptions', [True]) or (stats.get('exception') and not acknowledged)):
             raise ValueError('На принтере есть ошибка. Автоматическое продолжение запрещено.')
         if safety and s.get('purifier', {}).get('power_detected') is not True:
             raise ValueError('Подключение верхнего кожуха не подтверждено.')
@@ -128,7 +137,7 @@ class TimedPause:
     def player_state(self):
         s = self.api(self.QUERY)['status']; stats=s.get('print_stats',{}); machine=s.get('machine_state_manager',{})
         ready=s.get('webhooks',{}).get('state')=='ready'
-        identity=None; safe=False; reason=''; can_ack_bed=False
+        identity=None; safe=False; reason=''; can_ack_bed=False; can_ack_fault=False
         if stats.get('state') in ('printing','paused'):
             try:
                 _,identity=self.snapshot(False)
@@ -138,6 +147,10 @@ class TimedPause:
                 try:
                     self.snapshot(acknowledge_bed=True); can_ack_bed=True
                 except Exception: pass
+            if self.pause_fault_ack_allowed(s):
+                try:
+                    self.snapshot(manual=True,acknowledge_fault=True);can_ack_fault=True
+                except Exception:pass
         progress=s.get('virtual_sdcard',{}).get('progress',0)
         return {'ready':ready,'state':stats.get('state','unknown'),'filename':stats.get('filename',''),
                 'progress':min(1,max(0,progress)) if numeric(progress) else 0,'duration':stats.get('print_duration',0),'currentJob':identity,'reason':reason,
@@ -145,16 +158,18 @@ class TimedPause:
                 'canPause':safe and stats.get('state')=='printing',
                 'canResume':safe and stats.get('state')=='paused' and s.get('pause_resume',{}).get('is_paused') is True and set('xyz').issubset(s.get('toolhead',{}).get('homed_axes','')),
                 'canAcknowledgeBed':can_ack_bed,
+                'canAcknowledgeFault':can_ack_fault,'pauseFaultToken':digest(stats.get('exception')) if can_ack_fault else None,
                 'canCancel':ready and identity is not None}
 
     def player_action(self, ident, payload):
         action=payload.get('action')
-        if action not in ('pause','resume','cancel','ack_bed'):raise ValueError('Неизвестная команда плеера.')
-        if action in ('resume','cancel','ack_bed') and payload.get('confirmed') is not True:raise ValueError('Подтвердите действие с текущей печатью.')
-        s,identity=self.snapshot(safety=action!='cancel', acknowledge_bed=action=='ack_bed', manual=True)
+        if action not in ('pause','resume','cancel','ack_bed','ack_fault'):raise ValueError('Неизвестная команда плеера.')
+        if action in ('resume','cancel','ack_bed','ack_fault') and payload.get('confirmed') is not True:raise ValueError('Подтвердите действие с текущей печатью.')
+        s,identity=self.snapshot(safety=action!='cancel', acknowledge_bed=action=='ack_bed', manual=True,acknowledge_fault=action=='ack_fault')
         if payload.get('currentJob')!=identity:raise ValueError('Задание изменилось. Проверьте текущую печать.')
         state=s['print_stats']['state']
         if action=='ack_bed' and not self.bed_ack_allowed(s):raise ValueError('Предупреждение или стадия печати изменились. Проверьте U1.')
+        if action=='ack_fault' and (not self.pause_fault_ack_allowed(s) or payload.get('faultToken')!=digest(s['print_stats'].get('exception'))):raise ValueError('Предупреждение или стадия печати изменились. Проверьте U1.')
         if action=='pause' and state!='printing':raise ValueError('Печать уже приостановлена.')
         if action=='resume' and (state!='paused' or s.get('pause_resume',{}).get('is_paused') is not True or not set('xyz').issubset(s.get('toolhead',{}).get('homed_axes',''))):
             raise ValueError('Штатная пауза или позиция осей не подтверждена.')
@@ -169,7 +184,7 @@ class TimedPause:
         atomic(ledger,json.dumps(requests,ensure_ascii=False).encode())
         if self.active:self.update(state='cancelled',message='Таймер отключён ручной командой управления печатью.')
         try:
-            self.control('resume' if action=='ack_bed' else action)
+            self.control('resume' if action in ('ack_bed','ack_fault') else action)
             requests[ident]['phase']='accepted';message='Штатный запрос отправлен. Обновляется состояние принтера.'
         except Exception:
             requests[ident]['phase']='unknown';message='Ответ на команду не получен. Автоповтора нет; проверьте принтер.'

@@ -1643,5 +1643,7 @@
   "sc03724bcd4255165": "Alexa account linked",
   "sa21bf915bcfb602e": "Download Alexa skill",
   "sb6dc320f8c167278": "Instructions",
-  "sa222c8b6d129cb21": "Start and movement commands require confirmation."
+  "sa222c8b6d129cb21": "Start and movement commands require confirmation.",
+  "s008567c5ab4f42b4": "Filament tangling detected. Fix the cause and confirm to resume.",
+  "s23f97d2f46325fcf": "The cause is fixed and the filament feeds freely"
 }

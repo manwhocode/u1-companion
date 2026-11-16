@@ -599,6 +599,10 @@ class DataStore:
             self.commit(after)
 
     def handle(self, ident, request):
+        if 'expiresAt' in request:
+            deadline = request['expiresAt']
+            if type(deadline) not in (int, float) or not math.isfinite(deadline) or deadline <= time.time():
+                raise ValueError('Request expired; no command was executed.')
         operation = request.get('operation')
         payload = request.get('payload', {})
         if operation in ('voice_state','voice_setup','voice_enable','voice_pair'):

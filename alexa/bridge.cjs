@@ -5,6 +5,7 @@ const { maintenanceStatus } = require('./maintenance-status.cjs')
 const { loginDomain, returnShape } = require('./external-login.cjs')
 const Alexa = require('alexa-remote2')
 const speech = require('./speech.cjs')
+const { eventText } = require('./error-details.cjs')
 const DIR = process.env.U1_ALEXA_PRIVATE || '/userdata/u1-addons/alexa-private'
 fs.mkdirSync(DIR, { recursive: true, mode: 0o700 }); process.umask(0o077)
 const reqDir = path.join(DIR, 'requests'); fs.mkdirSync(reqDir, { recursive: true, mode: 0o700 })
@@ -150,7 +151,7 @@ async function poll () {
       // Persist reservation before submission. A lost response is never retried automatically.
       publicState.lastEvent={kind:event.kind,time:event.time,phase:'sending'};publish()
       let accepted=0
-      for(const id of config.targets) { if(!config.enabled)break;if(!config.confirmed.includes(id))continue;try{await speak(id,config.phrases[event.kind] || speech.defaults(config.language)[event.kind] || phrases[event.kind]);accepted++}catch{} }
+      for(const id of config.targets) { if(!config.enabled)break;if(!config.confirmed.includes(id))continue;try{await speak(id,eventText(event,config.language,config.phrases[event.kind] || speech.defaults(config.language)[event.kind] || phrases[event.kind]));accepted++}catch{} }
       publicState.lastEvent.phase=accepted?'accepted':'failed';publish()
     }
   } catch { publicState.message='Нет свежего статуса принтера или связи. Пропущенные объявления не воспроизводятся задним числом.';publish() } finally {sourceBusy=false}

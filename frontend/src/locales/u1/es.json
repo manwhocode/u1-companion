@@ -1643,5 +1643,7 @@
   "sc03724bcd4255165": "Cuenta Alexa vinculada",
   "sa21bf915bcfb602e": "Descargar skill de Alexa",
   "sb6dc320f8c167278": "Instrucciones",
-  "sa222c8b6d129cb21": "Los comandos de inicio y movimiento requieren confirmación."
+  "sa222c8b6d129cb21": "Los comandos de inicio y movimiento requieren confirmación.",
+  "s008567c5ab4f42b4": "Se ha detectado un enredo del filamento. Soluciona la causa y confirma para reanudar.",
+  "s23f97d2f46325fcf": "El problema está resuelto y el filamento avanza libremente"
 }

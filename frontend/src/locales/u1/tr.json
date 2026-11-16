@@ -1643,5 +1643,7 @@
   "sc03724bcd4255165": "Alexa hesabı bağlandı",
   "sa21bf915bcfb602e": "Alexa becerisini indir",
   "sb6dc320f8c167278": "Talimatlar",
-  "sa222c8b6d129cb21": "Başlatma ve hareket komutları onay gerektirir."
+  "sa222c8b6d129cb21": "Başlatma ve hareket komutları onay gerektirir.",
+  "s008567c5ab4f42b4": "Filament dolaşması algılandı. Nedeni giderin ve devam etmek için onaylayın.",
+  "s23f97d2f46325fcf": "Sorun giderildi ve filament serbestçe besleniyor"
 }

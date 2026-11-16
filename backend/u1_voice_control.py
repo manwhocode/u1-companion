@@ -130,7 +130,7 @@ class Voice:
         if name=='AMAZON.YesIntent':
             atomic(path,{})
             if pending.get('session')!=session or pending.get('user')!=user or pending.get('expires',0)<self.clock():return reply(text['expired'])
-            self.moon.relay(pending['operation'],pending['payload'],request_id=ident,timeout=4)
+            self.moon.relay(pending['operation'],pending['payload'],request_id=ident,timeout=4,expires_at=self.clock()+6)
             return reply(text['sent'])
         atomic(path,{})
         if kind=='LaunchRequest' or name in ('AMAZON.HelpIntent','AMAZON.FallbackIntent'):return reply(text['help'],False)
@@ -140,8 +140,15 @@ class Voice:
             state_name=labels.get(stats.get('state'),'unbekannt' if text is TEXT['de'] else 'unknown')
             if name=='StatusIntent':return reply(text['status'].format(state=state_name,percent=round(progress*100)))
             if name=='ErrorStatusIntent':
-                errors=s.get('exception_manager',{}).get('exceptions',[])
-                return reply(text['status'].format(state=state_name,percent=round(progress*100))+' '+('Aktive Druckerfehler: ' if text is TEXT['de'] else 'Active printer errors: ')+str(len(errors))+'. '+s.get('webhooks',{}).get('state_message','')[:500])
+                errors=list(s.get('exception_manager',{}).get('exceptions',[]))
+                if stats.get('exception') and stats['exception'] not in errors:errors.append(stats['exception'])
+                descriptions=[]
+                for fault in errors[:3]:
+                    if not isinstance(fault,dict):descriptions.append(str(fault)[:160]);continue
+                    if fault.get('id')==523 and fault.get('code')==38:descriptions.append('Filamentverwicklung erkannt. Prüfe die Spule und den Filamentweg.' if text is TEXT['de'] else 'Filament tangling detected. Check the spool and filament path.')
+                    elif fault.get('id')==532 and fault.get('code')==1:descriptions.append('Ein Gegenstand oder Schmutz wurde auf dem Druckbett erkannt.' if text is TEXT['de'] else 'An object or dirt was detected on the print bed.')
+                    else:descriptions.append(str(fault.get('message') or fault.get('msg') or fault.get('code',''))[:160])
+                return reply(text['status'].format(state=state_name,percent=round(progress*100))+' '+('Aktive Druckerfehler: ' if text is TEXT['de'] else 'Active printer errors: ')+str(len(errors))+'. '+' '.join(descriptions))
             if stats.get('state') not in ('printing','paused') or progress<=0:return reply(text['unavailable'])
             minutes=max(0,round(stats.get('print_duration',0)*(1/progress-1)/60))
             return reply(text['remaining'].format(minutes=minutes))
@@ -149,9 +156,13 @@ class Voice:
         if name in ('PausePrintIntent','ResumePrintIntent','CancelPrintIntent'):
             state=self.moon.relay('print_player_state',{},timeout=3)
             action={'PausePrintIntent':'pause','ResumePrintIntent':'resume','CancelPrintIntent':'cancel'}[name]
+            if action=='resume' and state.get('canAcknowledgeFault') and state.get('pauseFaultToken'):
+                if not session or not state.get('currentJob'):return reply(text['blocked'])
+                atomic(path,{'session':session,'user':user,'expires':self.clock()+60,'operation':'print_player_action','payload':{'action':'ack_fault','currentJob':state.get('currentJob'),'faultToken':state['pauseFaultToken'],'confirmed':True}})
+                return reply('Wurde die Filamentverwicklung behoben? Wird das Filament frei zugeführt und ist der Bewegungsbereich frei? Sage Ja zum Fortsetzen.' if text is TEXT['de'] else 'Have you fixed the filament tangling? Does the filament feed freely, and is the movement area clear? Say yes to resume.',False)
             if not state.get({'pause':'canPause','resume':'canResume','cancel':'canCancel'}[action]):return reply(text['blocked'])
             operation='print_player_action';payload={'action':action,'currentJob':state['currentJob'],'confirmed':action!='pause'}
-            if action=='pause':self.moon.relay(operation,payload,request_id=ident,timeout=4);return reply(text['sent'])
+            if action=='pause':self.moon.relay(operation,payload,request_id=ident,timeout=4,expires_at=self.clock()+6);return reply(text['sent'])
             question=text[action]
         elif name=='PauseLowerIntent':
             state=self.moon.relay('magnet_state',{},timeout=3)
@@ -173,7 +184,7 @@ class Voice:
         elif name in ('NightModeOnIntent','NightModeOffIntent'):
             state=self.moon.relay('night_state',{},timeout=3)
             payload={k:state[k] for k in ('revision','start','end','zone')};payload['mode']='on' if name=='NightModeOnIntent' else 'off'
-            self.moon.relay('night_configure',payload,request_id=ident,timeout=4);return reply(text['night'])
+            self.moon.relay('night_configure',payload,request_id=ident,timeout=4,expires_at=self.clock()+6);return reply(text['night'])
         elif name=='MaintenanceIntent':
             state=self.moon.relay('maintenance_state',{},timeout=3)
             extra=''
@@ -192,7 +203,7 @@ class Voice:
             question=(f'Druck pausieren und nach {minutes} Minuten automatisch fortsetzen? Ist der Bewegungsbereich frei? Bestätige mit Ja.' if text is TEXT['de'] else f'Pause the print and resume automatically after {minutes} minutes? Is the movement area clear? Say yes.')
         elif name=='CancelTimedPauseIntent':
             state=self.moon.relay('timed_pause_state',{},timeout=3)
-            self.moon.relay('timed_pause_cancel',{'id':state.get('id')},request_id=ident,timeout=4)
+            self.moon.relay('timed_pause_cancel',{'id':state.get('id')},request_id=ident,timeout=4,expires_at=self.clock()+6)
             return reply(text['sent'])
         else:return reply(text['help'],False)
         if not session:return reply(text['blocked'])

@@ -245,4 +245,36 @@ class BedAcknowledgementTests(unittest.TestCase):
             with self.assertRaises(ValueError): self.timer.player_action('no',{'action':'ack_bed','currentJob':state['currentJob'],'confirmed':True})
         self.assertEqual(self.calls, [])
 
+class FilamentAck(unittest.TestCase):
+    def setUp(self):
+        Tests.setUp(self)
+        self.timer.stock_bed_ack_supported=lambda:True
+        self.s['print_stats'].update(state='paused',exception={'id':523,'index':0,'code':38,'message':'detect filament tangled!','level':2},print_duration=1179,filament_used=4939,info={'current_layer':34})
+        self.s['pause_resume']['is_paused']=True
+
+    new=Tests.new
+    api=Tests.api
+    control=Tests.control
+
+    def test_manual_confirmation_only_with_same_job_and_fault(self):
+        state=self.timer.player_state()
+        self.assertTrue(state['canAcknowledgeFault']);self.assertFalse(state['canResume'])
+        self.assertFalse(self.timer.state()['eligible']);self.assertEqual(self.calls,[])
+        payload={'action':'ack_fault','currentJob':state['currentJob'],'faultToken':state['pauseFaultToken'],'confirmed':True}
+        for bad in ({**payload,'confirmed':False},{**payload,'currentJob':'old'},{**payload,'faultToken':'old'}):
+            with self.assertRaises(ValueError):self.timer.player_action('bad',bad)
+        self.assertEqual(self.calls,[])
+        self.timer.player_action('ok',payload);self.assertEqual(self.calls,['resume'])
+
+    def test_other_errors_guards_changed_fault_and_firmware_stay_blocked(self):
+        baseline=copy.deepcopy(self.s);initial=self.timer.player_state()
+        changes=[lambda:self.s['print_stats']['exception'].update(code=39),lambda:self.s['print_stats']['exception'].update(level=3),
+                 lambda:self.s['print_stats']['exception'].update(index=1),lambda:self.s['exception_manager'].update(exceptions=['other fault']),
+                 lambda:self.s['purifier'].update(power_detected=False),lambda:self.s['toolhead'].update(homed_axes='xy'),
+                 lambda:setattr(self.timer,'stock_bed_ack_supported',lambda:False)]
+        for change in changes:
+            self.s=copy.deepcopy(baseline);self.timer.stock_bed_ack_supported=lambda:True;change()
+            with self.assertRaises(ValueError):self.timer.player_action('no',{'action':'ack_fault','currentJob':initial['currentJob'],'faultToken':initial['pauseFaultToken'],'confirmed':True})
+        self.assertEqual(self.calls,[])
+
 if __name__=='__main__': unittest.main()

@@ -1,9 +1,9 @@
 name: SSH installer checks
 on:
   push:
-    paths: ['installer/**', 'desktop/**', 'alexa-skill/**', 'backend/u1_voice_control.py', 'backend/u1_ai/server.py', 'remote-access/nginx-template.conf', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
+    paths: ['installer/**', 'desktop/**', 'alexa/**', 'alexa-skill/**', 'backend/**', 'remote-access/nginx-template.conf', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
   pull_request:
-    paths: ['installer/**', 'desktop/**', 'alexa-skill/**', 'backend/u1_voice_control.py', 'backend/u1_ai/server.py', 'remote-access/nginx-template.conf', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
+    paths: ['installer/**', 'desktop/**', 'alexa/**', 'alexa-skill/**', 'backend/**', 'remote-access/nginx-template.conf', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
 permissions:
   contents: read
 jobs:
@@ -16,4 +16,8 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m unittest discover -s installer/tests -v
+      - run: python backend/test-u1-timed-pause.py
+        env:
+          PYTHONPATH: backend
+      - run: node --test alexa/events.test.cjs alexa/speech.test.cjs alexa/speech-settings.test.cjs
       - run: sh -n install.sh && sh -n services/S96u1-remote && sh -n services/S97u1-ai && sh -n services/S98u1-spool-accounting && sh -n services/S99u1-alexa-bridge

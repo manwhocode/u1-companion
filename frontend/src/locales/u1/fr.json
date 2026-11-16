@@ -1643,5 +1643,7 @@
   "sc03724bcd4255165": "Compte Alexa associé",
   "sa21bf915bcfb602e": "Télécharger le skill Alexa",
   "sb6dc320f8c167278": "Instructions",
-  "sa222c8b6d129cb21": "Les commandes de démarrage et de déplacement nécessitent une confirmation."
+  "sa222c8b6d129cb21": "Les commandes de démarrage et de déplacement nécessitent une confirmation.",
+  "s008567c5ab4f42b4": "Enchevêtrement du filament détecté. Corrigez le problème et confirmez la reprise.",
+  "s23f97d2f46325fcf": "Le problème est résolu et le filament avance librement"
 }

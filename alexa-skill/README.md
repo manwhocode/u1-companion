@@ -22,4 +22,6 @@ Launches, resumes, cancellations, bed movement and timed automatic resumption re
 
 Requests are signed, paired to the Amazon account, timestamp-checked and deduplicated. A timeout never automatically retries a command; check the printer before issuing another command. A spoken “request sent” does not mean motion has completed. Pairing authenticates an account, not an individual voice; other people near devices on that account can speak commands.
 
+Queued control commands expire after six seconds, so a stalled service cannot execute an old command much later. The verified stock filament-tangling warning permits manually confirmed resumption after the cause is fixed; other active faults remain blocked. Timed automatic resumption does not bypass this warning.
+
 If the tunnel URL changes, update only `url` in your private skill config.json and Deploy again. Disable voice control and external access before updating or uninstalling Companion. Physical Echo recognition, Amazon deployment and real printer command tests still require user verification; automated tests do not prove those steps.

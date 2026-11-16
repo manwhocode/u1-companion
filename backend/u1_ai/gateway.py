@@ -35,10 +35,13 @@ class Moonraker:
                 return default
             raise
 
-    def relay(self, operation, payload, request_id=None, timeout=30):
+    def relay(self, operation, payload, request_id=None, timeout=30, expires_at=None):
         request_id = request_id or str(uuid.uuid4())
+        value = {'operation': operation, 'payload': payload}
+        if expires_at is not None:
+            value['expiresAt'] = expires_at
         self.api('/server/database/item', {'namespace': 'u1_addon_requests', 'key': request_id,
-                                         'value': {'operation': operation, 'payload': payload}})
+                                         'value': value})
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             try:

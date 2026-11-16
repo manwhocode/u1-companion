@@ -1,6 +1,33 @@
 const test = require('node:test'), assert = require('node:assert/strict')
 const {reduce} = require('./events.cjs')
 const baseline = () => ({job:'job1',print:{state:'printing'},errors:[],maintenance:{due:false},bed:{due:false}})
+
+test('print_stats faults announce their cause instead of an ordinary pause or stop',()=>{
+ const fault={id:523,index:0,code:38,level:2,message:'detect filament tangled!'}
+ let r=reduce(null,baseline(),1)
+ r=reduce(r.state,{...baseline(),print:{state:'paused',exception:fault}},2)
+ assert.deepEqual(r.events.map(e=>e.kind),['error']);assert.deepEqual(r.events[0].error,fault)
+ r=reduce(r.state,{...baseline(),print:{state:'paused',exception:fault},errors:[fault]},3)
+ assert.deepEqual(r.events,[])
+ r=reduce(r.state,baseline(),4);assert.deepEqual(r.events.map(e=>e.kind),['resumed','recovered'])
+})
+
+test('stock dirty bed fault remains an error with no exception_manager entries',()=>{
+ const fault={id:532,index:0,code:1,level:2,message:'detected dirty bed'}
+ const r=reduce(null,{...baseline(),print:{state:'paused',exception:fault}},1)
+ assert.equal(r.events[0].kind,'error');assert.equal(r.events[0].error.id,532)
+})
+
+test('error speech identifies known faults and keeps other printer messages bounded',()=>{
+ const {eventText}=require('./error-details.cjs')
+ const tangled={kind:'error',error:{id:523,index:0,code:38,level:2,message:'detect filament tangled!'}}
+ assert.match(eventText(tangled,'en-US','Printer error.'),/Head 1.*tangling/)
+ assert.match(eventText(tangled,'en-US','X'.repeat(500)),/tangling/)
+ assert.match(eventText({kind:'error',error:{id:532,code:1}},'de-DE','Druckerfehler.'),/Druckbett/)
+ for(const lang of ['en','de','fr','it','es','pt','ja','hi','ar'])assert.ok(eventText(tangled,lang,'').length>15)
+ const unknown=eventText({kind:'error',error:{id:1,index:0,code:5,level:3,message:'<script>\n'+'X'.repeat(900)}},'en-US','Error.')
+ assert.ok(unknown.length<=500);assert.ok(!/[<>\n]/.test(unknown));assert.match(unknown,/Error code/)
+})
 test('does not announce an old completed print on initial connection',()=>assert.deepEqual(reduce(null,{...baseline(),print:{state:'complete'}},100).events,[]))
 test('announces completion once for the same known job',()=>{const a=reduce(null,baseline(),100);const b=reduce(a.state,{...baseline(),print:{state:'complete'}},110);assert.deepEqual(b.events.map(e=>e.kind),['finished']);assert.deepEqual(reduce(b.state,{...baseline(),print:{state:'complete'}},115).events,[])})
 test('a different history job cannot finish the previously observed job',()=>{const a=reduce(null,baseline(),100);assert.deepEqual(reduce(a.state,{...baseline(),job:'job2',print:{state:'complete'}},110).events,[])})

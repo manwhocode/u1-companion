@@ -1643,5 +1643,7 @@
   "sc03724bcd4255165": "Konto Alexa połączone",
   "sa21bf915bcfb602e": "Pobierz umiejętność Alexa",
   "sb6dc320f8c167278": "Instrukcja",
-  "sa222c8b6d129cb21": "Polecenia uruchamiania i ruchu wymagają potwierdzenia."
+  "sa222c8b6d129cb21": "Polecenia uruchamiania i ruchu wymagają potwierdzenia.",
+  "s008567c5ab4f42b4": "Wykryto splątanie filamentu. Usuń przyczynę i potwierdź wznowienie.",
+  "s23f97d2f46325fcf": "Przyczyna została usunięta, a filament podaje się swobodnie"
 }
