@@ -2,7 +2,7 @@
 <v-card outlined class="u1-print-player">
   <div class="player-track">
     <div class="player-track-info">
-      <span class="player-label">{{ $u1t("Управление печатью") }}</span>
+      <div class="player-heading-row"><span class="player-label">{{ $u1t("Управление печатью") }}</span><u1-favorite-models @choose="chooseFavorite" /></div>
       <strong class="player-filename" :title="state?.filename">{{ state?.filename || $u1t("Выберите файл на принтере") }}</strong>
       <span class="player-state">{{ stateLabel }}<template v-if="printing || paused"> · {{ elapsed }} · {{ percent }}%</template></span>
     </div>
@@ -16,7 +16,6 @@
     </div>
   </div>
   <v-progress-linear :value="percent" height="5" rounded :color="paused ? 'warning' : 'primary'" class="mt-3" :aria-label="$u1t('Прогресс печати')" />
-  <u1-favorite-models class="mt-2" @choose="chooseFavorite" />
   <u1-magnet-pause><slot /></u1-magnet-pause>
   <v-alert v-if="connectionError || error" dense type="error" class="mt-3 mb-0">{{ connectionError || error }}</v-alert>
   <p v-if="notice" class="player-notice mb-0 mt-2" role="status">{{ notice }}</p>
@@ -141,7 +140,8 @@ export default class U1PrintPlayer extends Vue {
 <style scoped>
 .u1-print-player { padding:14px 16px; margin-bottom:12px; border-radius:16px; background:linear-gradient(110deg,rgba(127,127,127,.09),transparent) }
 .player-track { display:flex; align-items:center; justify-content:space-between; gap:16px }
-.player-track-info { display:flex; flex-direction:column; gap:3px; min-width:0 }
+.player-track-info { display:flex; flex-direction:column; gap:3px; min-width:0;flex:1 }
+.player-heading-row { display:flex;align-items:center;gap:12px;justify-content:space-between;min-width:0 }.player-heading-row .player-label { flex:1 }.player-heading-row >>> .v-btn { height:28px;min-height:28px;padding:0 8px;font-size:12px;letter-spacing:0;text-transform:none;white-space:nowrap } @media(max-width:400px) { .player-heading-row { gap:4px }.player-heading-row >>> .v-btn {font-size:11px;padding:0 4px} }
 .player-label { font-size:11px; letter-spacing:.08em; text-transform:uppercase; opacity:.65 }
 .player-filename { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:15px }
 .player-state, .player-notice { font-size:12px; opacity:.8 }

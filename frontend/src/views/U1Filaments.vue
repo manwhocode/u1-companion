@@ -1,6 +1,5 @@
 <template>
   <div class="filament-page">
-    <u1-update-notice />
     <v-card outlined class="u1-maintenance-panel">
       <div class="hero-heading">
         <div class="companion-brand">
@@ -13,7 +12,7 @@
         <div class="companion-main-menu"><u1-program-settings class="companion-settings" @gpt="openGpt">
           <template #connection>
 <v-expansion-panels accordion flat class="connection-sections">
-<v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установщик Windows") }}</v-expansion-panel-header><v-expansion-panel-content><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><a href="https://github.com/manwhocode/u1-companion/blob/main/desktop/README.md" target="_blank" rel="noopener noreferrer">GitHub · U1 Companion</a></p><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.10/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p></v-expansion-panel-content></v-expansion-panel>
+<v-expansion-panel><v-expansion-panel-header>{{ $u1t("Скачать установщик") }}</v-expansion-panel-header><v-expansion-panel-content><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.11/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p></v-expansion-panel-content></v-expansion-panel>
 <v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установить сертификат") }}</v-expansion-panel-header><v-expansion-panel-content><p>{{ $u1t("Он позволяет открыть дополнение через доверенный HTTPS. Это нужно для прямого сканирования QR камерой и чтения/записи NFC-меток из браузера на поддерживаемом Android.") }}</p>
         
         <h3>iPhone</h3>
@@ -40,7 +39,7 @@
         </u1-program-settings>
         <v-btn icon outlined class="main-gpt-button" :aria-label="$u1t('Открыть чат GPT')" title="GPT" :aria-expanded="gptOpen" aria-controls="companion-gpt-chat" @click="toggleGpt"><svg width="26" height="26" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"><path v-for="n in 6" :key="n" :transform="'rotate(' + ((n - 1) * 60) + ' 24 24)'" d="M24 5 C34 2 43 13 37 23 L25 30 L17 25 L17 13 L24 9 L31 13 L31 23" /></g></svg></v-btn></div>
       </div>
-      <u1-calibration ref="calibrations" hide-launcher @saved="reloadUserData" /><u1-maintenance />
+      <u1-calibration ref="calibrations" hide-launcher @saved="reloadUserData" /><u1-maintenance /><u1-update-notice />
     </v-card>
     <v-dialog v-model="gptOpen" max-width="760" scrollable content-class="u1-dialog u1-unified-dialog"><v-card><u1-dialog-close @close="gptOpen = false" /><v-card-title>GPT</v-card-title><v-card-text><U1AI v-if="gptVisited" /></v-card-text></v-card></v-dialog>
     <u1-print-player @timer="openPauseTimer">

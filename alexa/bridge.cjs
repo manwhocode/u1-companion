@@ -126,15 +126,15 @@ async function command (request) {
 }
 function api (pathname) { return new Promise((resolve,reject) => { const req = http.get({hostname:'127.0.0.1',port:7125,path:pathname,timeout:4000},res => { let data='';res.on('data',chunk => { data+=chunk; if(data.length>8*1024*1024) req.destroy(new Error('large_response')) });res.on('end',() => { try { const value=JSON.parse(data); if(res.statusCode!==200 || !value.result) throw new Error('source_failed'); resolve(value.result) } catch { reject(new Error('source_failed')) } }) });req.on('timeout',()=>req.destroy(new Error('timeout')));req.on('error',reject) }) }
 async function collect () {
-  const [status,usage,maintenance,history,notice] = await Promise.all([
-    api('/printer/objects/query?print_stats&exception_manager&u1_dryer'),api('/server/database/item?namespace=fluidd&key=u1_spool_usage_v1'),api('/server/database/item?namespace=fluidd&key=u1_maintenance_v1'),api('/server/history/list?limit=1'),api('/server/database/item?namespace=fluidd&key=u1_maintenance_status_v1').catch(()=>null)])
+  const [status,usage,maintenance,history,notice,companionUpdate] = await Promise.all([
+    api('/printer/objects/query?print_stats&exception_manager&u1_dryer'),api('/server/database/item?namespace=fluidd&key=u1_spool_usage_v1'),api('/server/database/item?namespace=fluidd&key=u1_maintenance_v1'),api('/server/history/list?limit=1'),api('/server/database/item?namespace=fluidd&key=u1_maintenance_status_v1').catch(()=>null),api('/server/database/item?namespace=fluidd&key=u1_companion_update_v1').catch(()=>null)])
   const s=status.status,u=usage.value,m=maintenance.value
   const marker=m.service,bed=m.bed
   const dueState=maintenanceStatus(m,notice?.value)
   const schedule=(()=>{try{return JSON.parse(fs.readFileSync('/userdata/u1-addons/filament-ui-data/schedule/state.json'))}catch{return {}}})()
   const dryerNotify=(()=>{try{return JSON.parse(fs.readFileSync('/userdata/u1-addons/filament-ui-data/drying/notifications.json')).enabled===true}catch(error){return error.code==='ENOENT'}})()
   const calibration=(()=>{try{const c=JSON.parse(fs.readFileSync('/userdata/u1-addons/filament-ui-data/calibration-jobs/state.json'));return {id:c.id,state:c.state}}catch{return {}}})()
-  return {calibration,dryerNotify,print:s.print_stats,job:history.jobs[0] ? hash([history.jobs[0].job_id,history.jobs[0].start_time]) : null,errors:s.exception_manager?.exceptions || [],dryer:s.u1_dryer,dryerSession:hash([s.u1_dryer?.deadline]),schedule,scheduleVersion:hash([schedule.id,schedule.state,schedule.updatedAt]),shortages:u.active?.changed ? [] : u.active?.rows || [],paused:!!u.active?.paused,
+  return {companionUpdate:companionUpdate?.value,calibration,dryerNotify,print:s.print_stats,job:history.jobs[0] ? hash([history.jobs[0].job_id,history.jobs[0].start_time]) : null,errors:s.exception_manager?.exceptions || [],dryer:s.u1_dryer,dryerSession:hash([s.u1_dryer?.deadline]),schedule,scheduleVersion:hash([schedule.id,schedule.state,schedule.updatedAt]),shortages:u.active?.changed ? [] : u.active?.rows || [],paused:!!u.active?.paused,
     maintenance:{due:dueState.serviceDue,revision:hash([marker?.time,m.periods?.service])},bed:{due:dueState.bedDue,revision:hash([bed?.time,m.periods?.bed])}}
 }
 async function poll () {
@@ -143,13 +143,14 @@ async function poll () {
   sourceBusy = true
   try {
     const snapshot=await collect();const now=Date.now()/1000
-    const result=reduce(previousEnabled ? model : null,snapshot,now);model=result.state;previousEnabled=true;write('events',model)
+    const baseline = previousEnabled ? model : {previous:null,errors:{},once:{},lastCompanionUpdate:model?.lastCompanionUpdate}
+    const result=reduce(baseline,snapshot,now);model=result.state;previousEnabled=true;write('events',model)
     for (const event of result.events.slice(0,8)) {
       if (!config.enabled) break
       // Persist reservation before submission. A lost response is never retried automatically.
       publicState.lastEvent={kind:event.kind,time:event.time,phase:'sending'};publish()
       let accepted=0
-      for(const id of config.targets) { if(!config.enabled)break;if(!config.confirmed.includes(id))continue;try{await speak(id,config.phrases[event.kind] || phrases[event.kind]);accepted++}catch{} }
+      for(const id of config.targets) { if(!config.enabled)break;if(!config.confirmed.includes(id))continue;try{await speak(id,config.phrases[event.kind] || speech.defaults(config.language)[event.kind] || phrases[event.kind]);accepted++}catch{} }
       publicState.lastEvent.phase=accepted?'accepted':'failed';publish()
     }
   } catch { publicState.message='Нет свежего статуса принтера или связи. Пропущенные объявления не воспроизводятся задним числом.';publish() } finally {sourceBusy=false}

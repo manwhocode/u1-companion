@@ -16,7 +16,8 @@
     "bed": "Eine Druckbettkalibrierung wird empfohlen.",
     "dryerDone": "Die Filamenttrocknung ist abgeschlossen.",
     "dryerPaused": "Die Filamenttrocknung ist pausiert. Die Bettheizung wurde ausgeschaltet.",
-    "scheduleFailed": "Ihr geplanter Druck konnte nicht starten. Bitte prüfen Sie den Drucker."
+    "scheduleFailed": "Ihr geplanter Druck konnte nicht starten. Bitte prüfen Sie den Drucker.",
+    "companionUpdate": "Ein neues Update für U eins Companion ist verfügbar."
   },
   "fr": {
     "started": "Votre impression a démarré.",
@@ -35,7 +36,8 @@
     "bed": "Une calibration du plateau est recommandée.",
     "dryerDone": "Le séchage du filament est terminé.",
     "dryerPaused": "Le séchage du filament est en pause. Le chauffage du plateau est éteint.",
-    "scheduleFailed": "Votre impression programmée n'a pas pu démarrer. Vérifiez l'imprimante."
+    "scheduleFailed": "Votre impression programmée n'a pas pu démarrer. Vérifiez l'imprimante.",
+    "companionUpdate": "Une mise à jour de U un Companion est disponible."
   },
   "it": {
     "started": "La stampa è iniziata.",
@@ -54,7 +56,8 @@
     "bed": "Si consiglia la calibrazione del piano.",
     "dryerDone": "L'asciugatura del filamento è terminata.",
     "dryerPaused": "L'asciugatura del filamento è in pausa. Il riscaldamento del piano è spento.",
-    "scheduleFailed": "La stampa programmata non è partita. Controlla la stampante."
+    "scheduleFailed": "La stampa programmata non è partita. Controlla la stampante.",
+    "companionUpdate": "È disponibile un aggiornamento di U uno Companion."
   },
   "es": {
     "started": "La impresión ha comenzado.",
@@ -73,7 +76,8 @@
     "bed": "Se recomienda calibrar la cama.",
     "dryerDone": "El secado del filamento ha terminado.",
     "dryerPaused": "El secado del filamento está en pausa. La calefacción de la cama está apagada.",
-    "scheduleFailed": "La impresión programada no pudo comenzar. Revisa la impresora."
+    "scheduleFailed": "La impresión programada no pudo comenzar. Revisa la impresora.",
+    "companionUpdate": "Hay una actualización de U uno Companion disponible."
   },
   "pt": {
     "started": "A impressão começou.",
@@ -92,7 +96,8 @@
     "bed": "É recomendável calibrar a mesa.",
     "dryerDone": "A secagem do filamento foi concluída.",
     "dryerPaused": "A secagem do filamento está pausada. O aquecimento da mesa foi desligado.",
-    "scheduleFailed": "A impressão agendada não pôde começar. Verifique a impressora."
+    "scheduleFailed": "A impressão agendada não pôde começar. Verifique a impressora.",
+    "companionUpdate": "Está disponível uma atualização do U um Companion."
   },
   "ja": {
     "started": "印刷を開始しました。",
@@ -111,7 +116,8 @@
     "bed": "ベッドのキャリブレーションをお勧めします。",
     "dryerDone": "フィラメントの乾燥が完了しました。",
     "dryerPaused": "フィラメントの乾燥を一時停止しました。ベッドの加熱は停止しています。",
-    "scheduleFailed": "予約した印刷を開始できませんでした。プリンターを確認してください。"
+    "scheduleFailed": "予約した印刷を開始できませんでした。プリンターを確認してください。",
+    "companionUpdate": "U1コンパニオンの新しい更新が利用できます。"
   },
   "hi": {
     "started": "आपकी प्रिंटिंग शुरू हो गई है।",
@@ -130,7 +136,8 @@
     "bed": "प्रिंट बेड का कैलिब्रेशन करने की सलाह दी जाती है।",
     "dryerDone": "फिलामेंट का सूखना पूरा हो गया है।",
     "dryerPaused": "फिलामेंट सुखाना रोक दिया गया है। बेड की हीटिंग बंद कर दी गई है।",
-    "scheduleFailed": "आपकी निर्धारित प्रिंटिंग शुरू नहीं हो सकी। कृपया प्रिंटर जाँचें।"
+    "scheduleFailed": "आपकी निर्धारित प्रिंटिंग शुरू नहीं हो सकी। कृपया प्रिंटर जाँचें।",
+    "companionUpdate": "यू वन कंपैनियन का नया अपडेट उपलब्ध है।"
   },
   "ar": {
     "started": "بدأت الطباعة.",
@@ -149,6 +156,7 @@
     "bed": "يوصى بمعايرة منصة الطباعة.",
     "dryerDone": "اكتمل تجفيف الفتيل.",
     "dryerPaused": "تم إيقاف تجفيف الفتيل مؤقتًا وإيقاف تسخين المنصة.",
-    "scheduleFailed": "تعذر بدء الطباعة المجدولة. يرجى فحص الطابعة."
+    "scheduleFailed": "تعذر بدء الطباعة المجدولة. يرجى فحص الطابعة.",
+    "companionUpdate": "يتوفر تحديث جديد لتطبيق يو ون كومبانيون."
   }
 }

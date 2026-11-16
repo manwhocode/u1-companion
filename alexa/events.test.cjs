@@ -28,3 +28,11 @@ test('calibration notifications follow a new queue and a single terminal result'
  r=reduce(r.state,{calibration:{id:'failed-run',state:'starting'}},6)
  r=reduce(r.state,{calibration:{id:'failed-run',state:'failed'}},7);assert.deepEqual(r.events.map(e=>e.kind),['calibrationStopped'])
 })
+
+ test('Companion update speaks once per version, rejects stale and failed checks',()=>{
+ let r=reduce(null,{companionUpdate:{updateAvailable:true,latest:'v2',updatedAt:100}},101);assert.deepEqual(r.events.map(e=>e.kind),['companionUpdate']);
+ r=reduce(r.state,{companionUpdate:{updateAvailable:true,latest:'v2',updatedAt:100}},102);assert.deepEqual(r.events,[]);
+ r=reduce(r.state,{companionUpdate:{updateAvailable:true,latest:'v3',updatedAt:100}},103);assert.deepEqual(r.events.map(e=>e.kind),['companionUpdate']);
+ assert.deepEqual(reduce(null,{companionUpdate:{updateAvailable:true,latest:'v4',updatedAt:0}},10000).events,[]);
+ assert.deepEqual(reduce(null,{companionUpdate:{updateAvailable:true,checkFailed:true,latest:'v4',updatedAt:100}},101).events,[]);
+ })

@@ -1,4 +1,4 @@
-<template><v-alert v-if="info?.updateAvailable && !dismissed" dense type="info" dismissible @input="dismissed = true">{{ $u1t('Доступна новая версия') }}: {{ info.latest }} · <a href="https://github.com/manwhocode/u1-companion/releases" target="_blank" rel="noopener noreferrer">GitHub</a></v-alert></template>
+<template><v-alert v-if="info?.updateAvailable" dense type="info" class="mt-2 mb-1">{{ $u1t('Доступна новая версия') }}: U1 Companion {{ info.latest }}</v-alert></template>
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'

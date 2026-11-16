@@ -6,7 +6,7 @@ const phrases = {
   finished: 'Your print has finished.', stopped: 'Your print has stopped.', paused: 'Your print is paused.', resumed: 'Your print has resumed.',
   error: 'Your printer reported an error. Please check the printer.', repeat: 'Your printer still needs attention. The error has not been cleared.', recovered: 'The printer error has cleared.',
   shortage: 'A filament spool may run out in about thirty minutes. Please check the printer.',
-  maintenance: 'Your printer requires maintenance.', bed: 'Bed calibration is recommended.',
+  maintenance: 'Your printer requires maintenance.', bed: 'Bed calibration is recommended.', companionUpdate: 'A new U1 Companion update is available.',
   dryerDone: 'Filament drying is complete.', dryerPaused: 'Filament drying has paused and bed heating has been turned off.',
   scheduleFailed: 'Your scheduled print could not start. Please check the printer.'
 }
@@ -62,6 +62,10 @@ function reduce (old, snapshot, now) {
       // First due warning and one reminder per new print job, no 5-second loop.
       if (!state.once[key] || (snapshot.job && previous?.job !== snapshot.job && current.state === 'printing')) { state.once[key] = now; add(kind, [key, snapshot.job]) }
     }
+  }
+  const update = snapshot.companionUpdate
+  if (update?.updateAvailable && !update.checkFailed && update.latest && now - update.updatedAt < 7200 && state.lastCompanionUpdate !== update.latest) {
+    state.lastCompanionUpdate = update.latest; add('companionUpdate', update.latest)
   }
   const entries = Object.entries(state.once).sort((a,b) => b[1] - a[1]).slice(0,200)
   state.once = Object.fromEntries(entries)

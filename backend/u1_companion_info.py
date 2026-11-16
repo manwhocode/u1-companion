@@ -5,6 +5,14 @@ from u1_recovery import atomic
 
 REPO='https://github.com/manwhocode/u1-companion'
 _cache={}
+_published_at=0
+
+def poll(store):
+    global _published_at
+    if _published_at and time.monotonic()-_published_at<3600:return
+    state=info()
+    store.put('fluidd','u1_companion_update_v1',{**state,'updatedAt':time.time()})
+    _published_at=time.monotonic()
 
 def info():
     installed=json.loads(Path('/home/lava/fluidd/u1-filaments-ui/addon-status.json').read_text())['version']

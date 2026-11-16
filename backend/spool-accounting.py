@@ -275,6 +275,11 @@ def run():
                         store.maintenance.poll(store)
                     except Exception:
                         logging.exception('Maintenance update failed; spool accounting remains enabled')
+                    try:
+                        from u1_companion_info import poll as poll_companion_update
+                        poll_companion_update(store)
+                    except Exception:
+                        logging.exception('Companion update check unavailable')
                     store.sync_mirror()
                     last_poll = time.monotonic()
                 store.dryer.heartbeat()
