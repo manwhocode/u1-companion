@@ -142,6 +142,30 @@ class Guards(Fixture):
 
 
 class Transactions(Fixture):
+    @unittest.skipUnless(os.name=='posix','Unix directory permissions')
+    def test_public_program_directories_are_accessible_under_private_umask(self):
+        tx=self.tx();previous=os.umask(0o077)
+        try:tx.write(m.CORE+'/u1_ai/nested/module.py',b'# public code')
+        finally:os.umask(previous)
+        for name in [m.CORE,m.CORE+'/u1_ai',m.CORE+'/u1_ai/nested']:
+            self.assertEqual(self.p(name).stat().st_mode & 0o777,0o755)
+        self.assertEqual(tx.backup.stat().st_mode & 0o777,0o700)
+
+    @unittest.skipUnless(os.name=='posix','Unix directory permissions')
+    def test_failed_install_directory_permissions_are_repaired_and_reversible(self):
+        program=self.put(m.DATA+'/alexa-bridge/runtime/node',b'node')
+        program.parent.chmod(0o700);program.parent.parent.chmod(0o700)
+        private=self.put(m.DATA+'/ai-private/auth.json',b'private fixture');private.parent.chmod(0o700)
+        tx=self.tx();tx.write(m.DATA+'/alexa-bridge/runtime/node',b'node')
+        self.assertEqual(program.parent.stat().st_mode & 0o777,0o755)
+        self.assertEqual(program.parent.parent.stat().st_mode & 0o777,0o755)
+        self.assertEqual(private.parent.stat().st_mode & 0o777,0o700)
+        saved=json.loads((tx.backup/'journal.json').read_text())
+        restored=m.Transaction.__new__(m.Transaction);restored.root=tx.root;restored.backup=tx.backup
+        restored.rows=saved['files'];restored.directories=saved['directories'];restored.rollback()
+        self.assertEqual(program.parent.stat().st_mode & 0o777,0o700)
+        self.assertEqual(program.parent.parent.stat().st_mode & 0o777,0o700)
+
     def test_restores_existing_and_removes_new_files(self):
         self.put('/owned/file',b'before');tx=self.tx();tx.write('/owned/file',b'after');tx.write('/owned/new',b'new')
         tx.rollback();self.assertEqual(self.p('/owned/file').read_bytes(),b'before');self.assertFalse(self.p('/owned/new').exists())

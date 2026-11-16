@@ -19,7 +19,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.4'
+VERSION = 'v0.1.1-alpha.5'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
@@ -119,6 +119,7 @@ class Transaction:
     def __init__(self, root, backup):
         self.root, self.backup, self.rows = Path(root), Path(backup), []
         self.owned = {}
+        self.directories = []
         no_links(self.backup); self.backup.mkdir(mode=0o700, parents=True, exist_ok=False)
         self.backup.chmod(0o700)
 
@@ -143,6 +144,7 @@ class Transaction:
         before = self.state(path)
         after_hash = sha(source) if source else hashlib.sha256(data).hexdigest()
         self.owned[name] = {'link':link} if link is not None else {'hash':after_hash}
+        self.prepare_parents(path.parent)
         if (link is not None and before == {'link': link}) or (link is None and before.get('hash') == after_hash
                 and before['mode'] == mode and (not owner or (before['uid'], before['gid']) == tuple(owner))): return
         if any(row['path'] == name for row in self.rows): raise ValueError('Duplicate transaction target')
@@ -154,7 +156,6 @@ class Transaction:
             row['old'] = str(len(self.rows)); shutil.copy2(path, self.backup / row['old'])
         row['before'] = before
         self.rows.append(row); self.save()
-        path.parent.mkdir(parents=True, exist_ok=True)
         temp = path.with_name(path.name + '.u1-install-' + secrets.token_hex(6))
         try:
             if link is not None: temp.symlink_to(link)
@@ -170,14 +171,37 @@ class Transaction:
             os.replace(temp, path)
         finally: temp.unlink(missing_ok=True)
 
+    @staticmethod
+    def program_directory(name):
+        return any(name == base or name.startswith(base + '/') for base in
+                   (CORE, UI, DATA+'/alexa-bridge', DATA+'/codex-runtime', DATA+'/remote-access'))
+
+    def prepare_parents(self, parent):
+        # umask 077 protects downloads and secrets, but lava must traverse public code.
+        for directory in reversed((parent, *parent.parents)):
+            if directory == self.root or self.root not in directory.parents: continue
+            if not directory.exists():
+                directory.mkdir(mode=0o755); directory.chmod(0o755)
+            else:
+                name='/' + directory.relative_to(self.root).as_posix()
+                mode=directory.stat().st_mode & 0o777
+                if self.program_directory(name) and mode & 0o555 != 0o555:
+                    self.directories.append({'path':name,'before':mode,'after':mode | 0o555})
+                    self.save(); directory.chmod(mode | 0o555)
+
     def save(self):
         path = self.backup / 'journal.json'; temp = path.with_suffix('.next')
         with temp.open('w') as stream:
-            stream.write(json.dumps({'version': 1, 'files': self.rows})); stream.flush(); os.fsync(stream.fileno())
+            stream.write(json.dumps({'version': 1, 'files': self.rows, 'directories':self.directories})); stream.flush(); os.fsync(stream.fileno())
         temp.chmod(0o600); temp.replace(path)
 
     def validate_rollback(self):
         # Validate every target before changing any of them.
+        for row in getattr(self,'directories',[]):
+            path=self.target(row['path'])
+            if (not self.program_directory(row['path']) or path.is_symlink() or not path.is_dir()
+                    or path.stat().st_mode & 0o777 not in (row['before'],row['after'])):
+                raise ValueError('Changed program directory; rollback stopped: '+row['path'])
         for row in self.rows:
             path = self.target(row['path']); current = self.state(path)
             if current == row['before']: continue
@@ -199,6 +223,8 @@ class Transaction:
                 shutil.copy2(self.backup / row['old'], temp); temp.chmod(row['mode'])
                 if hasattr(os, 'chown'): os.chown(temp, row['uid'], row['gid'])
                 os.replace(temp, path)
+        for row in reversed(getattr(self,'directories',[])):
+            self.target(row['path']).chmod(row['before'])
 
     def remove(self, name):
         path=self.target(name);before=self.state(path)
@@ -402,12 +428,13 @@ class Installer:
             print('[6/7] Starting services with CPU and memory limits...')
             for name in SERVICES:
                 self.run('/etc/init.d/'+name,'start'); started.append(name)
+            health_error=None
             for _ in range(60):
                 try:
                     self.health(since); break
-                except Exception: pass
+                except Exception as error: health_error=error
                 self.sleep(1)
-            else: raise ValueError('Companion service health check failed')
+            else: raise ValueError('Companion service health check failed: '+str(health_error)) from health_error
             tx.write(CORE+'/managed-install.json',json.dumps({'version':1,'moduleVersion':VERSION,'files':{**prior['files'],**tx.owned}}).encode(),0o600,(0,0))
             (backup/'success.json').write_text(json.dumps({'version':VERSION,'ip':ip,'time':time.time()}))
             print('[7/7] Installation verified. Open this address in your browser:')
@@ -509,7 +536,7 @@ def main():
         backup=no_links(args.rollback).resolve()
         if backup.parent!=Path('/userdata/u1-addons-backups') or not backup.name.startswith('unified-'): raise ValueError('Use the exact unified backup path')
         installer.rollback_guard(True)
-        journal=json.loads((backup/'journal.json').read_text());tx=Transaction.__new__(Transaction);tx.root=Path('/');tx.backup=backup;tx.rows=journal['files']
+        journal=json.loads((backup/'journal.json').read_text());tx=Transaction.__new__(Transaction);tx.root=Path('/');tx.backup=backup;tx.rows=journal['files'];tx.directories=journal.get('directories',[])
         # Backups are root-only; do not accept journals that target unrelated paths.
         allowed=[CORE+'/',UI+'/',DATA+'/', '/etc/init.d/S9','/etc/nginx/sites-enabled/u1-companion','/home/lava/klipper/klippy/extras/u1_','/oem/printer_data/config/u1-']
         if any(row['path'] not in (PRINTER,'/oem/.debug','/etc/nginx/sites-available/fluidd') and not any(row['path'].startswith(a) for a in allowed) for row in tx.rows): raise ValueError('Invalid rollback journal')
