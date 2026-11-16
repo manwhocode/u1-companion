@@ -117,6 +117,15 @@ class Fixture(unittest.TestCase):
 
 
 class Guards(Fixture):
+    def test_ready_timeout_state_allowed_only_with_independent_idle_guards(self):
+        self.status['idle_timeout']['state']='Ready'
+        self.inst.preflight()
+        for section,key,value in [('print_stats','state','paused'),('extruder','target',200),('machine_state_manager','action_code',1),('exception_manager','exceptions',[1])]:
+            old=self.status[section][key];self.status[section][key]=value
+            with self.subTest(section=section),self.assertRaises(ValueError):self.inst.preflight()
+            self.status[section][key]=old
+        self.assertFalse(self.posts or self.commands)
+
     def test_pending_status_polls_do_not_block_install_or_uninstall(self):
         original=self.inst.api
         pending={str(i):{'operation':operation,'payload':{}} for i,operation in enumerate(m.STATUS_REQUESTS)}

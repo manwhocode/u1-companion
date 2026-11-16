@@ -1,33 +1,50 @@
 """Version information and user-defined model groups. No printer commands."""
-import json,time,uuid,urllib.request
+import json,time,uuid,urllib.request,threading
 from pathlib import Path
 from u1_recovery import atomic
 
 REPO='https://github.com/manwhocode/u1-companion'
 _cache={}
 _published_at=0
+_refreshing=False
+_cache_lock=threading.Lock()
+
+def refresh_version():
+    global _refreshing
+    try:
+        req=urllib.request.Request('https://raw.githubusercontent.com/manwhocode/u1-companion/main/install.sh',headers={'User-Agent':'U1-Companion'})
+        with urllib.request.urlopen(req,timeout=3) as response:raw=response.read(65536).decode()
+        import re
+        latest=re.search(r'^VERSION=(v[0-9A-Za-z.-]+)$',raw,re.M)[1]
+        with _cache_lock:_cache.update(latest=latest,checkedAt=time.time(),error=False)
+    except Exception:
+        # Preserve the last successful version; a network failure is not "up to date".
+        with _cache_lock:_cache.update(checkedAt=time.time(),error=True)
+    finally:
+        with _cache_lock:_refreshing=False
 
 def poll(store):
     global _published_at
-    if _published_at and time.monotonic()-_published_at<3600:return
+    if _published_at and time.monotonic()-_published_at<15:return
     state=info()
     store.put('fluidd','u1_companion_update_v1',{**state,'updatedAt':time.time()})
     _published_at=time.monotonic()
 
-def info():
+def info(force=False):
+    global _refreshing
     installed=json.loads(Path('/home/lava/fluidd/u1-filaments-ui/addon-status.json').read_text())['version']
-    if time.time()-_cache.get('checkedAt',0)>3600:
-        try:
-            req=urllib.request.Request('https://raw.githubusercontent.com/manwhocode/u1-companion/main/install.sh',headers={'User-Agent':'U1-Companion'})
-            with urllib.request.urlopen(req,timeout=3) as response:raw=response.read(65536).decode()
-            import re
-            latest=re.search(r'^VERSION=(v[0-9A-Za-z.-]+)$',raw,re.M)[1]
-            _cache.update(latest=latest,checkedAt=time.time(),error=False)
-        except Exception:_cache.update(latest=installed,checkedAt=time.time(),error=True)
+    with _cache_lock:
+        interval=60 if _cache.get('error') else 86400
+        if not _refreshing and (force or time.time()-_cache.get('checkedAt',0)>interval):
+            _refreshing=True
+            threading.Thread(target=refresh_version,daemon=True,name='companion-update-check').start()
+        cached=dict(_cache)
+        checking=_refreshing
+    latest=cached.get('latest',installed)
     def version(v):
         import re
         return tuple(int(x) for x in re.findall(r'\d+',v))
-    return dict(installed=installed,latest=_cache['latest'],updateAvailable=version(_cache['latest'])>version(installed),checkFailed=_cache['error'],repository=REPO)
+    return dict(installed=installed,latest=latest,updateAvailable=version(latest)>version(installed),checkFailed=cached.get('error',False),checking=checking,repository=REPO)
 
 def models(store,operation,payload):
     path=store.folder/'favorite-models.json'

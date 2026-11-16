@@ -19,7 +19,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.12'
+VERSION = 'v0.1.1-alpha.13'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
@@ -264,7 +264,7 @@ class Installer:
         if any(not self.p(path).is_file() or self.p(path).is_symlink() for path in required): raise ValueError('Snapmaker U1 layout not found')
         status = self.api('/printer/objects/query?webhooks&print_stats&idle_timeout&print_task_config&machine_state_manager&exception_manager&extruder&extruder1&extruder2&extruder3&heater_bed')['status']
         if (status['webhooks']['state'] != 'ready' or status['print_stats']['state'] not in ('standby','complete','cancelled')
-                or status['idle_timeout']['state'] != 'Idle' or status['machine_state_manager'].get('main_state') not in (0,'IDLE')
+                or status['idle_timeout']['state'] not in ('Idle','Ready') or status['machine_state_manager'].get('main_state') not in (0,'IDLE')
                 or status['machine_state_manager'].get('action_code') not in (0,'IDLE') or status['exception_manager'].get('exceptions', [True])
                 or any(status[name]['target'] != 0 for name in ['extruder','extruder1','extruder2','extruder3','heater_bed'])):
             raise ValueError('Printer must be ready, idle, without errors and with every heater target zero')

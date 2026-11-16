@@ -603,7 +603,7 @@ class DataStore:
         payload = request.get('payload', {})
         if operation == 'companion_info':
             from u1_companion_info import info
-            return info()
+            return info(force=payload.get('refresh') is True)
         if operation in ('models_state','models_save','models_delete','models_stats'):
             from u1_companion_info import models
             return models(self,operation,payload)
