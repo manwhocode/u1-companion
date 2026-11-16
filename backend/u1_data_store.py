@@ -601,6 +601,12 @@ class DataStore:
     def handle(self, ident, request):
         operation = request.get('operation')
         payload = request.get('payload', {})
+        if operation == 'companion_info':
+            from u1_companion_info import info
+            return info()
+        if operation in ('models_state','models_save','models_delete','models_stats'):
+            from u1_companion_info import models
+            return models(self,operation,payload)
         if operation in ('logs_export', 'logs_prepare_clear', 'logs_clear'):
             from u1_log_lists import export as export_logs, prepare as prepare_logs, clear as clear_logs
             if operation == 'logs_export': return export_logs(self, payload)

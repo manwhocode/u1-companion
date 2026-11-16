@@ -19,14 +19,14 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.9'
+VERSION = 'v0.1.1-alpha.10'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
 DATA = '/userdata/u1-addons'
 PRINTER = '/oem/printer_data/config/printer.cfg'
 SERVICES = ['S98u1-spool-accounting', 'S97u1-ai', 'S96u1-remote', 'S99u1-alexa-bridge']
-STATUS_REQUESTS = {'print_player_state','maintenance_state','night_state','alexa_state','dryer_state','dryer_profiles',
+STATUS_REQUESTS = {'companion_info','models_state','print_player_state','maintenance_state','night_state','alexa_state','dryer_state','dryer_profiles',
                    'magnet_state','recovery_state','timed_pause_state','schedule_state','calibration_run_state','feeder_state'}
 MODULES = {'u1_filament_profiles': ('u1-filament-profiles.cfg', '[u1_filament_profiles]\n'),
            'u1_dryer': ('u1-dryer.cfg', '[u1_dryer]\nchamber_sensor: cavity\n'),
@@ -549,6 +549,13 @@ def main():
         from importlib.util import spec_from_file_location,module_from_spec
         spec=spec_from_file_location('u1_uninstall',module_path);module=module_from_spec(spec);spec.loader.exec_module(module)
         module.uninstall(installer,args.yes);return
+    if args.update or args.install:
+        installed_registry=installer.p(CORE+'/managed-install.json')
+        if installed_registry.is_file():
+            installed_version=json.loads(installed_registry.read_text()).get('moduleVersion','')
+            print('Installed:',installed_version,'| Available:',VERSION)
+            if installed_version==VERSION:
+                print('Already up to date. No installation or restart required.');return
     if args.update:
         if not installer.p(UI+'/index.html').is_file():raise ValueError('U1 Companion is not installed; choose Install')
         args.install=True

@@ -24,4 +24,4 @@ python -m pip install -r desktop/requirements-build.txt
 python desktop/build_windows.py --output desktop/dist
 ```
 
-The build runs `--self-test`, which checks packaged dependencies and license resources without accepting the agreement or contacting a printer. No automatic physical installation/removal test is run on the author's U1.
+The build runs `--self-test`, which checks packaged dependencies and license resources without accepting the agreement or contacting a printer. The author has successfully tested Windows installation, updating and removal on a physical U1. The macOS Terminal launcher uses the same verified SSH installer; its actual execution still requires a Mac test.

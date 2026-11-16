@@ -1,5 +1,6 @@
 <template>
   <div class="filament-page">
+    <u1-update-notice />
     <v-card outlined class="u1-maintenance-panel">
       <div class="hero-heading">
         <div class="companion-brand">
@@ -12,7 +13,7 @@
         <div class="companion-main-menu"><u1-program-settings class="companion-settings" @gpt="openGpt">
           <template #connection>
 <v-expansion-panels accordion flat class="connection-sections">
-<v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установщик Windows") }}</v-expansion-panel-header><v-expansion-panel-content><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><a href="https://github.com/manwhocode/u1-companion/blob/main/desktop/README.md" target="_blank" rel="noopener noreferrer">GitHub · U1 Companion</a></p></v-expansion-panel-content></v-expansion-panel>
+<v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установщик Windows") }}</v-expansion-panel-header><v-expansion-panel-content><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><a href="https://github.com/manwhocode/u1-companion/blob/main/desktop/README.md" target="_blank" rel="noopener noreferrer">GitHub · U1 Companion</a></p><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.10/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p></v-expansion-panel-content></v-expansion-panel>
 <v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установить сертификат") }}</v-expansion-panel-header><v-expansion-panel-content><p>{{ $u1t("Он позволяет открыть дополнение через доверенный HTTPS. Это нужно для прямого сканирования QR камерой и чтения/записи NFC-меток из браузера на поддерживаемом Android.") }}</p>
         
         <h3>iPhone</h3>
@@ -196,6 +197,7 @@ import U1DataBackup from '@/components/U1DataBackup.vue'
 import U1Calibration from '@/components/U1Calibration.vue'
 import U1CalibrationRunner from '@/components/U1CalibrationRunner.vue'
 import U1AI from '@/views/U1AI.vue'
+import U1UpdateNotice from '@/components/U1UpdateNotice.vue'
 import U1ProgramSettings from '@/components/U1ProgramSettings.vue'
 import U1Dryer from '@/components/U1Dryer.vue'
 import U1Maintenance from '@/components/U1Maintenance.vue'
@@ -216,7 +218,7 @@ import { httpClientActions as http } from '@/api/httpClientActions'
 import { assertWritable, commands, materials, validatePreset, type FilamentPreset, type TaskConfig } from '@/utils/u1Filament'
 
 interface Status { print_stats: { state: string }; print_task_config: TaskConfig; extruder?: {pressure_advance?: number}; extruder1?: {pressure_advance?: number}; extruder2?: {pressure_advance?: number}; extruder3?: {pressure_advance?: number} }
-@Component({ components: { U1Support, U1AI, QrcodeVue, U1FilamentLibrary, U1Nfc, U1SpoolInventory, U1SpoolUsage, U1DataBackup, U1Calibration, U1CalibrationRunner, U1ProgramSettings, U1PrintProfiles, U1PrintErrors, U1Dryer, U1Maintenance, U1Scheduler, U1TimedPause, U1PrintPlayer, U1Recovery } })
+@Component({ components: { U1UpdateNotice, U1Support, U1AI, QrcodeVue, U1FilamentLibrary, U1Nfc, U1SpoolInventory, U1SpoolUsage, U1DataBackup, U1Calibration, U1CalibrationRunner, U1ProgramSettings, U1PrintProfiles, U1PrintErrors, U1Dryer, U1Maintenance, U1Scheduler, U1TimedPause, U1PrintPlayer, U1Recovery } })
 export default class U1Filaments extends Vue {
   gptOpen = false
   gptVisited = false

@@ -24,7 +24,7 @@
           <v-checkbox v-model="acknowledged" :label="$u1t('Принтер свободен, нагрев выключен. Разрешаю сохранить схему и перезапустить Klipper.')" :disabled="busy || (!changed && !state.pendingRestart)" />
           <p v-if="backup">{{ $u1t("Бэкап:") }} {{ backup }}</p>
         </template>
-        </section></v-expansion-panel-content></v-expansion-panel><v-expansion-panel><v-expansion-panel-header>{{ sectionNames[6] }}</v-expansion-panel-header><v-expansion-panel-content><section v-if="opened && section === 6" class="gpt-settings-section"><U1AI settings-only /></section></v-expansion-panel-content></v-expansion-panel><v-expansion-panel><v-expansion-panel-header>{{ sectionNames[7] }}</v-expansion-panel-header><v-expansion-panel-content><u1-remote-access v-if="opened && section === 7" /></v-expansion-panel-content></v-expansion-panel></v-expansion-panels></v-card-text>
+        </section></v-expansion-panel-content></v-expansion-panel><v-expansion-panel><v-expansion-panel-header>{{ sectionNames[6] }}</v-expansion-panel-header><v-expansion-panel-content><section v-if="opened && section === 6" class="gpt-settings-section"><U1AI settings-only /></section></v-expansion-panel-content></v-expansion-panel><v-expansion-panel><v-expansion-panel-header>{{ sectionNames[7] }}</v-expansion-panel-header><v-expansion-panel-content><u1-remote-access v-if="opened && section === 7" /></v-expansion-panel-content></v-expansion-panel><v-expansion-panel><v-expansion-panel-header>{{ $u1t("О программе") }}</v-expansion-panel-header><v-expansion-panel-content><u1-about v-if="opened && section === 8" /></v-expansion-panel-content></v-expansion-panel></v-expansion-panels></v-card-text>
       <v-card-actions class="settings-actions">
         <v-btn v-if="section === 5" color="primary" :loading="busy" :disabled="busy || !state || !acknowledged || (!changed && !state.pendingRestart)" @click="apply">{{ changed ? $u1t("Сохранить и применить") : $u1t("Применить сохранённое") }}</v-btn>
         
@@ -40,13 +40,14 @@ import { u1t } from '@/plugins/i18n'
 import Vue from 'vue'
 import U1RemoteAccess from '@/components/U1RemoteAccess.vue'
 import U1AI from '@/views/U1AI.vue'
+import U1About from '@/components/U1About.vue'
 import U1NightMode from '@/components/U1NightMode.vue'
 import U1Alexa from '@/components/U1Alexa.vue'
 import { Component } from 'vue-property-decorator'
 import { u1DataRequest } from '@/utils/u1DataClient'
 import { SocketActions } from '@/api/socketActions'
 interface FeederState { swap12: boolean; swap34: boolean; hash: string; pendingRestart: boolean; activeSwap12: boolean | null; activeSwap34: boolean | null; backup?: string }
-@Component({ components: { U1RemoteAccess, U1NightMode, U1Alexa, U1AI } })
+@Component({ components: { U1About, U1RemoteAccess, U1NightMode, U1Alexa, U1AI } })
 export default class U1ProgramSettings extends Vue {
   get sectionNames () { return [u1t("Подключение и ярлык"), u1t("Данные и резервные копии"), u1t("Калибровки"), u1t("Ночной режим"), 'Alexa', u1t("Податчики"), u1t("Управление через GPT"), u1t("Внешний доступ")] }
   selectSection (index: number) { this.section = index; if (index === 5) void this.load() }

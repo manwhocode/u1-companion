@@ -16,6 +16,7 @@
     </div>
   </div>
   <v-progress-linear :value="percent" height="5" rounded :color="paused ? 'warning' : 'primary'" class="mt-3" :aria-label="$u1t('Прогресс печати')" />
+  <u1-favorite-models class="mt-2" @choose="chooseFavorite" />
   <u1-magnet-pause><slot /></u1-magnet-pause>
   <v-alert v-if="connectionError || error" dense type="error" class="mt-3 mb-0">{{ connectionError || error }}</v-alert>
   <p v-if="notice" class="player-notice mb-0 mt-2" role="status">{{ notice }}</p>
@@ -69,12 +70,13 @@ import { u1t } from '@/plugins/i18n'
 import Vue from 'vue'
 import U1MagnetPause from '@/components/U1MagnetPause.vue'
 import U1CoverFans from '@/components/U1CoverFans.vue'
+import U1FavoriteModels from '@/components/U1FavoriteModels.vue'
 import { Component } from 'vue-property-decorator'
 import { u1DataRequest } from '@/utils/u1DataClient'
 import { httpClientActions as http } from '@/api/httpClientActions'
 interface State { ready: boolean; state: string; filename: string; progress: number; duration: number; currentJob: string | null; reason: string; canStart: boolean; canPause: boolean; canResume: boolean; canCancel: boolean; canAcknowledgeBed?: boolean }
 interface Plan { token: string; filename: string; rows: { logical: number; head: number; name: string; material: string; hex: string; required: number; remaining: number }[] }
-@Component({ components: { U1MagnetPause, U1CoverFans } })
+@Component({ components: { U1FavoriteModels, U1MagnetPause, U1CoverFans } })
 export default class U1PrintPlayer extends Vue {
   state: State | null = null
   action = ''
@@ -111,6 +113,7 @@ export default class U1PrintPlayer extends Vue {
   }
   play () { if (this.paused) this.confirm('resume'); else this.openStart() }
   confirm (action: 'resume' | 'cancel' | 'ack_bed') { this.error = ''; this.pendingAction = action; this.pendingJob = this.state?.currentJob || null; this.confirmOpen = true }
+  async chooseFavorite (filename: string) { await this.openStart(); this.filename = filename; this.resetPlan() }
   async openStart () {
     this.startOpen = true; this.error = ''; this.resetPlan(); this.filesLoading = true
     try { const result = await http.get<{result: {path: string}[]}>('/server/files/list?root=gcodes'); this.files = result.data.result.filter(f => f.path.toLowerCase().endsWith('.gcode')).map(f => f.path); if (!this.filename && this.state?.filename && this.files.includes(this.state.filename)) this.filename = this.state.filename } catch (error) { this.error = (error as Error).message } finally { this.filesLoading = false }
