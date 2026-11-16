@@ -69,8 +69,8 @@
         {
           "name": "TimedPauseIntent",
           "samples": [
-            "{minutes}分間一時停止して",
-            "{minutes}分後に印刷を再開して"
+            "{minutes} 分間一時停止して",
+            "{minutes} 分後に印刷を再開して"
           ],
           "slots": [
             {
@@ -89,8 +89,8 @@
         {
           "name": "FavoritePrintIntent",
           "samples": [
-            "お気に入りの{model}を印刷して",
-            "保存したモデルの{model}を印刷して"
+            "お気に入りの {model} を印刷して",
+            "保存したモデルの {model} を印刷して"
           ],
           "slots": [
             {
@@ -116,8 +116,8 @@
         {
           "name": "LinkPrinterIntent",
           "samples": [
-            "コード{code}でプリンターをリンクして",
-            "ペアリングコードは{code}"
+            "コード {code} でプリンターをリンクして",
+            "ペアリングコードは {code}"
           ],
           "slots": [
             {

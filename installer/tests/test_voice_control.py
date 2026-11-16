@@ -1,4 +1,4 @@
-import datetime,hashlib,hmac,json,os,sys,tempfile,types,unittest,uuid,io,importlib.util,threading,urllib.request,urllib.error
+import datetime,hashlib,hmac,json,os,sys,tempfile,types,unittest,uuid,io,importlib.util,threading,urllib.request,urllib.error,re
 from pathlib import Path
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'backend'))
@@ -139,6 +139,10 @@ class Voice(unittest.TestCase):
             model=json.loads(path.read_text(encoding='utf-8'))['interactionModel']['languageModel'];names={row['name'] for row in model['intents']}
             self.assertTrue({'AMAZON.YesIntent','AMAZON.NoIntent','LinkPrinterIntent','NightModeOffIntent','TimedPauseIntent','FavoritePrintIntent'}.issubset(names))
             self.assertEqual(len(names),len(model['intents']))
+            for intent in model['intents']:
+                for sample in intent.get('samples',[]):
+                    self.assertNotIn('’',sample,path.name)
+                    self.assertIsNone(re.search(r'\S\{|\}\S',sample),path.name+': '+sample)
 
     def test_all_voice_languages_have_complete_templates_and_confirmations(self):
         from string import Formatter

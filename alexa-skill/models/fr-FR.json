@@ -6,36 +6,36 @@
         {
           "name": "StatusIntent",
           "samples": [
-            "état de l’imprimante",
-            "où en est l’impression"
+            "état de l'imprimante",
+            "où en est l'impression"
           ]
         },
         {
           "name": "RemainingTimeIntent",
           "samples": [
             "combien de temps reste-t-il",
-            "quand l’impression sera terminée"
+            "quand l'impression sera terminée"
           ]
         },
         {
           "name": "PausePrintIntent",
           "samples": [
-            "mets l’impression en pause",
-            "suspends l’impression"
+            "mets l'impression en pause",
+            "suspends l'impression"
           ]
         },
         {
           "name": "ResumePrintIntent",
           "samples": [
-            "reprends l’impression",
-            "continue l’impression"
+            "reprends l'impression",
+            "continue l'impression"
           ]
         },
         {
           "name": "CancelPrintIntent",
           "samples": [
-            "annule l’impression",
-            "arrête l’impression en cours"
+            "annule l'impression",
+            "arrête l'impression en cours"
           ]
         },
         {
@@ -102,22 +102,22 @@
         {
           "name": "ErrorStatusIntent",
           "samples": [
-            "pourquoi l’imprimante s’est arrêtée",
-            "quelle erreur signale l’imprimante"
+            "pourquoi l'imprimante s'est arrêtée",
+            "quelle erreur signale l'imprimante"
           ]
         },
         {
           "name": "MaintenanceIntent",
           "samples": [
-            "quand faut-il faire l’entretien",
+            "quand faut-il faire l'entretien",
             "faut-il calibrer le plateau"
           ]
         },
         {
           "name": "LinkPrinterIntent",
           "samples": [
-            "associe l’imprimante avec le code {code}",
-            "mon code d’association est {code}"
+            "associe l'imprimante avec le code {code}",
+            "mon code d'association est {code}"
           ],
           "slots": [
             {

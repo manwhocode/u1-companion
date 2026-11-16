@@ -41,8 +41,8 @@
         {
           "name": "RepeatPrintIntent",
           "samples": [
-            "ripeti l’ultima stampa",
-            "stampa di nuovo l’ultimo modello"
+            "ripeti l'ultima stampa",
+            "stampa di nuovo l'ultimo modello"
           ]
         },
         {
