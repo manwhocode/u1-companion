@@ -156,6 +156,14 @@ def handler(app):
                 if method == 'GET' and self.path == '/health':
                     self.send_json(200, {'service': 'u1-companion-ai', 'version': 1})
                     return
+                if method == 'POST' and self.path == '/u1-alexa/skill':
+                    length=int(self.headers.get('Content-Length','-1'))
+                    if not 0<length<=65536 or self.headers.get_content_type()!='application/json':raise PermissionError('Invalid voice request')
+                    from u1_voice_control import Voice
+                    from .gateway import Moonraker
+                    value=Voice(Moonraker()).receive(self.rfile.read(length),self.headers.get('X-U1-Voice-Signature',''))
+                    self.send_json(200,value)
+                    return
                 helper = method == 'POST' and self.path in (PREFIX+'helper/start', PREFIX+'helper/finish')
                 if helper:
                     if not self.headers.get('X-U1-Origin', '').startswith('https://'): raise PermissionError('Нужен доверенный HTTPS.')

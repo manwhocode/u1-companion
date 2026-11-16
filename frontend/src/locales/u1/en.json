@@ -1632,5 +1632,16 @@
   "s9f6e777314c0e4c5": "Download installer",
   "s3ac5a5671b397025": "Check for updates",
   "s1324064e67da1075": "The latest version is installed",
-  "sebf1c6aa77b9b331": "Could not check for updates. Try again later."
+  "sebf1c6aa77b9b331": "Could not check for updates. Try again later.",
+  "s2494d577eeb0b424": "Alexa voice control",
+  "s43eaec136535b9e9": "Personal Amazon skill and external HTTPS link.",
+  "s865c154b2c0eae41": "Set up connection",
+  "s4b83dd9161c28025": "Download skill settings",
+  "sc47d943a21b53fd7": "Secret key. Do not publish this file.",
+  "se96735ae258a6afd": "Enable voice control",
+  "sced50b3594566cd8": "Get pairing code",
+  "sc03724bcd4255165": "Alexa account linked",
+  "sa21bf915bcfb602e": "Download Alexa skill",
+  "sb6dc320f8c167278": "Instructions",
+  "sa222c8b6d129cb21": "Start and movement commands require confirmation."
 }

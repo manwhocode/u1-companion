@@ -1,0 +1,186 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "druck helfer",
+      "intents": [
+        {
+          "name": "StatusIntent",
+          "samples": [
+            "Druckerstatus",
+            "wie ist der Druckerstatus",
+            "was macht der Drucker",
+            "wie weit ist der Druck",
+            "wie viel Prozent sind fertig"
+          ]
+        },
+        {
+          "name": "RemainingTimeIntent",
+          "samples": [
+            "wie lange dauert der Druck noch",
+            "wie lange noch",
+            "verbleibende Zeit",
+            "wann ist der Druck fertig"
+          ]
+        },
+        {
+          "name": "PausePrintIntent",
+          "samples": [
+            "pausiere den Druck",
+            "Druck pausieren",
+            "halte den Druck an",
+            "mach eine Druckpause"
+          ]
+        },
+        {
+          "name": "ResumePrintIntent",
+          "samples": [
+            "setze den Druck fort",
+            "Druck fortsetzen",
+            "drucke weiter",
+            "setze die pausierte Druckaufgabe fort"
+          ]
+        },
+        {
+          "name": "CancelPrintIntent",
+          "samples": [
+            "brich den Druck ab",
+            "Druck abbrechen",
+            "stoppe den aktuellen Druck",
+            "beende den aktuellen Druck"
+          ]
+        },
+        {
+          "name": "RepeatPrintIntent",
+          "samples": [
+            "wiederhole den letzten Druck",
+            "letzten Druck wiederholen",
+            "drucke das letzte Modell noch einmal",
+            "starte den letzten Druck erneut"
+          ]
+        },
+        {
+          "name": "PauseLowerIntent",
+          "samples": [
+            "pausiere und senke das Bett ab",
+            "Pause mit abgesenktem Bett",
+            "pausiere für Magnete",
+            "mache eine Magnetpause",
+            "senke das Bett für Magnete ab"
+          ]
+        },
+        {
+          "name": "NightModeOnIntent",
+          "samples": [
+            "Nachtmodus einschalten",
+            "schalte den Nachtmodus ein",
+            "schalte die Lüfter der Abdeckung aus",
+            "mache die Lüfter der Abdeckung leise"
+          ]
+        },
+        {
+          "name": "NightModeOffIntent",
+          "samples": [
+            "Nachtmodus ausschalten",
+            "schalte den Nachtmodus aus",
+            "schalte die Lüfter der Abdeckung wieder ein",
+            "aktiviere die normale Lüftersteuerung"
+          ]
+        },
+        {
+          "name": "TimedPauseIntent",
+          "samples": [
+            "pausiere für {minutes} Minuten",
+            "pausiere den Druck für {minutes} Minuten",
+            "setze den Druck nach {minutes} Minuten fort"
+          ],
+          "slots": [
+            {
+              "name": "minutes",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "CancelTimedPauseIntent",
+          "samples": [
+            "automatisches Fortsetzen abbrechen",
+            "lösche den Pausentimer",
+            "schalte den Pausentimer aus",
+            "brich den Timer zum Fortsetzen ab"
+          ]
+        },
+        {
+          "name": "FavoritePrintIntent",
+          "samples": [
+            "drucke den Favoriten {model}",
+            "starte den Favoriten {model}",
+            "drucke das gespeicherte Modell {model}"
+          ],
+          "slots": [
+            {
+              "name": "model",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "ErrorStatusIntent",
+          "samples": [
+            "warum hat der Drucker angehalten",
+            "warum ist der Druck gestoppt",
+            "welcher Fehler liegt vor",
+            "hat der Drucker einen Fehler"
+          ]
+        },
+        {
+          "name": "MaintenanceIntent",
+          "samples": [
+            "wann ist die Wartung fällig",
+            "braucht der Drucker eine Wartung",
+            "ist eine Bettkalibrierung fällig",
+            "prüfe die Wartung"
+          ]
+        },
+        {
+          "name": "LinkPrinterIntent",
+          "samples": [
+            "verbinde den Drucker mit Code {code}",
+            "Drucker verbinden mit {code}",
+            "mein Verbindungscode ist {code}"
+          ],
+          "slots": [
+            {
+              "name": "code",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  }
+}

@@ -99,3 +99,5 @@ Enjoying U1 Companion? Buy me a coffee! Your support helps me keep improving the
 Follow my projects and models: [Instagram](https://www.instagram.com/3dlabstorex/) · [MakerWorld](https://makerworld.com/ru/@user_110109506) · [Snapmaker Space](https://space.snapmaker.com/en/creator/75133?tab=models).
 
 **macOS installer:** [U1-Companion-macOS.zip](https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.10/U1-Companion-macOS.zip). Extract the ZIP and open U1-Companion.command in Terminal. Uses built-in SSH; supports install, update and uninstall. macOS execution has not yet been verified on a Mac.
+
+[Personal Alexa voice skill setup](alexa-skill/README.md): control, status and timing commands with German/English sample phrases. Requires pairing and your own Alexa-hosted skill; physical Echo testing is pending.

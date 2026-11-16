@@ -1,6 +1,7 @@
 <template>
 <section class="alexa-settings">
-  <h3>{{ $u1t("Уведомления Alexa") }}</h3>
+  <u1-voice-control />
+  <h3 class="mt-4">{{ $u1t("Уведомления Alexa") }}</h3>
   <p>{{ $u1t("Подключите свой Amazon, выберите устройства и проверьте звук. Home Assistant не требуется.") }}</p>
   <v-alert v-if="busy" dense type="info" role="status">{{ progress }} {{ $u1t("Запрос отправляется один раз; остальные разделы доступны.") }}</v-alert>
   <v-alert v-if="error" dense type="error">{{ error }}</v-alert>
@@ -56,12 +57,13 @@
 import { u1t } from '@/plugins/i18n'
 
 import Vue from 'vue'
+import U1VoiceControl from '@/components/U1VoiceControl.vue'
 import { Component } from 'vue-property-decorator'
 import { u1DataRequest } from '@/utils/u1DataClient'
 interface Device { id: string; name: string; family: string; online: boolean; confirmed: boolean }
 interface Config { language?: string; phraseLanguages?: Record<string, Record<string,string>>; region: string; method: string; enabled: boolean; targets: string[]; phrases: Record<string, string> }
 interface State { speechLocales?: {value:string;text:string}[]; speechCatalogs?: Record<string,Record<string,string>>; phase: string; message: string; devices: Device[]; loginUrl: string | null; externalLoginUrl?: string | null; config?: Config; test?: {id: string; phase: string}; operation?: {id: string; ok: boolean; error?: string}; lastEvent?: {kind: string; phase: string} }
-@Component
+@Component({ components: { U1VoiceControl } })
 export default class U1Alexa extends Vue {
   state: State | null = null
   progress = ''

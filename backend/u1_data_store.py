@@ -601,6 +601,9 @@ class DataStore:
     def handle(self, ident, request):
         operation = request.get('operation')
         payload = request.get('payload', {})
+        if operation in ('voice_state','voice_setup','voice_enable','voice_pair'):
+            from u1_voice_control import settings
+            return settings(operation,payload,self.folder/'alexa-voice')
         if operation == 'companion_info':
             from u1_companion_info import info
             return info(force=payload.get('refresh') is True)

@@ -1,9 +1,9 @@
 name: SSH installer checks
 on:
   push:
-    paths: ['installer/**', 'desktop/**', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
+    paths: ['installer/**', 'desktop/**', 'alexa-skill/**', 'backend/u1_voice_control.py', 'backend/u1_ai/server.py', 'remote-access/nginx-template.conf', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
   pull_request:
-    paths: ['installer/**', 'desktop/**', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
+    paths: ['installer/**', 'desktop/**', 'alexa-skill/**', 'backend/u1_voice_control.py', 'backend/u1_ai/server.py', 'remote-access/nginx-template.conf', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
 permissions:
   contents: read
 jobs:

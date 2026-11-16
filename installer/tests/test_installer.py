@@ -117,6 +117,10 @@ class Fixture(unittest.TestCase):
 
 
 class Guards(Fixture):
+    def test_enabled_voice_control_blocks_update_or_removal(self):
+        self.put(m.DATA+'/filament-ui-data/alexa-voice/config.json',b'{"enabled":true}')
+        with self.assertRaisesRegex(ValueError,'Disable Alexa voice'):self.inst.preflight()
+        self.assertFalse(self.commands or self.posts)
     def test_ready_timeout_state_allowed_only_with_independent_idle_guards(self):
         self.status['idle_timeout']['state']='Ready'
         self.inst.preflight()
