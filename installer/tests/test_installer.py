@@ -117,6 +117,22 @@ class Fixture(unittest.TestCase):
 
 
 class Guards(Fixture):
+    def test_pending_status_polls_do_not_block_install_or_uninstall(self):
+        original=self.inst.api
+        pending={str(i):{'operation':operation,'payload':{}} for i,operation in enumerate(m.STATUS_REQUESTS)}
+        self.inst.api=lambda path,post=False: {'value':pending} if path.endswith('namespace=u1_addon_requests') else original(path,post)
+        self.inst.preflight()
+        self.assertFalse(self.posts or self.commands)
+
+    def test_pending_changes_and_unknown_requests_still_block(self):
+        original=self.inst.api
+        for request in [{'operation':'print_player_action','payload':{'action':'start'}},
+                        {'operation':'import','payload':{}},{'operation':'unknown','payload':{}},
+                        {'operation':'print_player_state','payload':{'unexpected':True}},None]:
+            self.inst.api=lambda path,post=False: {'value':{'test':request}} if path.endswith('namespace=u1_addon_requests') else original(path,post)
+            with self.subTest(request=request),self.assertRaisesRegex(ValueError,'pending Companion changes'):self.inst.preflight()
+        self.assertFalse(self.posts or self.commands)
+
     def test_idle_compatible_read_only(self):
         original=self.p(m.PRINTER).read_bytes();self.inst.preflight()
         self.assertEqual(self.posts,[]);self.assertEqual(self.commands,[]);self.assertEqual(original,self.p(m.PRINTER).read_bytes())

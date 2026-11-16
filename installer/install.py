@@ -19,13 +19,15 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.7'
+VERSION = 'v0.1.1-alpha.8'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
 DATA = '/userdata/u1-addons'
 PRINTER = '/oem/printer_data/config/printer.cfg'
 SERVICES = ['S98u1-spool-accounting', 'S97u1-ai', 'S96u1-remote', 'S99u1-alexa-bridge']
+STATUS_REQUESTS = {'print_player_state','maintenance_state','night_state','alexa_state','dryer_state','dryer_profiles',
+                   'magnet_state','recovery_state','timed_pause_state','schedule_state','calibration_run_state','feeder_state'}
 MODULES = {'u1_filament_profiles': ('u1-filament-profiles.cfg', '[u1_filament_profiles]\n'),
            'u1_dryer': ('u1-dryer.cfg', '[u1_dryer]\nchamber_sensor: cavity\n'),
            'u1_magnet_pause': ('u1-magnet-pauses.cfg', '[u1_magnet_pause]\n')}
@@ -288,7 +290,10 @@ class Installer:
         except urllib.error.HTTPError as error:
             if error.code != 404: raise
             pending = {}
-        if pending: raise ValueError('Wait for pending Companion requests to finish')
+        if not isinstance(pending,dict): raise ValueError('Unknown Companion request queue format')
+        if any(not isinstance(request,dict) or request.get('operation') not in STATUS_REQUESTS
+               or request.get('payload',{}) != {} for request in pending.values()):
+            raise ValueError('Wait for pending Companion changes to finish; close Companion tabs before retrying')
         return status
 
     def layout_check(self):
