@@ -4,7 +4,7 @@
 
 Spools, printing and maintenance for Snapmaker U1. Unofficial companion UI built on Snapmaker Fluidd, with local Python services.
 
-**Full SSH installer, early access.** Installation and rollback are tested in an isolated Linux simulation. A clean install on another physical U1 has not yet been verified; unsupported firmware or conflicting custom setups are rejected before installation.
+**Full SSH installer, early access.** Installation, uninstallation and updating have been tested successfully by the author on a physical U1. Most features have also been tested and work. Automated Linux tests cover installation and rollback; unsupported firmware or conflicting custom setups are rejected before installation.
 
 [Русский](README.ru.md) · [Installation guide](INSTALL.md) · [Установка по-русски](INSTALL.ru.md)
 

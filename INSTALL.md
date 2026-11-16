@@ -1,6 +1,6 @@
 # Full SSH installation
 
-The installer runs on **Snapmaker U1**, not on your computer. Windows/macOS only provide the SSH terminal. This is an early-access release: automated isolated Linux tests cover fresh installation and rollback; a clean installation on a second physical U1 is still pending.
+The installer runs on **Snapmaker U1**, not on your computer. Windows/macOS only provide the SSH terminal. Installation, uninstallation and updating have been successfully tested by the author on a physical U1. Most features have also been tested and work. Automated isolated Linux tests cover installation and rollback. This remains an early-access release.
 
 ## Three steps
 

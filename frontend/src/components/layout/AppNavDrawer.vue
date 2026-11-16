@@ -32,6 +32,7 @@
           class="nav-items"
         >
           <app-nav-item icon="$filamentSpool" to="u1_filaments">
+            <template #icon><img src="../../assets/u1-companion.png" width="28" height="28" alt=""></template>
             U1 Companion
           </app-nav-item>
           <app-nav-item

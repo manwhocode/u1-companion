@@ -13,7 +13,7 @@
         v-on="on"
       >
         <v-list-item-icon>
-          <v-icon>{{ icon }}</v-icon>
+          <slot name="icon"><v-icon>{{ icon }}</v-icon></slot>
         </v-list-item-icon>
 
         <v-list-item-content>
