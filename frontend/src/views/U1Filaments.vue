@@ -10,9 +10,10 @@
           </div>
         </div>
         <div class="companion-main-menu"><u1-program-settings class="companion-settings" @gpt="openGpt">
+          <template #installer><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.12/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p></template>
           <template #connection>
 <v-expansion-panels accordion flat class="connection-sections">
-<v-expansion-panel><v-expansion-panel-header>{{ $u1t("Скачать установщик") }}</v-expansion-panel-header><v-expansion-panel-content><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.11/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p></v-expansion-panel-content></v-expansion-panel>
+
 <v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установить сертификат") }}</v-expansion-panel-header><v-expansion-panel-content><p>{{ $u1t("Он позволяет открыть дополнение через доверенный HTTPS. Это нужно для прямого сканирования QR камерой и чтения/записи NFC-меток из браузера на поддерживаемом Android.") }}</p>
         
         <h3>iPhone</h3>
@@ -42,7 +43,7 @@
       <u1-calibration ref="calibrations" hide-launcher @saved="reloadUserData" /><u1-maintenance /><u1-update-notice />
     </v-card>
     <v-dialog v-model="gptOpen" max-width="760" scrollable content-class="u1-dialog u1-unified-dialog"><v-card><u1-dialog-close @close="gptOpen = false" /><v-card-title>GPT</v-card-title><v-card-text><U1AI v-if="gptVisited" /></v-card-text></v-card></v-dialog>
-    <u1-print-player @timer="openPauseTimer">
+    <u1-print-player ref="printPlayer" @timer="openPauseTimer">
       <div class="maintenance-tools"><u1-scheduler /><u1-timed-pause ref="pauseTimer" /><u1-recovery /></div>
     </u1-print-player>
     <v-card outlined class="workspace-panel">
@@ -58,6 +59,7 @@
         <h2>{{ $u1t("Расход и печать") }}</h2>
         <div class="usage-actions-grid">
           <u1-dryer />
+          <u1-favorite-models @choose="openFavoritePrint" />
           <u1-print-errors ref="errors" />
           <v-btn outlined color="primary" @click="openUsageStats">{{ $u1t("Статистика расхода") }}</v-btn>
           <u1-spool-usage ref="usage" :spools="assignedSpools" @totals="usageTotals = $event" />
@@ -203,6 +205,7 @@ import U1Maintenance from '@/components/U1Maintenance.vue'
 import U1Scheduler from '@/components/U1Scheduler.vue'
 import U1TimedPause from '@/components/U1TimedPause.vue'
 import U1PrintPlayer from '@/components/U1PrintPlayer.vue'
+import U1FavoriteModels from '@/components/U1FavoriteModels.vue'
 import U1Recovery from '@/components/U1Recovery.vue'
 import U1Support from '@/components/U1Support.vue'
 import U1PrintErrors from '@/components/U1PrintErrors.vue'
@@ -217,7 +220,7 @@ import { httpClientActions as http } from '@/api/httpClientActions'
 import { assertWritable, commands, materials, validatePreset, type FilamentPreset, type TaskConfig } from '@/utils/u1Filament'
 
 interface Status { print_stats: { state: string }; print_task_config: TaskConfig; extruder?: {pressure_advance?: number}; extruder1?: {pressure_advance?: number}; extruder2?: {pressure_advance?: number}; extruder3?: {pressure_advance?: number} }
-@Component({ components: { U1UpdateNotice, U1Support, U1AI, QrcodeVue, U1FilamentLibrary, U1Nfc, U1SpoolInventory, U1SpoolUsage, U1DataBackup, U1Calibration, U1CalibrationRunner, U1ProgramSettings, U1PrintProfiles, U1PrintErrors, U1Dryer, U1Maintenance, U1Scheduler, U1TimedPause, U1PrintPlayer, U1Recovery } })
+@Component({ components: { U1FavoriteModels, U1UpdateNotice, U1Support, U1AI, QrcodeVue, U1FilamentLibrary, U1Nfc, U1SpoolInventory, U1SpoolUsage, U1DataBackup, U1Calibration, U1CalibrationRunner, U1ProgramSettings, U1PrintProfiles, U1PrintErrors, U1Dryer, U1Maintenance, U1Scheduler, U1TimedPause, U1PrintPlayer, U1Recovery } })
 export default class U1Filaments extends Vue {
   gptOpen = false
   gptVisited = false
@@ -257,6 +260,7 @@ export default class U1Filaments extends Vue {
   spoolInventory: U1SpoolInventory['inventory'] | null = null
   usageTotals: Record<string, number> = {}
   livePressureAdvance: (number | null)[] = [null, null, null, null]
+  openFavoritePrint (filename: string) { void (this.$refs.printPlayer as U1PrintPlayer).chooseFavorite(filename) }
   openPauseTimer () { (this.$refs.pauseTimer as U1TimedPause).open() }
   openUsageStats () { (this.$refs.usage as U1SpoolUsage).openStats() }
   openErrorHistory (kind: 'spool' | 'color', value: {id: string; name: string}) { (this.$refs.errors as U1PrintErrors).openFor(kind, value.id, value.name) }
@@ -637,3 +641,7 @@ export default class U1Filaments extends Vue {
 <style scoped>.main-gpt-button { width:44px !important;height:44px !important;min-width:44px !important;min-height:44px !important;border-radius:6px }</style>
 
 <style scoped>.connection-sections >>> .v-expansion-panel { border-bottom:1px solid #8885 }.connection-sections >>> .v-expansion-panel-header { min-height:44px;font-size:14px;padding:10px 6px }</style>
+
+<style scoped>
+.usage-actions-grid >>> .favorite-launcher { width:100%;min-width:0;height:44px;margin:0;padding:6px 8px;border-radius:4px;letter-spacing:.01em;text-transform:none;font-size:14px;font-weight:500 }.usage-actions-grid >>> .favorite-launcher .v-btn__content { white-space:normal;line-height:1.2 } @media(max-width:600px){.usage-actions-grid >>> .favorite-launcher{font-size:12px}}
+</style>

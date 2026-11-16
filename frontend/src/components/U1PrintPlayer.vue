@@ -2,7 +2,7 @@
 <v-card outlined class="u1-print-player">
   <div class="player-track">
     <div class="player-track-info">
-      <div class="player-heading-row"><span class="player-label">{{ $u1t("Управление печатью") }}</span><u1-favorite-models @choose="chooseFavorite" /></div>
+      <span class="player-label">{{ $u1t("Управление печатью") }}</span>
       <strong class="player-filename" :title="state?.filename">{{ state?.filename || $u1t("Выберите файл на принтере") }}</strong>
       <span class="player-state">{{ stateLabel }}<template v-if="printing || paused"> · {{ elapsed }} · {{ percent }}%</template></span>
     </div>
@@ -69,13 +69,12 @@ import { u1t } from '@/plugins/i18n'
 import Vue from 'vue'
 import U1MagnetPause from '@/components/U1MagnetPause.vue'
 import U1CoverFans from '@/components/U1CoverFans.vue'
-import U1FavoriteModels from '@/components/U1FavoriteModels.vue'
 import { Component } from 'vue-property-decorator'
 import { u1DataRequest } from '@/utils/u1DataClient'
 import { httpClientActions as http } from '@/api/httpClientActions'
 interface State { ready: boolean; state: string; filename: string; progress: number; duration: number; currentJob: string | null; reason: string; canStart: boolean; canPause: boolean; canResume: boolean; canCancel: boolean; canAcknowledgeBed?: boolean }
 interface Plan { token: string; filename: string; rows: { logical: number; head: number; name: string; material: string; hex: string; required: number; remaining: number }[] }
-@Component({ components: { U1FavoriteModels, U1MagnetPause, U1CoverFans } })
+@Component({ components: { U1MagnetPause, U1CoverFans } })
 export default class U1PrintPlayer extends Vue {
   state: State | null = null
   action = ''
@@ -141,7 +140,6 @@ export default class U1PrintPlayer extends Vue {
 .u1-print-player { padding:14px 16px; margin-bottom:12px; border-radius:16px; background:linear-gradient(110deg,rgba(127,127,127,.09),transparent) }
 .player-track { display:flex; align-items:center; justify-content:space-between; gap:16px }
 .player-track-info { display:flex; flex-direction:column; gap:3px; min-width:0;flex:1 }
-.player-heading-row { display:flex;align-items:center;gap:12px;justify-content:space-between;min-width:0 }.player-heading-row .player-label { flex:1 }.player-heading-row >>> .v-btn { height:28px;min-height:28px;padding:0 8px;font-size:12px;letter-spacing:0;text-transform:none;white-space:nowrap } @media(max-width:400px) { .player-heading-row { gap:4px }.player-heading-row >>> .v-btn {font-size:11px;padding:0 4px} }
 .player-label { font-size:11px; letter-spacing:.08em; text-transform:uppercase; opacity:.65 }
 .player-filename { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:15px }
 .player-state, .player-notice { font-size:12px; opacity:.8 }
