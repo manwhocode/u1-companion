@@ -19,7 +19,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.5'
+VERSION = 'v0.1.1-alpha.6'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
@@ -31,6 +31,15 @@ MODULES = {'u1_filament_profiles': ('u1-filament-profiles.cfg', '[u1_filament_pr
            'u1_magnet_pause': ('u1-magnet-pauses.cfg', '[u1_magnet_pause]\n')}
 NATIVE = {'/home/lava/printer_data/config/fluidd.cfg': 'ede05f50709c808e0775498f62e9c44a758f33c1f4684f51fb3cf0d87cb2b46e',
           '/home/lava/klipper/klippy/extras/virtual_sdcard.py': '38e769f078ee637c3393008e8d0dbb87dc4261ea1f1cd6ae9061fdb23673dc1e'}
+
+
+def confirm(prompt):
+    while True:
+        try: answer=input(prompt).strip().casefold()
+        except EOFError: raise ValueError('Confirmation input closed; operation cancelled without changes') from None
+        if answer in ('y','yes','да','д','у'): return
+        if answer in ('','n','no','нет','н'): raise ValueError('Operation cancelled; no changes were made')
+        print('Confirmation not understood. Enter y / yes / да to continue, or n / no / нет to cancel.')
 
 
 def no_links(path):
@@ -542,7 +551,7 @@ def main():
         if any(row['path'] not in (PRINTER,'/oem/.debug','/etc/nginx/sites-available/fluidd') and not any(row['path'].startswith(a) for a in allowed) for row in tx.rows): raise ValueError('Invalid rollback journal')
         if journal.get('version')!=1 or any(row['old'] is not None and not re.fullmatch('[0-9]+',row['old']) for row in tx.rows): raise ValueError('Invalid backup file reference')
         tx.validate_rollback()
-        if not args.yes and input('Restore this installation backup and restart idle Klipper? [y/N] ').lower()!='y': return
+        if not args.yes: confirm('Restore this installation backup and restart idle Klipper? [y/N] ')
         previous=json.loads((backup/'services.json').read_text())
         if not isinstance(previous,list) or any(name not in SERVICES for name in previous): raise ValueError('Invalid service backup')
         for name in SERVICES:
@@ -562,7 +571,7 @@ def main():
     if needs_persistence: print('Persistence: /oem/.debug will be enabled so Companion survives reboot. Other system changes will also persist.')
     if needs_persistence and args.yes and not args.enable_persistence: raise ValueError('Unattended installation requires --enable-persistence')
     print('Will back up owned files, add owned config includes, install local HTTPS, and restart idle Klipper. No print/heating/motion commands.')
-    if not args.yes and input('Install U1 Companion? [y/N] ').lower()!='y': return
+    if not args.yes: confirm('Install U1 Companion? [y/N] ')
     if needs_persistence: args.enable_persistence=True
     minimum=1500*1024*1024
     if shutil.disk_usage('/userdata').free<minimum: raise ValueError('At least 1.5 GiB free /userdata space is needed for installation and backup; no existing files were deleted')

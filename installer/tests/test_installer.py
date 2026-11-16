@@ -34,6 +34,19 @@ def symlinks_available():
 LINKS=symlinks_available()
 
 
+class Confirmation(unittest.TestCase):
+    def test_accepts_trimmed_and_russian_confirmation(self):
+        for answer in ['y',' Y ','yes','да','у']:
+            with self.subTest(answer=answer),patch('builtins.input',return_value=answer):m.confirm('Continue? ')
+
+    def test_reprompts_unknown_input_and_reports_cancellation(self):
+        with patch('builtins.input',side_effect=['unknown','yes']),patch('builtins.print') as output:
+            m.confirm('Continue? ');self.assertTrue(output.called)
+        for answer in ['','no','нет']:
+            with patch('builtins.input',return_value=answer),self.assertRaisesRegex(ValueError,'cancelled'):m.confirm('Continue? ')
+        with patch('builtins.input',side_effect=EOFError),self.assertRaisesRegex(ValueError,'closed'):m.confirm('Continue? ')
+
+
 class Fixture(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)

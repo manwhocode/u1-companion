@@ -1,7 +1,7 @@
 """Remove only inventoried Companion files; preserve all personal state."""
 from pathlib import Path
 import json,re,secrets,shutil,time
-from install import CORE,UI,DATA,PRINTER,MODULES,SERVICES,Transaction,sha,no_links
+from install import CORE,UI,DATA,PRINTER,MODULES,SERVICES,Transaction,sha,no_links,confirm
 
 
 def allowed(name):
@@ -61,7 +61,7 @@ def uninstall(inst,yes=False):
         files.append(name)
     print('Will stop Companion services, back up/remove owned program files, restore native Fluidd routes and restart idle Klipper.')
     print('Personal libraries, logs, credentials, certificates and /oem/.debug persistence are retained. No print, heat or movement commands.')
-    if not yes and input('Uninstall U1 Companion? [y/N] ').lower()!='y':return
+    if not yes:confirm('Uninstall U1 Companion? [y/N] ')
     size=sum(inst.p(n).stat().st_size for n in files if inst.p(n).is_file() and not inst.p(n).is_symlink())
     if shutil.disk_usage(inst.p('/userdata')).free<size+100*1024*1024:raise ValueError('Not enough space for removal backup')
     backup=inst.p('/userdata/u1-addons-backups/uninstall-'+time.strftime('%Y%m%d-%H%M%S')+'-'+secrets.token_hex(3))
