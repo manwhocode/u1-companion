@@ -7,12 +7,14 @@ p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);a
 work=a.output/'work';work.mkdir(exist_ok=True)
 notices=work/'THIRD-PARTY-NOTICES.txt'
 parts=['U1 Companion Windows launcher: GPL-3.0. Source: https://github.com/manwhocode/u1-companion\n']
+python_license=Path(sys.base_prefix)/'LICENSE.txt'
+if python_license.is_file():parts.append('\n=== Python runtime license ===\n'+python_license.read_text(encoding='utf-8'))
 for package in ['paramiko','cryptography','bcrypt','PyNaCl','cffi','pycparser','packaging','pyinstaller']:
     try:dist=importlib.metadata.distribution(package)
     except importlib.metadata.PackageNotFoundError:continue
     parts.append('\n\n=== '+package+' '+dist.version+' ===\n')
     for file in dist.files or []:
-        if any(word in str(file).upper() for word in ['LICENSE','COPYING','NOTICE']) and str(file).endswith(('.txt','.md','LICENSE','COPYING','NOTICE')):
+        if any(word in str(file).upper() for word in ['LICENSE','COPYING','NOTICE']):
             path=dist.locate_file(file)
             if path.is_file():parts.append(path.read_text(encoding='utf-8',errors='replace'))
 notices.write_text('\n'.join(parts),encoding='utf-8')

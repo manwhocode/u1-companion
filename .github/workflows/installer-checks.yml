@@ -1,9 +1,9 @@
 name: SSH installer checks
 on:
   push:
-    paths: ['installer/**', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
+    paths: ['installer/**', 'desktop/**', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
   pull_request:
-    paths: ['installer/**', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
+    paths: ['installer/**', 'desktop/**', 'install.sh', 'services/**', '.github/workflows/installer-checks.yml']
 permissions:
   contents: read
 jobs:
