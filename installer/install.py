@@ -19,7 +19,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.6'
+VERSION = 'v0.1.1-alpha.7'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
@@ -324,11 +324,17 @@ class Installer:
         if len(raw) > 32*1024*1024: raise ValueError('Data snapshot exceeds size limit; export your data first')
         path = backup/'user-data.json'; path.write_bytes(raw); path.chmod(0o600)
 
+    def ui_health(self):
+        expected=self.p(UI+'/index.html').read_bytes()
+        if not expected or len(expected)>256*1024: raise ValueError('Unexpected UI entry file size')
+        with urllib.request.urlopen('http://127.0.0.1/u1-filaments-ui/',timeout=2) as response:
+            served=response.read(len(expected)+1)
+        if served!=expected: raise ValueError('UI health check failed: served entry differs from installed index.html')
+
     def health(self, since):
         with urllib.request.urlopen('http://127.0.0.1:4547/health',timeout=2) as response:
             if json.load(response).get('service') != 'u1-companion-ai': raise ValueError('AI health check failed')
-        with urllib.request.urlopen('http://127.0.0.1/u1-filaments-ui/',timeout=2) as response:
-            if b'U1' not in response.read(65536): raise ValueError('UI health check failed')
+        self.ui_health()
         c = self.api('/server/database/item?namespace=fluidd&key=u1_data_storage_v1')['value']
         usage = self.api('/server/database/item?namespace=fluidd&key=u1_spool_usage_v1')['value']
         if c.get('state') != 'ready' or c.get('updatedAt',0) < since or usage.get('checkedAt',0) < since:

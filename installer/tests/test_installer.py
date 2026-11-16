@@ -155,6 +155,18 @@ class Guards(Fixture):
 
 
 class Transactions(Fixture):
+    def test_ui_health_accepts_compiled_entry_without_brand_text(self):
+        compiled=b'<!doctype html><title>fluidd</title><div id="app"></div><script src="/assets/app.js"></script>'
+        self.put(m.UI+'/index.html',compiled)
+        with patch.object(m.urllib.request,'urlopen',return_value=io.BytesIO(compiled)):
+            self.inst.ui_health()
+
+    def test_ui_health_rejects_redirect_shim_and_unrelated_branded_page(self):
+        self.put(m.UI+'/index.html',b'<html><div id="app"></div></html>')
+        for served in [b'<meta http-equiv="refresh" content="0;url=/index.html">',b'<html>U1 unavailable</html>']:
+            with patch.object(m.urllib.request,'urlopen',return_value=io.BytesIO(served)),self.assertRaisesRegex(ValueError,'served entry differs'):
+                self.inst.ui_health()
+
     @unittest.skipUnless(os.name=='posix','Unix directory permissions')
     def test_public_program_directories_are_accessible_under_private_umask(self):
         tx=self.tx();previous=os.umask(0o077)
