@@ -2,17 +2,19 @@
   <div class="filament-page">
     <v-card outlined class="u1-maintenance-panel">
       <div class="hero-heading">
-        <div>
+        <div class="companion-brand">
+          <img class="companion-logo" src="../assets/u1-companion.png" alt="" width="64" height="64">
+          <div>
           <h1>U1 Companion</h1>
           <p>{{ $u1t("Катушки, печать и обслуживание вашего U1.") }}</p>
+          </div>
         </div>
         <div class="companion-main-menu"><u1-program-settings class="companion-settings" @gpt="openGpt">
           <template #connection>
 <v-expansion-panels accordion flat class="connection-sections">
+<v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установщик Windows") }}</v-expansion-panel-header><v-expansion-panel-content><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><a href="https://github.com/manwhocode/u1-companion/blob/main/desktop/README.md" target="_blank" rel="noopener noreferrer">GitHub · U1 Companion</a></p></v-expansion-panel-content></v-expansion-panel>
 <v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установить сертификат") }}</v-expansion-panel-header><v-expansion-panel-content><p>{{ $u1t("Он позволяет открыть дополнение через доверенный HTTPS. Это нужно для прямого сканирования QR камерой и чтения/записи NFC-меток из браузера на поддерживаемом Android.") }}</p>
         
-        <p><a href="/u1-filaments-ui/U1-Filament-Addon.tar.gz">{{ $u1t("Скачать дополнение для установки на U1") }}</a></p>
-        <p>{{ $u1t("Повторная установка на принтер: распакуйте архив и запустите install-addon.py через SSH с правами root. Установщик сам создаст бэкап. Браузер не выполняет системную установку.") }}</p>
         <h3>iPhone</h3>
         <p><a :href="certificateUrl">{{ $u1t("Скачать профиль iPhone") }}</a></p>
         <p class="mt-2">{{ $u1t("Откройте Настройки → Основные → VPN и управление устройством → загруженный профиль → Установить. Затем в разделе Основные → Об этом устройстве → Доверие сертификатам включите доверие «U1 Local Camera CA».") }}</p>
@@ -515,6 +517,7 @@ export default class U1Filaments extends Vue {
 .main-gpt-button { width:40px;height:40px;min-height:40px;border-radius:6px }
 .companion-gpt-panel { padding:14px;margin-bottom:16px;min-width:0 }
 .gpt-collapse { display:flex;justify-content:flex-end;margin-bottom:10px }
+.companion-brand { display:flex;align-items:center;gap:12px;min-width:0 }.companion-logo { flex:0 0 auto;object-fit:contain;width:64px;height:64px } @media(max-width:600px) { .companion-logo { width:48px;height:48px }.companion-brand { gap:8px } }
 .hero-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; min-width:0; margin-bottom:12px }
 .hero-heading h1 { font-size:clamp(1.5rem,4vw,2rem); line-height:1.15; margin:0 0 4px }
 .hero-heading p { margin:0; font-size:.9rem }

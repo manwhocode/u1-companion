@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/u1-companion.png" width="144" height="144" alt="U1 Companion" /></p>
+
 # U1 Companion
 
 Spools, printing and maintenance for Snapmaker U1. Unofficial companion UI built on Snapmaker Fluidd, with local Python services.

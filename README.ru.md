@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/u1-companion.png" width="144" height="144" alt="U1 Companion" /></p>
+
 # U1 Companion
 
 Катушки, печать и обслуживание Snapmaker U1. Неофициальное дополнение на основе Snapmaker Fluidd.
