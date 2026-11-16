@@ -1,12 +1,12 @@
 # Universal Windows launcher
 
-[Download U1-Companion-Setup.exe](https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.0/U1-Companion-Setup.exe)
+[Download U1-Companion-Setup.exe](https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe)
 
 Portable Windows x64 application. Python and SSH dependencies are bundled; Windows administrator access is not required. This EXE does not install an application on the PC: it operates on your U1 over SSH.
 
 1. Enable root SSH on the printer, keep it idle and heaters off.
 2. Open the EXE, read the license/warnings and check the acknowledgement box.
-3. Enter your printer IP and root SSH password, then select **Install**, **Update** or **Uninstall**.
+3. Enter your printer IP. The factory root password is used automatically. If you changed it, check **I changed the SSH password** and enter your own password. Select **Install**, **Update** or **Uninstall**.
 4. On first connection, verify the displayed SSH fingerprint. Review and confirm the operation plan in the console. Keep the window/power open until completion.
 
 The module version is **not embedded**. Every operation fetches the current official `main/install.sh` over verified HTTPS; that script selects and verifies the current module release. The same EXE can be used for future compatible module releases. Credentials are not included or saved. Only the printer's public SSH key is saved locally; changed keys are rejected.

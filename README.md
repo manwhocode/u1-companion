@@ -8,7 +8,7 @@ Spools, printing and maintenance for Snapmaker U1. Unofficial companion UI built
 
 ## Install
 
-**Windows:** [Download the universal EXE](https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.0/U1-Companion-Setup.exe). Enter your printer IP/password and choose Install, Update or Uninstall. It includes a license/risk acknowledgement checkbox and always fetches the current module installer. [Details and limitations](desktop/README.md).
+**Windows:** [Download the universal EXE](https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe). Enable Root Access / SSH in the printer settings, enter its IP and choose Install, Update or Uninstall. The factory password is used automatically; check “I changed the SSH password” only if you need to enter your own. It includes a license/risk acknowledgement checkbox and always fetches the current module installer. [Details and limitations](desktop/README.md).
 
 **Command line:** the SSH method below remains available on Windows/macOS/Linux.
 

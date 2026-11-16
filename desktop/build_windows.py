@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse,hashlib,importlib.metadata,json,subprocess,sys
 
 repo=Path(__file__).resolve().parent.parent
-p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);a=p.parse_args();a.output=a.output.resolve();a.output.mkdir(parents=True,exist_ok=True)
 work=a.output/'work';work.mkdir(exist_ok=True)
 notices=work/'THIRD-PARTY-NOTICES.txt'
 parts=['U1 Companion Windows launcher: GPL-3.0. Source: https://github.com/manwhocode/u1-companion\n']
@@ -20,6 +20,7 @@ for package in ['paramiko','cryptography','bcrypt','PyNaCl','cffi','pycparser','
 notices.write_text('\n'.join(parts),encoding='utf-8')
 command=[sys.executable,'-m','PyInstaller','--noconfirm','--onefile','--console','--noupx','--name','U1-Companion-Setup',
          '--distpath',str(a.output),'--workpath',str(work/'pyinstaller'),'--specpath',str(work),
+         '--icon',str(repo/'desktop/assets/u1-companion.ico'),'--add-data',str(repo/'desktop/assets')+':desktop/assets',
          '--add-data',str(repo/'LICENSE')+':.','--add-data',str(repo/'desktop/AGREEMENT.ru.txt')+':desktop',
          '--add-data',str(repo/'desktop/AGREEMENT.en.txt')+':desktop','--add-data',str(notices)+':.',str(repo/'desktop/launcher.py')]
 compat=Path(sys.base_prefix)/'abi3t-compat/python3t.dll'
