@@ -1,0 +1,184 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "printer helper",
+      "intents": [
+        {
+          "name": "StatusIntent",
+          "samples": [
+            "printer status",
+            "what is the printer doing",
+            "how far is the print",
+            "what percent is complete"
+          ]
+        },
+        {
+          "name": "RemainingTimeIntent",
+          "samples": [
+            "how long is left",
+            "time remaining",
+            "when will the print finish",
+            "how much time remains"
+          ]
+        },
+        {
+          "name": "PausePrintIntent",
+          "samples": [
+            "pause the print",
+            "pause printing",
+            "put the print on pause",
+            "pause my printer"
+          ]
+        },
+        {
+          "name": "ResumePrintIntent",
+          "samples": [
+            "resume the print",
+            "continue printing",
+            "continue the paused print",
+            "resume my printer"
+          ]
+        },
+        {
+          "name": "CancelPrintIntent",
+          "samples": [
+            "cancel the print",
+            "stop the current print",
+            "abort the print",
+            "cancel printing"
+          ]
+        },
+        {
+          "name": "RepeatPrintIntent",
+          "samples": [
+            "repeat the last print",
+            "print the last model again",
+            "start the previous print again",
+            "reprint my last job"
+          ]
+        },
+        {
+          "name": "PauseLowerIntent",
+          "samples": [
+            "pause and lower the bed",
+            "pause for magnets",
+            "lower the bed for magnets",
+            "make a magnet pause"
+          ]
+        },
+        {
+          "name": "NightModeOnIntent",
+          "samples": [
+            "enable night mode",
+            "turn night mode on",
+            "turn off the cover fans",
+            "make the cover fans quiet"
+          ]
+        },
+        {
+          "name": "NightModeOffIntent",
+          "samples": [
+            "disable night mode",
+            "turn night mode off",
+            "turn the cover fans back on",
+            "restore normal cover fan control"
+          ]
+        },
+        {
+          "name": "TimedPauseIntent",
+          "samples": [
+            "pause for {minutes} minutes",
+            "pause the print for {minutes} minutes",
+            "resume the print in {minutes} minutes"
+          ],
+          "slots": [
+            {
+              "name": "minutes",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "CancelTimedPauseIntent",
+          "samples": [
+            "cancel automatic resume",
+            "cancel the pause timer",
+            "turn off the pause timer",
+            "remove the resume timer"
+          ]
+        },
+        {
+          "name": "FavoritePrintIntent",
+          "samples": [
+            "print favorite {model}",
+            "start favorite {model}",
+            "print saved model {model}"
+          ],
+          "slots": [
+            {
+              "name": "model",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "ErrorStatusIntent",
+          "samples": [
+            "why did the printer stop",
+            "why is printing stopped",
+            "what error does the printer have",
+            "does the printer have an error"
+          ]
+        },
+        {
+          "name": "MaintenanceIntent",
+          "samples": [
+            "when is maintenance due",
+            "does the printer need maintenance",
+            "is bed calibration due",
+            "check maintenance"
+          ]
+        },
+        {
+          "name": "LinkPrinterIntent",
+          "samples": [
+            "link the printer with code {code}",
+            "link printer with {code}",
+            "my pairing code is {code}"
+          ],
+          "slots": [
+            {
+              "name": "code",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "مساعد الطابعة",
+      "intents": [
+        {
+          "name": "StatusIntent",
+          "samples": [
+            "ما حالة الطابعة",
+            "ما نسبة تقدم الطباعة"
+          ]
+        },
+        {
+          "name": "RemainingTimeIntent",
+          "samples": [
+            "كم بقي من الوقت",
+            "متى تنتهي الطباعة"
+          ]
+        },
+        {
+          "name": "PausePrintIntent",
+          "samples": [
+            "أوقف الطباعة مؤقتا",
+            "ضع الطباعة في حالة إيقاف مؤقت"
+          ]
+        },
+        {
+          "name": "ResumePrintIntent",
+          "samples": [
+            "استأنف الطباعة",
+            "تابع الطباعة"
+          ]
+        },
+        {
+          "name": "CancelPrintIntent",
+          "samples": [
+            "ألغ الطباعة",
+            "أوقف الطباعة الحالية نهائيا"
+          ]
+        },
+        {
+          "name": "RepeatPrintIntent",
+          "samples": [
+            "كرر آخر طباعة",
+            "اطبع آخر نموذج مرة أخرى"
+          ]
+        },
+        {
+          "name": "PauseLowerIntent",
+          "samples": [
+            "أوقف الطباعة مؤقتا وأنزل المنصة",
+            "توقف مؤقتا لتركيب المغناطيس"
+          ]
+        },
+        {
+          "name": "NightModeOnIntent",
+          "samples": [
+            "فعل الوضع الليلي",
+            "أطفئ مراوح الغطاء"
+          ]
+        },
+        {
+          "name": "NightModeOffIntent",
+          "samples": [
+            "ألغ الوضع الليلي",
+            "أعد التحكم العادي في مراوح الغطاء"
+          ]
+        },
+        {
+          "name": "TimedPauseIntent",
+          "samples": [
+            "أوقف الطباعة مؤقتا لمدة {minutes} دقيقة",
+            "استأنف الطباعة بعد {minutes} دقيقة"
+          ],
+          "slots": [
+            {
+              "name": "minutes",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "CancelTimedPauseIntent",
+          "samples": [
+            "ألغ الاستئناف التلقائي",
+            "ألغ مؤقت الإيقاف"
+          ]
+        },
+        {
+          "name": "FavoritePrintIntent",
+          "samples": [
+            "اطبع النموذج المفضل {model}",
+            "اطبع النموذج المحفوظ {model}"
+          ],
+          "slots": [
+            {
+              "name": "model",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "ErrorStatusIntent",
+          "samples": [
+            "لماذا توقفت الطابعة",
+            "ما خطأ الطابعة"
+          ]
+        },
+        {
+          "name": "MaintenanceIntent",
+          "samples": [
+            "متى يحين موعد الصيانة",
+            "هل تحتاج المنصة إلى معايرة"
+          ]
+        },
+        {
+          "name": "LinkPrinterIntent",
+          "samples": [
+            "اربط الطابعة بالرمز {code}",
+            "رمز الاقتران هو {code}"
+          ],
+          "slots": [
+            {
+              "name": "code",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  }
+}

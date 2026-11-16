@@ -1,0 +1,157 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "assistente impressora",
+      "intents": [
+        {
+          "name": "StatusIntent",
+          "samples": [
+            "estado da impressora",
+            "como está a impressão"
+          ]
+        },
+        {
+          "name": "RemainingTimeIntent",
+          "samples": [
+            "quanto tempo falta",
+            "quando a impressão termina"
+          ]
+        },
+        {
+          "name": "PausePrintIntent",
+          "samples": [
+            "pause a impressão",
+            "coloque a impressão em pausa"
+          ]
+        },
+        {
+          "name": "ResumePrintIntent",
+          "samples": [
+            "retome a impressão",
+            "continue a impressão"
+          ]
+        },
+        {
+          "name": "CancelPrintIntent",
+          "samples": [
+            "cancele a impressão",
+            "pare a impressão atual"
+          ]
+        },
+        {
+          "name": "RepeatPrintIntent",
+          "samples": [
+            "repita a última impressão",
+            "imprima novamente o último modelo"
+          ]
+        },
+        {
+          "name": "PauseLowerIntent",
+          "samples": [
+            "pause e abaixe a mesa",
+            "faça uma pausa para os ímãs"
+          ]
+        },
+        {
+          "name": "NightModeOnIntent",
+          "samples": [
+            "ative o modo noturno",
+            "desligue os ventiladores da tampa"
+          ]
+        },
+        {
+          "name": "NightModeOffIntent",
+          "samples": [
+            "desative o modo noturno",
+            "restaure o controle normal dos ventiladores"
+          ]
+        },
+        {
+          "name": "TimedPauseIntent",
+          "samples": [
+            "pause por {minutes} minutos",
+            "retome em {minutes} minutos"
+          ],
+          "slots": [
+            {
+              "name": "minutes",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "CancelTimedPauseIntent",
+          "samples": [
+            "cancele a retomada automática",
+            "cancele o temporizador de pausa"
+          ]
+        },
+        {
+          "name": "FavoritePrintIntent",
+          "samples": [
+            "imprima o favorito {model}",
+            "imprima o modelo salvo {model}"
+          ],
+          "slots": [
+            {
+              "name": "model",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "ErrorStatusIntent",
+          "samples": [
+            "por que a impressora parou",
+            "qual é o erro da impressora"
+          ]
+        },
+        {
+          "name": "MaintenanceIntent",
+          "samples": [
+            "quando é necessária a manutenção",
+            "é preciso calibrar a mesa"
+          ]
+        },
+        {
+          "name": "LinkPrinterIntent",
+          "samples": [
+            "vincule a impressora com o código {code}",
+            "meu código de vinculação é {code}"
+          ],
+          "slots": [
+            {
+              "name": "code",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  }
+}

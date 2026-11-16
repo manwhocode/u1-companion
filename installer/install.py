@@ -19,7 +19,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.14'
+VERSION = 'v0.1.1-alpha.15'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
@@ -293,8 +293,12 @@ class Installer:
             if error.code != 404: raise
             pending = {}
         if not isinstance(pending,dict): raise ValueError('Unknown Companion request queue format')
-        if any(not isinstance(request,dict) or request.get('operation') not in STATUS_REQUESTS
-               or request.get('payload',{}) != {} for request in pending.values()):
+        def harmless(request):
+            if not isinstance(request,dict) or request.get('operation') not in STATUS_REQUESTS:return False
+            payload=request.get('payload',{})
+            return payload=={} or (request.get('operation')=='companion_info' and isinstance(payload,dict)
+                                   and set(payload)=={'refresh'} and type(payload['refresh']) is bool)
+        if any(not harmless(request) for request in pending.values()):
             raise ValueError('Wait for pending Companion changes to finish; close Companion tabs before retrying')
         return status
 
@@ -390,7 +394,7 @@ class Installer:
             for p in package.rglob('*'):
                 if not p.is_file(): continue
                 rel = p.relative_to(package).as_posix()
-                if rel.startswith('backend/') and p.suffix in ('.py','.ps1','.cjs'): target = CORE + '/' + rel[len('backend/'):]
+                if rel.startswith('backend/') and (p.suffix in ('.py','.ps1','.cjs') or rel=='backend/u1_voice_messages.json'): target = CORE + '/' + rel[len('backend/'):]
                 elif rel.startswith('ui/'): target = UI + '/' + rel[len('ui/'):]
                 elif rel.startswith('remote/') and p.name != 'nginx-template.conf': target = CORE + '/' + p.name
                 elif rel.startswith('licenses/'): target = CORE + '/' + rel

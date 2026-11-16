@@ -73,6 +73,7 @@ class Fixture(unittest.TestCase):
             p=self.package/'backend'/name;p.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(REPO/'backend'/name,p)
         for name in m.MODULES:self.package_file('backend/'+name+'.py',b'# fixture module\n')
         self.package_file('backend/spool-accounting.py',b'# fixture accounting\n')
+        self.package_file('backend/u1_voice_messages.json',b'{"en":{"help":"fixture"}}')
         self.package_file('ui/index.html',b'<title>U1 Companion</title>')
         self.package_file('ui/config.json',b'{"endpoints":[],"hosted":false}')
         for name in m.SERVICES:self.package_file('services/'+name,b'#!/bin/sh\n# fixture service\n')
@@ -135,13 +136,17 @@ class Guards(Fixture):
         pending={str(i):{'operation':operation,'payload':{}} for i,operation in enumerate(m.STATUS_REQUESTS)}
         self.inst.api=lambda path,post=False: {'value':pending} if path.endswith('namespace=u1_addon_requests') else original(path,post)
         self.inst.preflight()
+        pending['version-check']={'operation':'companion_info','payload':{'refresh':True}}
+        self.inst.preflight()
         self.assertFalse(self.posts or self.commands)
 
     def test_pending_changes_and_unknown_requests_still_block(self):
         original=self.inst.api
         for request in [{'operation':'print_player_action','payload':{'action':'start'}},
                         {'operation':'import','payload':{}},{'operation':'unknown','payload':{}},
-                        {'operation':'print_player_state','payload':{'unexpected':True}},None]:
+                        {'operation':'print_player_state','payload':{'unexpected':True}},
+                        {'operation':'companion_info','payload':{'refresh':'true'}},
+                        {'operation':'companion_info','payload':{'refresh':True,'action':'start'}},None]:
             self.inst.api=lambda path,post=False: {'value':{'test':request}} if path.endswith('namespace=u1_addon_requests') else original(path,post)
             with self.subTest(request=request),self.assertRaisesRegex(ValueError,'pending Companion changes'):self.inst.preflight()
         self.assertFalse(self.posts or self.commands)
@@ -293,6 +298,7 @@ class FullInstallation(Fixture):
     def test_fresh_install_full_components_and_empty_user_libraries(self):
         stock={name:self.p(name).read_bytes() for name in self.native}
         backup=self.inst.install(self.package,self.work,'192.168.1.100',enable_persistence=True)
+        self.assertEqual(self.p(m.CORE+'/u1_voice_messages.json').read_bytes(),b'{"en":{"help":"fixture"}}')
         self.assertTrue((backup/'success.json').exists());self.assertEqual(self.posts,['/printer/restart'])
         self.assertEqual(set(self.live),set(m.SERVICES))
         for path in ['/alexa-bridge/runtime/node','/codex-runtime/codex','/remote-access/runtime/cloudflared']:self.assertTrue(self.p(m.DATA+path).is_file())

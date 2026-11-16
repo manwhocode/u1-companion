@@ -39,7 +39,7 @@ def main():
         if path.is_symlink() or not path.is_file():continue
         if path.name.startswith('test-') or '.test.' in path.name:continue
         folder,_,tail=name.partition('/')
-        if folder=='backend' and path.suffix in ('.py','.ps1','.cjs'):files['backend/'+tail]=path
+        if folder=='backend' and (path.suffix in ('.py','.ps1','.cjs') or tail=='u1_voice_messages.json'):files['backend/'+tail]=path
         elif folder=='services':files['services/'+tail]=path
         elif folder=='alexa' and path.suffix in ('.cjs','.json'):files['alexa/'+tail]=path
         elif folder=='remote-access' and path.suffix in ('.conf','.html','.js','.json'):files['remote/'+tail]=path

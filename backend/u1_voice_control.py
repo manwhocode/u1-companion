@@ -1,5 +1,5 @@
 """Personal Alexa skill relay. HMAC, pairing, expiring confirmation, no raw G-code."""
-import datetime,hashlib,hmac,json,os,re,secrets,time,uuid
+import datetime,hashlib,hmac,json,os,re,secrets,time,uuid,unicodedata
 from pathlib import Path
 from u1_recovery import atomic
 
@@ -41,33 +41,7 @@ def settings(action,payload,root=ROOT):
 def reply(text,end=True):
     return {'version':'1.0','response':{'outputSpeech':{'type':'PlainText','text':text},'shouldEndSession':end}}
 
-TEXT={
- 'en':{'help':'Say printer status, time remaining, pause print, resume print, repeat last print, cancel print, pause and lower bed, or enable night mode.',
- 'pair':'First link the printer. Say link printer followed by the six digit code shown in Companion.',
- 'linked':'Your Alexa account is linked to this printer.','badcode':'The pairing code is incorrect or expired.',
- 'blocked':'This action is not available in the current printer state. Check U1 Companion.',
- 'unknown':'The command result is not confirmed. Check the printer. I will not repeat the command automatically.',
- 'sent':'The request was sent to the printer. Check its state in Companion.',
- 'resume':'Are the tools and magnets clear, and is the printer ready to resume? Say yes to continue.',
- 'cancel':'Cancel the current print? Say yes to confirm. This is cancellation, not a pause.',
- 'lower':'Is the bed movement area clear? Say yes to pause and lower the bed. Resume manually after inserting magnets.',
- 'repeat':'Repeat {file}? Confirm the old model is removed, the bed is clear and the loaded spools are correct. Say yes.',
- 'expired':'The confirmation has expired. Ask for the action again.','no':'Cancelled. No printer command was sent.',
- 'status':'Printer state: {state}. Progress: {percent} percent.','remaining':'Estimated time remaining: {minutes} minutes.',
- 'unavailable':'Remaining time is not available yet.','night':'Night mode for the cover fans was requested. Printer protection keeps priority.'},
- 'de':{'help':'Sage Druckerstatus, verbleibende Zeit, Druck pausieren, Druck fortsetzen, letzten Druck wiederholen, Druck abbrechen, Pause mit abgesenktem Bett oder Nachtmodus einschalten.',
- 'pair':'Verbinde zuerst den Drucker. Sage Drucker verbinden und den sechsstelligen Code aus Companion.',
- 'linked':'Dein Alexa Konto ist mit diesem Drucker verbunden.','badcode':'Der Verbindungscode ist falsch oder abgelaufen.',
- 'blocked':'Diese Aktion ist im aktuellen Druckerzustand nicht verfügbar. Prüfe U eins Companion.',
- 'unknown':'Das Ergebnis ist nicht bestätigt. Prüfe den Drucker. Der Befehl wird nicht automatisch wiederholt.',
- 'sent':'Die Anfrage wurde an den Drucker gesendet. Prüfe den Zustand in Companion.',
- 'resume':'Sind Werkzeuge und Magnete entfernt und ist der Drucker zum Fortsetzen bereit? Bestätige mit Ja.',
- 'cancel':'Den aktuellen Druck abbrechen? Bestätige mit Ja. Dies ist ein Abbruch und keine Pause.',
- 'lower':'Ist der Bewegungsbereich des Betts frei? Bestätige mit Ja für eine Pause mit abgesenktem Bett. Setze nach dem Einlegen der Magnete manuell fort.',
- 'repeat':'{file} erneut drucken? Bestätige, dass das alte Modell entfernt wurde, das Bett frei ist und die eingelegten Spulen passen. Sage Ja.',
- 'expired':'Die Bestätigung ist abgelaufen. Fordere die Aktion erneut an.','no':'Abgebrochen. Es wurde kein Druckerbefehl gesendet.',
- 'status':'Druckerstatus: {state}. Fortschritt: {percent} Prozent.','remaining':'Geschätzte verbleibende Zeit: {minutes} Minuten.',
- 'unavailable':'Die verbleibende Zeit ist noch nicht verfügbar.','night':'Der Nachtmodus für die Lüfter der Abdeckung wurde angefordert. Die Schutzfunktionen haben Vorrang.'}}
+TEXT=json.loads(Path(__file__).with_name('u1_voice_messages.json').read_text(encoding='utf-8'))
 
 class Voice:
     def __init__(self,moon,root=ROOT,clock=time.time):
@@ -89,7 +63,7 @@ class Voice:
         if abs(self.clock()-stamp)>150:raise PermissionError('Expired Alexa request')
         request_id=request.get('requestId','');session_id=session.get('sessionId','')
         if not isinstance(request_id,str) or not 1<=len(request_id)<=250:raise PermissionError('Invalid request ID')
-        lang='de' if request.get('locale','').startswith('de') else 'en';text=TEXT[lang]
+        lang=request.get('locale','').split('-')[0].lower();text=TEXT.get(lang,TEXT['en'])
         with (self.root/'voice.lock').open('a') as lock:
             try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
             except BlockingIOError:return reply(text['unknown'])
@@ -106,7 +80,7 @@ class Voice:
             intent=request.get('intent',{});name=intent.get('name');kind=request.get('type')
             if name=='LinkPrinterIntent':
                 code=str(intent.get('slots',{}).get('code',{}).get('value','')).replace(' ','')
-                if re.fullmatch(r'\d{1,6}',code):code=code.zfill(6)
+                if re.fullmatch(r'\d{1,6}',code):code=''.join(str(unicodedata.decimal(c)) for c in code).zfill(6)
                 valid=cfg.get('pairExpires',0)>self.clock() and cfg.get('pairAttempts',0)<5 and re.fullmatch(r'\d{6}',code) and hmac.compare_digest(cfg.get('pairHash',''),hashlib.sha256(code.encode()).hexdigest())
                 cfg['pairAttempts']=cfg.get('pairAttempts',0)+1
                 if valid:cfg.update(userHash=user_hash,pairExpires=0,pairHash='')
@@ -136,8 +110,7 @@ class Voice:
         if kind=='LaunchRequest' or name in ('AMAZON.HelpIntent','AMAZON.FallbackIntent'):return reply(text['help'],False)
         if name in ('StatusIntent','RemainingTimeIntent','ErrorStatusIntent'):
             s=self.moon.api('/printer/objects/query?webhooks&print_stats&virtual_sdcard&exception_manager')['status'];stats=s.get('print_stats',{});progress=s.get('virtual_sdcard',{}).get('progress',0)
-            labels=({'printing':'druckt','paused':'pausiert','standby':'bereit','complete':'abgeschlossen','cancelled':'abgebrochen','error':'Fehler'} if text is TEXT['de'] else {'printing':'printing','paused':'paused','standby':'ready','complete':'completed','cancelled':'cancelled','error':'error'})
-            state_name=labels.get(stats.get('state'),'unbekannt' if text is TEXT['de'] else 'unknown')
+            state_name=text['states'].get(stats.get('state'),text['states']['unknown'])
             if name=='StatusIntent':return reply(text['status'].format(state=state_name,percent=round(progress*100)))
             if name=='ErrorStatusIntent':
                 errors=list(s.get('exception_manager',{}).get('exceptions',[]))
@@ -145,10 +118,10 @@ class Voice:
                 descriptions=[]
                 for fault in errors[:3]:
                     if not isinstance(fault,dict):descriptions.append(str(fault)[:160]);continue
-                    if fault.get('id')==523 and fault.get('code')==38:descriptions.append('Filamentverwicklung erkannt. Prüfe die Spule und den Filamentweg.' if text is TEXT['de'] else 'Filament tangling detected. Check the spool and filament path.')
-                    elif fault.get('id')==532 and fault.get('code')==1:descriptions.append('Ein Gegenstand oder Schmutz wurde auf dem Druckbett erkannt.' if text is TEXT['de'] else 'An object or dirt was detected on the print bed.')
+                    if fault.get('id')==523 and fault.get('code')==38:descriptions.append(text['tangled'])
+                    elif fault.get('id')==532 and fault.get('code')==1:descriptions.append(text['dirtyBed'])
                     else:descriptions.append(str(fault.get('message') or fault.get('msg') or fault.get('code',''))[:160])
-                return reply(text['status'].format(state=state_name,percent=round(progress*100))+' '+('Aktive Druckerfehler: ' if text is TEXT['de'] else 'Active printer errors: ')+str(len(errors))+'. '+' '.join(descriptions))
+                return reply(text['status'].format(state=state_name,percent=round(progress*100))+' '+text['activeErrors'].format(count=len(errors))+' '+' '.join(descriptions))
             if stats.get('state') not in ('printing','paused') or progress<=0:return reply(text['unavailable'])
             minutes=max(0,round(stats.get('print_duration',0)*(1/progress-1)/60))
             return reply(text['remaining'].format(minutes=minutes))
@@ -159,7 +132,7 @@ class Voice:
             if action=='resume' and state.get('canAcknowledgeFault') and state.get('pauseFaultToken'):
                 if not session or not state.get('currentJob'):return reply(text['blocked'])
                 atomic(path,{'session':session,'user':user,'expires':self.clock()+60,'operation':'print_player_action','payload':{'action':'ack_fault','currentJob':state.get('currentJob'),'faultToken':state['pauseFaultToken'],'confirmed':True}})
-                return reply('Wurde die Filamentverwicklung behoben? Wird das Filament frei zugeführt und ist der Bewegungsbereich frei? Sage Ja zum Fortsetzen.' if text is TEXT['de'] else 'Have you fixed the filament tangling? Does the filament feed freely, and is the movement area clear? Say yes to resume.',False)
+                return reply(text['untangle'],False)
             if not state.get({'pause':'canPause','resume':'canResume','cancel':'canCancel'}[action]):return reply(text['blocked'])
             operation='print_player_action';payload={'action':action,'currentJob':state['currentJob'],'confirmed':action!='pause'}
             if action=='pause':self.moon.relay(operation,payload,request_id=ident,timeout=4,expires_at=self.clock()+6);return reply(text['sent'])
@@ -176,7 +149,10 @@ class Voice:
                 query=intent.get('slots',{}).get('model',{}).get('value','').strip().casefold()
                 if not query:return reply(text['blocked'])
                 rows=self.moon.relay('models_state',{},timeout=3)['models']
-                matches=[m for m in rows if m['name'].casefold()==query] or [m for m in rows if query in m['name'].casefold()]
+                if text is TEXT['nl']:
+                    index=int(query) if query.isdecimal() else 0
+                    matches=[rows[index-1]] if 1<=index<=len(rows) else []
+                else:matches=[m for m in rows if m['name'].casefold()==query] or [m for m in rows if query in m['name'].casefold()]
                 if len(matches)!=1:return reply(text['blocked'])
                 filename=matches[0]['files'][0]
             plan=self.moon.relay('print_player_prepare',{'filename':filename,'mapping':[0,1,2,3],'bedLevel':True,'flowCalibration':False},timeout=4)
@@ -191,16 +167,15 @@ class Voice:
             if not state.get('serviceDue') and state.get('serviceDueAt'):
                 import math
                 days=max(0,math.ceil((state['serviceDueAt']-self.clock())/86400))
-                extra=(f' Kalenderfrist in {days} Tagen. Die Druckstunden können eine frühere Wartung erfordern.' if text is TEXT['de'] else f' Calendar deadline in {days} days. Print hours may require earlier maintenance.')
-            if text is TEXT['de']:return reply('Wartung erforderlich: '+('ja' if state.get('serviceDue') else 'nein')+'. Bettkalibrierung empfohlen: '+('ja' if state.get('bedDue') else 'nein')+'.'+extra)
-            return reply('Maintenance due: '+('yes' if state.get('serviceDue') else 'no')+'. Bed calibration due: '+('yes' if state.get('bedDue') else 'no')+'.'+extra)
+                extra=' '+text['deadline'].format(days=days)
+            return reply(text['maintenance'].format(service=text['yes'] if state.get('serviceDue') else text['noWord'],bed=text['yes'] if state.get('bedDue') else text['noWord'])+extra)
         elif name=='TimedPauseIntent':
             raw=intent.get('slots',{}).get('minutes',{}).get('value','')
             minutes=int(raw)
             if not 1<=minutes<=1440:return reply(text['blocked'])
             plan=self.moon.relay('timed_pause_prepare',{'minutes':minutes},timeout=3)
             operation='timed_pause_arm';payload={'token':plan['token'],'confirmed':True}
-            question=(f'Druck pausieren und nach {minutes} Minuten automatisch fortsetzen? Ist der Bewegungsbereich frei? Bestätige mit Ja.' if text is TEXT['de'] else f'Pause the print and resume automatically after {minutes} minutes? Is the movement area clear? Say yes.')
+            question=text['timer'].format(minutes=minutes)
         elif name=='CancelTimedPauseIntent':
             state=self.moon.relay('timed_pause_state',{},timeout=3)
             self.moon.relay('timed_pause_cancel',{'id':state.get('id')},request_id=ident,timeout=4,expires_at=self.clock()+6)

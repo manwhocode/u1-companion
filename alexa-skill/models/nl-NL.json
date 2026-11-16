@@ -1,0 +1,157 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "printer assistent",
+      "intents": [
+        {
+          "name": "StatusIntent",
+          "samples": [
+            "printerstatus",
+            "hoe ver is de afdruk"
+          ]
+        },
+        {
+          "name": "RemainingTimeIntent",
+          "samples": [
+            "hoeveel tijd is er nog over",
+            "wanneer is de afdruk klaar"
+          ]
+        },
+        {
+          "name": "PausePrintIntent",
+          "samples": [
+            "pauzeer de afdruk",
+            "zet de afdruk op pauze"
+          ]
+        },
+        {
+          "name": "ResumePrintIntent",
+          "samples": [
+            "hervat de afdruk",
+            "ga verder met afdrukken"
+          ]
+        },
+        {
+          "name": "CancelPrintIntent",
+          "samples": [
+            "annuleer de afdruk",
+            "stop de huidige afdruk"
+          ]
+        },
+        {
+          "name": "RepeatPrintIntent",
+          "samples": [
+            "herhaal de laatste afdruk",
+            "druk het vorige model opnieuw af"
+          ]
+        },
+        {
+          "name": "PauseLowerIntent",
+          "samples": [
+            "pauzeer en laat het bed zakken",
+            "pauzeer voor magneten"
+          ]
+        },
+        {
+          "name": "NightModeOnIntent",
+          "samples": [
+            "schakel de nachtmodus in",
+            "zet de ventilatoren van de kap uit"
+          ]
+        },
+        {
+          "name": "NightModeOffIntent",
+          "samples": [
+            "schakel de nachtmodus uit",
+            "herstel de normale ventilatorregeling"
+          ]
+        },
+        {
+          "name": "TimedPauseIntent",
+          "samples": [
+            "pauzeer voor {minutes} minuten",
+            "hervat de afdruk over {minutes} minuten"
+          ],
+          "slots": [
+            {
+              "name": "minutes",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "CancelTimedPauseIntent",
+          "samples": [
+            "annuleer automatisch hervatten",
+            "annuleer de pauzetimer"
+          ]
+        },
+        {
+          "name": "FavoritePrintIntent",
+          "samples": [
+            "druk favoriet nummer {model} af",
+            "start favoriet nummer {model}"
+          ],
+          "slots": [
+            {
+              "name": "model",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "ErrorStatusIntent",
+          "samples": [
+            "waarom is de printer gestopt",
+            "welke fout heeft de printer"
+          ]
+        },
+        {
+          "name": "MaintenanceIntent",
+          "samples": [
+            "wanneer is onderhoud nodig",
+            "moet het bed worden gekalibreerd"
+          ]
+        },
+        {
+          "name": "LinkPrinterIntent",
+          "samples": [
+            "koppel de printer met code {code}",
+            "mijn koppelcode is {code}"
+          ],
+          "slots": [
+            {
+              "name": "code",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  }
+}

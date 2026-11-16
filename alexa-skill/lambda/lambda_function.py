@@ -3,16 +3,21 @@ import hashlib,hmac,json,os,urllib.request
 from pathlib import Path
 from urllib.parse import urlsplit
 
+MESSAGES=json.loads(Path(__file__).with_name('voice_messages.json').read_text(encoding='utf-8'))
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self,*args,**kwargs):return None
 
 def lambda_handler(event,context):
-    language='de' if event.get('request',{}).get('locale','').startswith('de') else 'en'
-    failure='Die Verbindung zum Drucker ist nicht bestätigt. Prüfe Companion. Befehle werden nicht automatisch wiederholt.' if language=='de' else 'The printer response is not confirmed. Check Companion. Commands are not retried automatically.'
+    language=event.get('request',{}).get('locale','').split('-')[0].lower()
+    text=MESSAGES.get(language,MESSAGES['en'])
+    failure=text['failure']
     try:
         cfg=json.loads(Path(__file__).with_name('config.json').read_text())
         application=event.get('context',{}).get('System',{}).get('application',{}).get('applicationId')
         if not cfg.get('skillId') or application!=cfg['skillId'] or not event.get('request',{}).get('requestId'):raise ValueError('wrong_skill')
+        if not cfg.get('url') and not cfg.get('key'):
+            return {'version':'1.0','response':{'outputSpeech':{'type':'PlainText','text':text['setup']},'shouldEndSession':True}}
         url=urlsplit(cfg['url'])
         if url.scheme!='https' or not url.hostname or url.username or url.password or url.path!='/u1-alexa/skill' or url.query or url.fragment:raise ValueError('invalid_endpoint')
         if not isinstance(cfg.get('key'),str) or len(cfg['key'])!=64:raise ValueError('invalid_key')

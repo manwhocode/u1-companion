@@ -140,6 +140,50 @@ class Voice(unittest.TestCase):
             self.assertTrue({'AMAZON.YesIntent','AMAZON.NoIntent','LinkPrinterIntent','NightModeOffIntent','TimedPauseIntent','FavoritePrintIntent'}.issubset(names))
             self.assertEqual(len(names),len(model['intents']))
 
+    def test_all_voice_languages_have_complete_templates_and_confirmations(self):
+        from string import Formatter
+        root=Path(__file__).resolve().parents[2]
+        self.assertEqual(set(v.TEXT),{'en','de','fr','es','it','pt','nl','ja','ar'})
+        self.assertEqual(v.TEXT,json.loads((root/'alexa-skill/lambda/voice_messages.json').read_text(encoding='utf-8')))
+        for language,catalog in v.TEXT.items():
+            self.assertEqual(set(catalog),set(v.TEXT['en']))
+            for key,value in catalog.items():
+                if isinstance(value,dict):self.assertEqual(set(value),set(v.TEXT['en'][key]));continue
+                fields=lambda s:{name for _,name,_,_ in Formatter().parse(s) if name}
+                self.assertTrue(value.strip());self.assertEqual(fields(value),fields(v.TEXT['en'][key]))
+            self.moon.calls=[]
+            body=self.body('ResumePrintIntent');body['request']['locale']=language+'-XX'
+            self.assertEqual(self.send(body)['response']['outputSpeech']['text'],catalog['resume'])
+            self.assertFalse(self.writes())
+            body=self.body('AMAZON.NoIntent');body['request']['locale']=language+'-XX';self.send(body)
+            self.assertFalse(self.writes())
+        locales={p.stem for p in (root/'alexa-skill/models').glob('*.json')}
+        self.assertEqual(locales,{'ar-SA','de-DE','en-AU','en-CA','en-GB','en-IN','en-US','es-ES','es-MX','es-US','fr-CA','fr-FR','it-IT','ja-JP','nl-NL','pt-BR'})
+
+    def test_arabic_pairing_digits_and_dutch_numbered_favorites(self):
+        self.cfg.update(userHash='',pairHash=hashlib.sha256(b'001234').hexdigest(),pairExpires=self.now+100,pairAttempts=0)
+        v.atomic(self.root/'config.json',self.cfg)
+        body=self.body('LinkPrinterIntent',slots={'code':'٠٠١٢٣٤'});body['request']['locale']='ar-SA'
+        self.assertEqual(self.send(body)['response']['outputSpeech']['text'],v.TEXT['ar']['linked'])
+        for invalid in ['0','2','-1','cube']:
+            body=self.body('FavoritePrintIntent',slots={'model':invalid});body['request']['locale']='nl-NL'
+            self.assertEqual(self.send(body)['response']['outputSpeech']['text'],v.TEXT['nl']['blocked'])
+        body=self.body('FavoritePrintIntent',slots={'model':'1'});body['request']['locale']='nl-NL'
+        answer=self.send(body);self.assertIn('cube.gcode',answer['response']['outputSpeech']['text']);self.assertFalse(self.writes())
+        self.send(self.body('AMAZON.YesIntent'));self.assertEqual(self.writes()[0][0],'print_player_start')
+
+    def test_hosted_unconfigured_skill_answers_without_contacting_printer(self):
+        root=Path(__file__).resolve().parents[2]
+        spec=importlib.util.spec_from_file_location('voice_lambda_offline',root/'alexa-skill/lambda/lambda_function.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        with patch.object(module.Path,'read_text',return_value=json.dumps({'skillId':self.skill,'url':'','key':''})),patch.object(module.urllib.request,'build_opener') as opener:
+            for language in v.TEXT:
+                body=self.body('StatusIntent');body['request']['locale']=language+'-XX'
+                self.assertEqual(module.lambda_handler(body,None)['response']['outputSpeech']['text'],v.TEXT[language]['setup'])
+            wrong=self.body('StatusIntent');wrong['context']['System']['application']['applicationId']='wrong'
+            self.assertEqual(module.lambda_handler(wrong,None)['response']['outputSpeech']['text'],v.TEXT['de']['failure'])
+            opener.assert_not_called()
+
     def test_only_voice_gateway_route_bypasses_browser_auth_and_still_has_hmac(self):
         root=Path(__file__).resolve().parents[2];text=(root/'remote-access/nginx-template.conf').read_text()
         self.assertIn('"POST::/u1-alexa/skill" 0;',text);self.assertIn('proxy_set_header X-U1-Voice-Signature $http_x_u1_voice_signature;',text)

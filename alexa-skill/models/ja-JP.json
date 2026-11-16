@@ -1,0 +1,157 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "プリントヘルパー",
+      "intents": [
+        {
+          "name": "StatusIntent",
+          "samples": [
+            "プリンターの状態を教えて",
+            "印刷の進捗を教えて"
+          ]
+        },
+        {
+          "name": "RemainingTimeIntent",
+          "samples": [
+            "残り時間を教えて",
+            "印刷はあと何分"
+          ]
+        },
+        {
+          "name": "PausePrintIntent",
+          "samples": [
+            "印刷を一時停止して",
+            "プリンターを一時停止して"
+          ]
+        },
+        {
+          "name": "ResumePrintIntent",
+          "samples": [
+            "印刷を再開して",
+            "印刷を続けて"
+          ]
+        },
+        {
+          "name": "CancelPrintIntent",
+          "samples": [
+            "印刷をキャンセルして",
+            "現在の印刷を中止して"
+          ]
+        },
+        {
+          "name": "RepeatPrintIntent",
+          "samples": [
+            "最後の印刷をもう一度実行して",
+            "前回のモデルをもう一度印刷して"
+          ]
+        },
+        {
+          "name": "PauseLowerIntent",
+          "samples": [
+            "一時停止してベッドを下げて",
+            "マグネットを入れるために一時停止して"
+          ]
+        },
+        {
+          "name": "NightModeOnIntent",
+          "samples": [
+            "ナイトモードを有効にして",
+            "カバーのファンを止めて"
+          ]
+        },
+        {
+          "name": "NightModeOffIntent",
+          "samples": [
+            "ナイトモードを無効にして",
+            "カバーのファンを通常の制御に戻して"
+          ]
+        },
+        {
+          "name": "TimedPauseIntent",
+          "samples": [
+            "{minutes}分間一時停止して",
+            "{minutes}分後に印刷を再開して"
+          ],
+          "slots": [
+            {
+              "name": "minutes",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "CancelTimedPauseIntent",
+          "samples": [
+            "自動再開をキャンセルして",
+            "一時停止タイマーを解除して"
+          ]
+        },
+        {
+          "name": "FavoritePrintIntent",
+          "samples": [
+            "お気に入りの{model}を印刷して",
+            "保存したモデルの{model}を印刷して"
+          ],
+          "slots": [
+            {
+              "name": "model",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "ErrorStatusIntent",
+          "samples": [
+            "プリンターが止まった理由を教えて",
+            "プリンターのエラーを教えて"
+          ]
+        },
+        {
+          "name": "MaintenanceIntent",
+          "samples": [
+            "メンテナンスはいつ必要",
+            "ベッドのキャリブレーションは必要"
+          ]
+        },
+        {
+          "name": "LinkPrinterIntent",
+          "samples": [
+            "コード{code}でプリンターをリンクして",
+            "ペアリングコードは{code}"
+          ],
+          "slots": [
+            {
+              "name": "code",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  }
+}

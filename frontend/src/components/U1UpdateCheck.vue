@@ -2,7 +2,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { u1DataRequest } from '@/utils/u1DataClient'
+import { checkCompanionVersion } from '@/utils/u1UpdateClient'
 interface Info {installed:string;latest:string;updateAvailable:boolean;checkFailed:boolean;checking:boolean}
 @Component
 export default class U1UpdateCheck extends Vue {
@@ -10,11 +10,9 @@ export default class U1UpdateCheck extends Vue {
   async check () {
     this.busy = true; this.error = ''; this.result = null
     try {
-      let value = await u1DataRequest<Info>('companion_info', {refresh:true}, 12000)
-      for (let i = 0; value.checking && i < 12; i++) { await new Promise(resolve => setTimeout(resolve, 500)); value = await u1DataRequest<Info>('companion_info', {}, 12000) }
-      if (value.checking) value.checkFailed = true
+      const value = await checkCompanionVersion()
       this.result = value; this.$root.$emit('u1-update-checked', value)
-    } catch (e) { this.error = String(e) } finally { this.busy = false }
+    } catch { this.error = this.$u1t('Не удалось проверить обновления. Повторите позже.') } finally { this.busy = false }
   }
 }
 </script>

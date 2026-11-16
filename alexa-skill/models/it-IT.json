@@ -1,0 +1,157 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "assistente stampante",
+      "intents": [
+        {
+          "name": "StatusIntent",
+          "samples": [
+            "stato della stampante",
+            "a che punto è la stampa"
+          ]
+        },
+        {
+          "name": "RemainingTimeIntent",
+          "samples": [
+            "quanto tempo manca",
+            "quando finisce la stampa"
+          ]
+        },
+        {
+          "name": "PausePrintIntent",
+          "samples": [
+            "metti in pausa la stampa",
+            "sospendi la stampa"
+          ]
+        },
+        {
+          "name": "ResumePrintIntent",
+          "samples": [
+            "riprendi la stampa",
+            "continua la stampa"
+          ]
+        },
+        {
+          "name": "CancelPrintIntent",
+          "samples": [
+            "annulla la stampa",
+            "ferma la stampa in corso"
+          ]
+        },
+        {
+          "name": "RepeatPrintIntent",
+          "samples": [
+            "ripeti l’ultima stampa",
+            "stampa di nuovo l’ultimo modello"
+          ]
+        },
+        {
+          "name": "PauseLowerIntent",
+          "samples": [
+            "metti in pausa e abbassa il piano",
+            "fai una pausa per i magneti"
+          ]
+        },
+        {
+          "name": "NightModeOnIntent",
+          "samples": [
+            "attiva la modalità notturna",
+            "spegni le ventole del coperchio"
+          ]
+        },
+        {
+          "name": "NightModeOffIntent",
+          "samples": [
+            "disattiva la modalità notturna",
+            "ripristina il controllo normale delle ventole"
+          ]
+        },
+        {
+          "name": "TimedPauseIntent",
+          "samples": [
+            "metti in pausa per {minutes} minuti",
+            "riprendi tra {minutes} minuti"
+          ],
+          "slots": [
+            {
+              "name": "minutes",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "CancelTimedPauseIntent",
+          "samples": [
+            "annulla la ripresa automatica",
+            "annulla il timer di pausa"
+          ]
+        },
+        {
+          "name": "FavoritePrintIntent",
+          "samples": [
+            "stampa il preferito {model}",
+            "stampa il modello salvato {model}"
+          ],
+          "slots": [
+            {
+              "name": "model",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "ErrorStatusIntent",
+          "samples": [
+            "perché la stampante si è fermata",
+            "quale errore segnala la stampante"
+          ]
+        },
+        {
+          "name": "MaintenanceIntent",
+          "samples": [
+            "quando serve la manutenzione",
+            "serve calibrare il piano"
+          ]
+        },
+        {
+          "name": "LinkPrinterIntent",
+          "samples": [
+            "collega la stampante con il codice {code}",
+            "il mio codice di collegamento è {code}"
+          ],
+          "slots": [
+            {
+              "name": "code",
+              "type": "AMAZON.NUMBER"
+            }
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  }
+}
