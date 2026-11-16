@@ -39,6 +39,8 @@ No print, heater or motion command is sent by the installer. It adds marked conf
 
 ## Check without installing
 
+After downloading the current bootstrap, use `sh /userdata/u1-companion-install.sh --update` to update or `sh /userdata/u1-companion-install.sh --uninstall` to remove an inventoried installation. Removal backs up owned files and preserves personal state/certificates and the shared `/oem/.debug` flag. Historical manual installations require migration review before automatic removal.
+
 After downloading the script, run:
 
 ```sh

@@ -19,7 +19,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.3'
+VERSION = 'v0.1.1-alpha.4'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
@@ -118,6 +118,7 @@ def include(raw, name):
 class Transaction:
     def __init__(self, root, backup):
         self.root, self.backup, self.rows = Path(root), Path(backup), []
+        self.owned = {}
         no_links(self.backup); self.backup.mkdir(mode=0o700, parents=True, exist_ok=False)
         self.backup.chmod(0o700)
 
@@ -141,6 +142,7 @@ class Transaction:
         path = self.target(name)
         before = self.state(path)
         after_hash = sha(source) if source else hashlib.sha256(data).hexdigest()
+        self.owned[name] = {'link':link} if link is not None else {'hash':after_hash}
         if (link is not None and before == {'link': link}) or (link is None and before.get('hash') == after_hash
                 and before['mode'] == mode and (not owner or (before['uid'], before['gid']) == tuple(owner))): return
         if any(row['path'] == name for row in self.rows): raise ValueError('Duplicate transaction target')
@@ -179,7 +181,7 @@ class Transaction:
         for row in self.rows:
             path = self.target(row['path']); current = self.state(path)
             if current == row['before']: continue
-            expected = current.get('link') == row['after'] if row['afterLink'] else current.get('hash') == row['after']
+            expected = current.get('missing') is True if row.get('afterMissing') else current.get('link') == row['after'] if row['afterLink'] else current.get('hash') == row['after']
             if not expected: raise ValueError('Changed target; rollback stopped: ' + row['path'])
             if row['old'] is not None and sha(no_links(self.backup / row['old'])) != row['before']['hash']:
                 raise ValueError('Backup checksum mismatch')
@@ -197,6 +199,16 @@ class Transaction:
                 shutil.copy2(self.backup / row['old'], temp); temp.chmod(row['mode'])
                 if hasattr(os, 'chown'): os.chown(temp, row['uid'], row['gid'])
                 os.replace(temp, path)
+
+    def remove(self, name):
+        path=self.target(name);before=self.state(path)
+        if before.get('missing'):return
+        row={'path':name,'old':None,'link':before.get('link'),'before':before,'after':None,'afterLink':False,'afterMissing':True}
+        if 'hash' in before:
+            row.update(mode=before['mode'],uid=before['uid'],gid=before['gid']);row['old']=str(len(self.rows));shutil.copy2(path,self.backup/row['old'])
+        self.rows.append(row);self.save()
+        if self.state(path)!=before:raise ValueError('Target changed during uninstall')
+        path.unlink()
 
 
 class Installer:
@@ -313,6 +325,9 @@ class Installer:
         sys.path.insert(0,str(package/'backend'))
         self.preflight(); user = pwd.getpwnam('lava'); owner = (user.pw_uid,user.pw_gid)
         self.layout_check()
+        registry=self.p(CORE+'/managed-install.json')
+        prior=json.loads(registry.read_text()) if registry.exists() else {'version':1,'files':{}}
+        if prior.get('version')!=1 or not isinstance(prior.get('files'),dict):raise ValueError('Unknown installation registry')
         if not self.p('/oem/.debug').exists() and not enable_persistence: raise ValueError('Persistence consent required')
         backup = self.p('/userdata/u1-addons-backups/unified-' + time.strftime('%Y%m%d-%H%M%S') + '-' + secrets.token_hex(3))
         tx = Transaction(self.root, backup); started = []; previous = []
@@ -393,6 +408,7 @@ class Installer:
                 except Exception: pass
                 self.sleep(1)
             else: raise ValueError('Companion service health check failed')
+            tx.write(CORE+'/managed-install.json',json.dumps({'version':1,'moduleVersion':VERSION,'files':{**prior['files'],**tx.owned}}).encode(),0o600,(0,0))
             (backup/'success.json').write_text(json.dumps({'version':VERSION,'ip':ip,'time':time.time()}))
             print('[7/7] Installation verified. Open this address in your browser:')
             print('INSTALLED:', 'http://'+ip+'/u1-filaments-ui/#/u1-filaments')
@@ -462,6 +478,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     mode=p.add_mutually_exclusive_group()
     mode.add_argument('--install',action='store_true');mode.add_argument('--check',action='store_true')
+    mode.add_argument('--update',action='store_true');mode.add_argument('--uninstall',action='store_true')
     p.add_argument('--yes',action='store_true');p.add_argument('--ip')
     p.add_argument('--enable-persistence',action='store_true');p.add_argument('--rollback',type=Path)
     p.add_argument('--download-dir',type=Path,default=Path('/userdata/u1-addons/downloads/'+VERSION))
@@ -470,7 +487,7 @@ def main():
     if sys.version_info < (3,11): raise ValueError('Stock Python 3.11 or newer is required')
     os.umask(0o077)
     # Do not let two install/rollback sessions race. A read-only check needs no lock.
-    if args.install or args.rollback:
+    if args.install or args.update or args.uninstall or args.rollback:
         import fcntl
         lock_path=no_links('/run/u1-companion-install.lock')
         lock=lock_path.open('a');lock_path.chmod(0o600)
@@ -479,6 +496,15 @@ def main():
     for command in ['nginx','openssl','start-stop-daemon','python3']:
         if not shutil.which(command): raise ValueError('Missing required stock dependency: '+command)
     installer=Installer()
+    if args.uninstall:
+        with https(RELEASE+'/SHA256SUMS',timeout=30) as response:checks=checksums(response.read(16384))
+        module_path=fetch(RELEASE+'/uninstall.py',Path(__file__).with_name('uninstall.py'),checks['uninstall.py'])
+        from importlib.util import spec_from_file_location,module_from_spec
+        spec=spec_from_file_location('u1_uninstall',module_path);module=module_from_spec(spec);spec.loader.exec_module(module)
+        module.uninstall(installer,args.yes);return
+    if args.update:
+        if not installer.p(UI+'/index.html').is_file():raise ValueError('U1 Companion is not installed; choose Install')
+        args.install=True
     if args.rollback:
         backup=no_links(args.rollback).resolve()
         if backup.parent!=Path('/userdata/u1-addons-backups') or not backup.name.startswith('unified-'): raise ValueError('Use the exact unified backup path')

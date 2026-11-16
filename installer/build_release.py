@@ -76,10 +76,10 @@ def main():
                 raw=path.read_bytes().replace(b'\r\n',b'\n');info.size=len(raw);tar.addfile(info,io.BytesIO(raw))
             else:
                 with path.open('rb') as source:tar.addfile(info,source)
-    for name,source in [('install.py',repo/'installer/install.py'),('install.sh',repo/'install.sh'),('u1-service-stop.py',repo/'installer/u1-service-stop.py'),
+    for name,source in [('install.py',repo/'installer/install.py'),('uninstall.py',repo/'installer/uninstall.py'),('install.sh',repo/'install.sh'),('u1-service-stop.py',repo/'installer/u1-service-stop.py'),
                         ('node-runtime.tar.gz',args.node_runtime),('codex-arm64.gz',args.codex_runtime),('cloudflared-linux-arm64',args.cloudflared_runtime)]:
         if name in RUNTIMES and sha(source)!=RUNTIMES[name]:raise ValueError('Unverified runtime: '+name)
-        if name in ('install.sh','install.py','u1-service-stop.py'):
+        if name in ('install.sh','install.py','uninstall.py','u1-service-stop.py'):
             (args.output/name).write_bytes(source.read_bytes().replace(b'\r\n',b'\n'))
         else:shutil.copyfile(source,args.output/name)
     manifest={'version':VERSION,'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),

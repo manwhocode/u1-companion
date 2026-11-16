@@ -1,0 +1,22 @@
+U1 Companion: license, warranty and liability
+
+U1 Companion is an unofficial add-on, not a Snapmaker product or endorsed by Snapmaker. Compatibility with every firmware, device or third-party modification is not guaranteed.
+
+LICENSE
+This project is distributed under GNU GPL version 3; the full text follows. GPL allows use, study, modification and redistribution under its terms. Third-party components retain their licenses. This acknowledgement does not restrict the rights granted by GPL or replace its terms.
+
+NO WARRANTY
+The program is provided AS IS, without warranties, including fitness for a particular purpose, correctness, safety or uninterrupted operation, to the extent permitted by applicable law. Users independently assess suitability and the risks of use.
+
+LIMITATION OF LIABILITY
+To the maximum extent permitted by applicable law, copyright holders, authors and distributors are not liable for damage arising from use or inability to use the program, including damage to printers, equipment or property, data loss, failed prints, expenses, downtime, lost profits and direct, indirect or consequential losses. GPL-3.0 sections 15–17 apply.
+
+This does not exclude liability or mandatory rights that cannot lawfully be excluded or limited. A complete waiver of all liability is not guaranteed.
+
+PRINTER CHANGES
+Installation and removal modify printer files and may restart Klipper. Keep the printer idle, heaters off and a backup available. Do not disconnect power or close this installer during an operation. Supervise the printer and physical safety yourself. Do not use this software for safety-critical tasks.
+
+DATA AND CONNECTIONS
+Your SSH password is used only for this connection and is not saved. The printer's public SSH key is saved to verify future connections. The printer contacts the official GitHub repository to obtain the current installer. Uninstall preserves personal libraries and credentials on the printer; it does not delete Amazon/OpenAI accounts or revoke trust in an installed certificate.
+
+The checkbox acknowledges that you have read the license, warnings and limitation of liability. A separate operation plan and confirmation follow.
