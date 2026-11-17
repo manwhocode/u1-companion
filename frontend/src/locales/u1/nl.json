@@ -1645,5 +1645,10 @@
   "sb6dc320f8c167278": "Instructies",
   "sa222c8b6d129cb21": "Start- en bewegingsopdrachten vereisen bevestiging.",
   "s008567c5ab4f42b4": "Verward filament gedetecteerd. Verhelp de oorzaak en bevestig om te hervatten.",
-  "s23f97d2f46325fcf": "De oorzaak is verholpen en het filament wordt vrij aangevoerd"
+  "s23f97d2f46325fcf": "De oorzaak is verholpen en het filament wordt vrij aangevoerd",
+  "sc4ff11ffa73b7b43": "Kalibratie starten",
+  "s15d55a1369dd0fd5": "Maak het bed vrij en plaats de bouwplaat. U1 voert de ingebouwde kalibratie uit, met bewegingen en verwarming van het bed tot 55 °C. Een geslaagd resultaat wordt automatisch vastgelegd. U kunt dit venster sluiten.",
+  "s1b2c184a6dc4802c": "Het bed is vrij en de bouwplaat is geplaatst",
+  "se1b5f53bb9ec22ed": "Bedkalibratie voltooid en automatisch vastgelegd.",
+  "s1ef81047694f8e0a": "Een geslaagde bedkalibratie is niet bevestigd. De registratie is niet gewijzigd."
 }

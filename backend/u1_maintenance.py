@@ -192,7 +192,35 @@ class Maintenance:
         health = dict(self.health)
         if health['checkedAt'] and time.time()-health['checkedAt'] > 90 and not health['message']:
             health['message'] = 'Наработка давно не обновлялась. Проверьте связь с U1.'
-        return {**(view(data) if data else {'value':None}), **health}
+        jobs = getattr(store, 'calibration_jobs', None)
+        job = jobs.state() if jobs else {}
+        return {**(view(data) if data else {'value':None}), **health,
+                'bedCalibration': job if job.get('kind') == 'bed' else None,
+                'calibrationActive': bool(jobs and jobs.active)}
+
+    def record_bed(self, store, ident):
+        # Only the worker drains a verified native job; use the normal durable ledger.
+        store.require_idle(calibration=True)
+        self.poll(store, force=True)
+        raw = store.raw()
+        data = copy.deepcopy(raw.get(KEY))
+        if not data:
+            raise ValueError('Счётчики ещё не получены.')
+        if any(row['id'] == ident for row in data['history']):
+            return
+        if len(data['history']) >= 10000:
+            raise ValueError('История подтверждений заполнена. Экспортируйте данные.')
+        seconds, completed = totals(data)
+        marker = {'time': time.time(), 'seconds': seconds, 'completed': completed, 'zone': 'UTC'}
+        data['bed'] = marker
+        data['history'].append({'id': ident, 'kind': 'bed', **marker})
+        data['revision'] = str(uuid.uuid4())
+        validate(data)
+        after = copy.deepcopy(raw)
+        after[KEY] = data
+        store.require_idle(calibration=True)
+        store.commit(after)
+        self.publish_status(store, data)
 
     def publish_status(self, store, data):
         value = view(data)

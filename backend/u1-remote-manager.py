@@ -16,14 +16,14 @@ class Manager:
   self.key=(root/'control.key').read_text().strip()
   self.config=read(root/'config.json',{'email':'','enabled':False})
   self.auth=PairingAuth(root)
-  self.proc=None;self.phase='stopped';self.url='';self.error='';self.lock=threading.RLock();self.lines=queue.Queue(maxsize=100);self.start_time=0;self.relays=0
+  self.proc=None;self.phase='stopped';self.url='';self.error='';self.lock=threading.RLock();self.lines=queue.Queue(maxsize=100);self.start_time=0;self.relays=0;self.retry_at=0;self.retry_delay=5
   self.publish()
  def state(self):
   with self.lock:return {'phase':self.phase,'url':self.url,'hasCode':bool(self.auth.code()),'authMode':'code','accessProtected':True,'enabled':bool(self.config.get('enabled')),'error':self.error,'updatedAt':time.time()}
  def publish(self):atomic(self.root/'status.json',self.state())
  def stop(self):
   with self.lock:
-   p=self.proc;self.proc=None;self.phase='stopped';self.url='';self.error='';self.auth.sessions.clear()
+   p=self.proc;self.proc=None;self.phase='stopped';self.url='';self.error='';self.auth.sessions.clear();self.retry_at=0
    if p:
     p.terminate()
     try:p.wait(timeout=5)
@@ -44,7 +44,7 @@ class Manager:
   with BINARY.open('rb') as f:
    for b in iter(lambda:f.read(65536),b''):h.update(b)
   if h.hexdigest()!=EXPECTED:raise ValueError('invalid_runtime')
-  self.phase='starting';self.url='';self.error='';self.start_time=time.monotonic()
+  self.phase='starting';self.url='';self.error='';self.start_time=time.monotonic();self.retry_at=0
   env={'PATH':'/usr/bin:/bin','HOME':str(self.root),'LANG':'C.UTF-8','GOMEMLIMIT':'64MiB','GOGC':'50','GOMAXPROCS':'1'}
   self.proc=subprocess.Popen(args,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,env=env,cwd=self.root)
   process=self.proc
@@ -55,6 +55,20 @@ class Manager:
     try:self.lines.put_nowait((process,line))
     except queue.Full:pass
   threading.Thread(target=reader,daemon=True).start();self.publish()
+ def retry_later(self):
+  delay=self.retry_delay
+  self.stop();self.phase='error';self.error='connection_failed'
+  self.retry_at=time.monotonic()+delay;self.retry_delay=min(delay*2,300)
+  self.publish()
+ def restore(self):
+  # Keep the owner's enabled choice through transient boot/network failures.
+  # Every attempt still verifies pairing, protected origin and runtime digest.
+  with self.lock:
+   try:self.launch()
+   except ValueError as error:
+    self.retry_at=0;self.phase='error';self.error=str(error)
+    self.config['enabled']=False;atomic(self.root/'config.json',self.config);self.publish()
+   except Exception:self.retry_later()
  def command(self,payload):
   if not isinstance(payload,dict):raise ValueError('invalid_request')
   action=payload.get('action')
@@ -67,7 +81,7 @@ class Manager:
     if not self.auth.code():raise ValueError('code_required')
     self.config={'authMode':'code','enabled':True};atomic(self.root/'config.json',self.config)
     try:self.launch()
-    except Exception:self.config['enabled']=False;atomic(self.root/'config.json',self.config);raise
+    except Exception:self.retry_at=0;self.config['enabled']=False;atomic(self.root/'config.json',self.config);raise
    elif action=='stop':
     self.config['enabled']=False;atomic(self.root/'config.json',self.config);self.stop()
    else:raise ValueError('invalid_request')
@@ -79,11 +93,12 @@ class Manager:
     if process is not self.proc:continue
     m=re.search(r'https://[a-z0-9-]+\.trycloudflare\.com',line)
     if m and URL.fullmatch(m[0]):self.url=m[0]
-    if 'Registered tunnel connection' in line and self.url:self.phase='running'
+    if 'Registered tunnel connection' in line and self.url:self.phase='running';self.retry_delay=5;self.retry_at=0
    if self.proc and self.proc.poll() is not None:
-    self.proc=None;self.phase='error';self.url='';self.error='connection_failed';self.config['enabled']=False;atomic(self.root/'config.json',self.config)
+    self.retry_later()
    if self.proc and self.phase=='starting' and time.monotonic()-self.start_time>120:
-    self.stop();self.phase='error';self.error='connection_failed';self.config['enabled']=False;atomic(self.root/'config.json',self.config)
+    self.retry_later()
+   if not self.proc and self.config.get('enabled') and self.retry_at and time.monotonic()>=self.retry_at:self.restore()
    self.publish()
 
 def handler(manager):
@@ -173,8 +188,6 @@ def main():
  threading.Thread(target=server.serve_forever,daemon=True).start()
  def stop(*args):manager.stop();sys.exit(0)
  signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
- if manager.config.get('enabled'):
-  try:manager.launch()
-  except Exception:manager.phase='error';manager.error='connection_failed'
+ if manager.config.get('enabled'):manager.restore()
  while True:manager.tick();time.sleep(1)
 if __name__=='__main__':main()

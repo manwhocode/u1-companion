@@ -5,7 +5,8 @@
     <small v-if="state?.value">{{ $u1t("Общая наработка:") }} {{ hours(state.totalSeconds) }} {{ $u1t("ч") }}</small>
   </div>
   <v-alert v-if="state?.serviceDue" dense type="warning" class="mt-2 mb-1">{{ state.value?.service ? $u1t("Пора выполнить обслуживание U1.") : $u1t("Дата обслуживания неизвестна. Подтвердите выполненные работы в разделе «Обслуживание U1».") }}</v-alert>
-  <v-alert v-if="state?.bedDue" dense type="info" class="mt-2 mb-1">{{ state.value?.bed ? $u1t("Пора выполнить штатную калибровку стола.") : $u1t("Последняя калибровка стола не отмечена. Подтвердите её после выполнения.") }}</v-alert>
+  <v-alert v-if="state?.bedDue" dense type="info" class="mt-2 mb-1"><div class="maintenance-bed-notice"><span>{{ state.value?.bed ? $u1t("Пора выполнить штатную калибровку стола.") : $u1t("Последняя калибровка стола не отмечена. Подтвердите её после выполнения.") }}</span><v-btn small outlined :disabled="saving || state.calibrationActive" @click="bedConfirmOpen = true">{{ $u1t("Выполнить калибровку") }}</v-btn></div></v-alert>
+  <v-alert v-if="state?.bedCalibration?.message" dense :type="state.bedCalibration.state === 'failed' || state.bedCalibration.state === 'interrupted' ? 'warning' : 'info'" class="mt-2 mb-1">{{ state.bedCalibration.message }}</v-alert>
   <v-alert v-if="error || state?.message" dense type="warning" class="mt-2">{{ error || state?.message }}</v-alert>
   <v-dialog v-model="opened" content-class="u1-maintenance-dialog u1-unified-dialog" max-width="760" scrollable>
     <v-card>
@@ -25,6 +26,7 @@
           <h3>{{ $u1t("Калибровка стола") }}</h3>
           <v-switch :input-value="state.value.bedEnabled" :disabled="saving" :label="$u1t('Напоминать о калибровке стола')" @change="toggleBed" />
           <p>{{ $u1t("Последнее подтверждение:") }} {{ date(state.value.bed?.time) }}<br>{{ $u1t("После калибровки:") }} {{ state.bedSeconds === null ? $u1t("неизвестно") : hours(state.bedSeconds) + $u1t(" ч") }} · {{ state.bedPrints === null ? $u1t("неизвестно") : state.bedPrints }} {{ $u1t("завершённых печатей.") }}<br>{{ intervalSummary('bed') }}</p>
+          <v-btn color="primary" class="mr-2 mb-2" :disabled="saving || state.calibrationActive" @click="bedConfirmOpen = true">{{ $u1t("Выполнить калибровку") }}</v-btn>
           <v-btn color="primary" outlined :disabled="saving" @click="ask('bed')">{{ $u1t("Калибровка стола выполнена") }}</v-btn>
           <p class="mt-2">{{ $u1t("Кнопка только фиксирует уже выполненную штатную калибровку. Отмена или ошибка печати не увеличивает число завершённых печатей, но потраченное активное время учитывается.") }}</p>
         </v-card>
@@ -44,6 +46,14 @@
       <v-card-text v-else>{{ $u1t("Счётчики ещё не получены.") }} {{ error || state?.message }}</v-card-text>
       
     </v-card>
+  </v-dialog>
+  <v-dialog v-model="bedConfirmOpen" content-class="u1-maintenance-dialog u1-unified-dialog" max-width="560">
+    <v-card><u1-dialog-close @close="bedConfirmOpen = false" /><v-card-title>{{ $u1t("Калибровка стола") }}</v-card-title><v-card-text>
+      <p>{{ $u1t("Освободите стол и установите печатную пластину. U1 выполнит штатную калибровку с нагревом стола до 55 °C и движениями. После успеха отметка сохранится автоматически. Окно можно закрыть.") }}</p>
+      <v-checkbox v-model="bedConfirmed" :label="$u1t('Стол освобождён, печатная пластина установлена')" />
+      <v-alert v-if="error" dense type="error">{{ error }}</v-alert>
+      <v-btn block color="primary" :disabled="!bedConfirmed || saving || state?.calibrationActive" :loading="saving" @click="startBed">{{ $u1t("Выполнить калибровку") }}</v-btn>
+    </v-card-text></v-card>
   </v-dialog>
   <v-dialog v-model="periodsOpen" content-class="u1-maintenance-dialog u1-unified-dialog" max-width="650" scrollable>
     <v-card><u1-dialog-close @close="periodsOpen = false" /><v-card-title>{{ $u1t("Периоды и уведомления") }}</v-card-title><v-card-text>
@@ -81,6 +91,7 @@ interface Marker { time: number; seconds: number; completed: number }
 interface State {
   value: { revision: string; service: Marker | null; bed: Marker | null; bedEnabled: boolean; history: (Marker & { id: string; kind: string })[] } | null;
   periods?: {service: Period; bed: Period};
+  bedCalibration?: {state: string; message: string} | null; calibrationActive?: boolean;
   totalSeconds: number; completedPrints: number; serviceSeconds: number | null; bedSeconds: number | null; bedPrints: number | null;
   serviceDueAt: number | null; serviceDue: boolean; bedDue: boolean; checkedAt: number; message: string;
 }
@@ -104,6 +115,8 @@ export default class U1Maintenance extends Vue {
     if (await this.change({ action: 'periods', value })) this.periodsOpen = false
   }
   opened = false
+  bedConfirmOpen = false
+  bedConfirmed = false
   confirmOpen = false
   confirmed = false
   action: 'service' | 'bed' = 'service'
@@ -125,6 +138,16 @@ export default class U1Maintenance extends Vue {
     this.loading = true
     try { this.state = await u1DataRequest<State>('maintenance_state'); this.error = '' } catch (error) { this.error = (error as Error).message } finally { this.loading = false }
   }
+  async startBed () {
+    if (this.saving || !this.bedConfirmed) return
+    this.saving = true
+    try {
+      const plan = await u1DataRequest<{token: string}>('bed_calibration_prepare')
+      const job = await u1DataRequest<{state: string; message: string}>('bed_calibration_start', {token: plan.token, confirmed: true})
+      if (this.state) { this.state.bedCalibration = job; this.state.calibrationActive = true }
+      this.error = ''; this.bedConfirmOpen = false; this.bedConfirmed = false
+    } catch (error) { this.error = (error as Error).message } finally { this.saving = false }
+  }
   async change (payload: object) {
     if (!this.state?.value || this.saving) return false
     this.saving = true
@@ -143,4 +166,6 @@ export default class U1Maintenance extends Vue {
 .u1-maintenance-dialog input { font-size: 16px !important }
 .maintenance-actions { padding-left: 64px !important; flex-wrap: wrap; gap: 8px }
 .maintenance-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
+.maintenance-bed-notice { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
+.maintenance-bed-notice span { flex: 1 1 280px }
 </style>

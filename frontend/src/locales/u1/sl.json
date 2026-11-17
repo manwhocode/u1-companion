@@ -1645,5 +1645,10 @@
   "sb6dc320f8c167278": "Navodila",
   "sa222c8b6d129cb21": "Ukazi za zagon in premikanje zahtevajo potrditev.",
   "s008567c5ab4f42b4": "Zaznan je zapleten filament. Odpravite vzrok in potrdite nadaljevanje.",
-  "s23f97d2f46325fcf": "Vzrok je odpravljen in filament se prosto podaja"
+  "s23f97d2f46325fcf": "Vzrok je odpravljen in filament se prosto podaja",
+  "sc4ff11ffa73b7b43": "Zaženi umerjanje",
+  "s15d55a1369dd0fd5": "Izpraznite mizo in namestite tiskalno ploščo. U1 bo izvedel vgrajeno umerjanje s premiki in segrevanjem mize na 55 °C. Uspeh bo samodejno zabeležen. To okno lahko zaprete.",
+  "s1b2c184a6dc4802c": "Miza je prazna in tiskalna plošča je nameščena",
+  "se1b5f53bb9ec22ed": "Umerjanje mize je končano in samodejno zabeleženo.",
+  "s1ef81047694f8e0a": "Uspešno umerjanje mize ni bilo potrjeno. Zapis ni spremenjen."
 }

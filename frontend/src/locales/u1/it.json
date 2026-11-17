@@ -1645,5 +1645,10 @@
   "sb6dc320f8c167278": "Istruzioni",
   "sa222c8b6d129cb21": "I comandi di avvio e movimento richiedono conferma.",
   "s008567c5ab4f42b4": "Rilevato un groviglio del filamento. Risolvi il problema e conferma la ripresa.",
-  "s23f97d2f46325fcf": "Il problema è risolto e il filamento scorre liberamente"
+  "s23f97d2f46325fcf": "Il problema è risolto e il filamento scorre liberamente",
+  "sc4ff11ffa73b7b43": "Avvia calibrazione",
+  "s15d55a1369dd0fd5": "Liberare il piano e installare la piastra di stampa. U1 eseguirà la calibrazione integrata con movimenti e riscaldamento del piano a 55 °C. Il completamento verrà registrato automaticamente. È possibile chiudere questa finestra.",
+  "s1b2c184a6dc4802c": "Il piano è libero e la piastra è installata",
+  "se1b5f53bb9ec22ed": "Calibrazione del piano completata e registrata automaticamente.",
+  "s1ef81047694f8e0a": "Il completamento della calibrazione del piano non è stato confermato. La registrazione non è cambiata."
 }

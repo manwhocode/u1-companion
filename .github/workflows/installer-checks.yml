@@ -16,6 +16,8 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m unittest discover -s installer/tests -v
+      - run: python -m unittest test-u1-bed-calibration.py test-u1-maintenance.py test-u1-calibration-jobs.py
+        working-directory: backend
       - run: python backend/test-u1-timed-pause.py
         env:
           PYTHONPATH: backend

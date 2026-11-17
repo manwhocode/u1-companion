@@ -630,7 +630,7 @@ class DataStore:
         if operation == 'dryer_profiles': return self.dryer.profiles()
         if operation == 'dryer_profile_save': return self.dryer.change(payload)
         if operation == 'dryer_action': return self.dryer.action(self,payload)
-        if operation in ('calibration_run_start','feeder_apply','feeder_restart_check','import'):
+        if operation in ('bed_calibration_prepare','bed_calibration_start','calibration_run_start','feeder_apply','feeder_restart_check','import'):
             state_file = self.folder / 'drying' / 'state.json'
             if state_file.exists() and json.loads(state_file.read_text()).get('state') in ('heating','running','paused'):raise ValueError('Сначала отмените сушку.')
         if operation == 'night_configure' and payload.get('mode') != 'off':
@@ -653,17 +653,23 @@ class DataStore:
         if operation == 'timed_pause_prepare': return self.timed_pause.prepare(self,payload)
         if operation == 'timed_pause_arm': return self.timed_pause.arm(self,payload)
         if operation == 'timed_pause_cancel': return self.timed_pause.cancel(payload)
-        if self.timed_pause.active and operation in ('schedule_prepare','schedule_arm','calibration_run_start','feeder_apply','feeder_restart_check','import'):
+        if self.timed_pause.active and operation in ('bed_calibration_prepare','bed_calibration_start','schedule_prepare','schedule_arm','calibration_run_start','feeder_apply','feeder_restart_check','import'):
             raise ValueError('Сначала отмените таймер продолжения печати.')
         if operation == 'schedule_state': return self.scheduler.state()
         if operation == 'schedule_prepare': return self.scheduler.prepare(self,payload)
         if operation == 'schedule_arm': return self.scheduler.arm(self,payload)
         if operation == 'schedule_cancel': return self.scheduler.cancel(payload)
-        if self.scheduler.active and operation in ('calibration_run_start','feeder_apply','feeder_restart_check','import'):
+        if self.scheduler.active and operation in ('bed_calibration_prepare','bed_calibration_start','calibration_run_start','feeder_apply','feeder_restart_check','import'):
             raise ValueError('Сначала отмените отложенный запуск.')
         if operation == 'maintenance_state':
             return self.maintenance.state(self)
+        if operation == 'bed_calibration_prepare':
+            return self.calibration_jobs.prepare_bed()
+        if operation == 'bed_calibration_start':
+            return self.calibration_jobs.start_bed(payload)
         if operation == 'maintenance_change':
+            if self.calibration_jobs.active:
+                raise ValueError('Дождитесь завершения очереди калибровки.')
             return self.maintenance.change(self, ident, payload)
         if operation in ('calibration_run_state', 'calibration_run_prepare', 'calibration_run_start', 'calibration_run_stop'):
             if operation == 'calibration_run_state':

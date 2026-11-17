@@ -1645,5 +1645,10 @@
   "sb6dc320f8c167278": "Instructions",
   "sa222c8b6d129cb21": "Les commandes de démarrage et de déplacement nécessitent une confirmation.",
   "s008567c5ab4f42b4": "Enchevêtrement du filament détecté. Corrigez le problème et confirmez la reprise.",
-  "s23f97d2f46325fcf": "Le problème est résolu et le filament avance librement"
+  "s23f97d2f46325fcf": "Le problème est résolu et le filament avance librement",
+  "sc4ff11ffa73b7b43": "Lancer le calibrage",
+  "s15d55a1369dd0fd5": "Dégagez le plateau et installez la plaque. U1 exécutera son calibrage intégré, avec des mouvements et un chauffage du plateau à 55 °C. La réussite sera enregistrée automatiquement. Vous pouvez fermer cette fenêtre.",
+  "s1b2c184a6dc4802c": "Le plateau est dégagé et la plaque est installée",
+  "se1b5f53bb9ec22ed": "Calibrage du plateau terminé et enregistré automatiquement.",
+  "s1ef81047694f8e0a": "La réussite du calibrage du plateau n’a pas été confirmée. L’enregistrement reste inchangé."
 }

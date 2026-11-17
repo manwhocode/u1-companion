@@ -2,6 +2,7 @@
 import copy
 import datetime
 import json
+import math
 from pathlib import Path
 import re
 import threading
@@ -102,6 +103,90 @@ class CalibrationJobs:
     def status(self):
         return self.api(QUERY)['status']
 
+    def bed_ready(self):
+        if self.active or self.execute is None:
+            raise ValueError('Калибровка уже выполняется или сервис запуска не готов.')
+        status = self.api(QUERY + '&heater_bed&bed_mesh')['status']
+        require_idle(status)
+        if any(status.get(name, {}).get('target', 1) != 0 for name in ('heater_bed', 'extruder', 'extruder1', 'extruder2', 'extruder3')):
+            raise ValueError('Есть активный нагрев или сушка. Сначала выключите нагрев.')
+        return status
+
+    def prepare_bed(self):
+        self.bed_ready()
+        token = str(uuid.uuid4())
+        self.plans = {token: {'kind': 'bed', 'created': time.monotonic()}}
+        return {'token': token}
+
+    def start_bed(self, payload):
+        with self.lock:
+            token = payload.get('token')
+            if token and self.job.get('token') == token and self.job.get('kind') == 'bed':
+                return self.state()
+            plan = self.plans.get(token) if isinstance(token, str) else None
+            if not plan or plan.get('kind') != 'bed' or time.monotonic() - plan['created'] > 30 or payload.get('confirmed') is not True:
+                raise ValueError('Подтверждение запуска устарело. Подтвердите запуск заново.')
+            self.bed_ready()
+            self.plans.clear()
+            self.job = {'id': str(uuid.uuid4()), 'token': token, 'kind': 'bed', 'state': 'starting',
+                        'results': [], 'message': '', 'createdAt': time.time()}
+            self.update()
+            self.thread = threading.Thread(target=self.run_bed, daemon=True, name='u1-bed-calibration')
+            self.thread.start()
+            return self.state()
+
+    def run_bed(self):
+        # Long native request runs outside the mailbox worker; no automatic retry.
+        touched = False
+        failure = None
+        try:
+            status = self.api(QUERY + '&heater_bed')['status']
+            require_idle(status)
+            if any(status.get(name, {}).get('target', 1) != 0 for name in ('heater_bed', 'extruder', 'extruder1', 'extruder2', 'extruder3')):
+                raise ValueError('Есть активный нагрев или сушка. Сначала выключите нагрев.')
+            marker = max([0] + [row['time'] for row in self.logs()])
+            self.update(state='calibrating', message='Выполняется калибровка.')
+            touched = True
+            self.execute('G28\nAUTO_BED_MESH_CALIBRATE')
+            after = self.settled()
+            mesh = self.api('/printer/objects/query?bed_mesh')['status']['bed_mesh']
+            logs = [row for row in self.logs() if row['time'] > marker and row['type'] == 'response']
+            matrix = mesh.get('probed_matrix', [])
+            if (mesh.get('progress', {}).get('probe_state') != 'completed' or mesh.get('profile_name') != 'default'
+                    or len(matrix) < 3 or any(not isinstance(row, list) or len(row) != len(matrix[0]) or len(row) < 3
+                       or any(type(v) not in (int, float) or not math.isfinite(v) for v in row) for row in matrix)
+                    or not any(row['message'].strip() == '// Mesh Bed Leveling Complete' for row in logs)
+                    or any(re.search(r'^!!|abort|failed|error', row['message'], re.I) for row in logs)):
+                raise ValueError('Успешная калибровка стола не подтверждена. Отметка не изменена.')
+            require_idle(after)
+            self.execute('M140 S0')
+            touched = False
+            event = threading.Event()
+            task = {'event': event, 'kind': 'bed', 'id': self.state()['id']}
+            with self.lock:
+                self.pending = task
+                self.update(state='saving')
+            if not event.wait(45):
+                with self.lock:
+                    if self.pending is task:
+                        self.pending = None
+                raise ValueError('Успешная калибровка стола не подтверждена. Отметка не изменена.')
+            if task.get('error'):
+                raise ValueError(task['error'])
+            self.update(state='completed', message='Калибровка стола завершена и отмечена автоматически.')
+        except Exception as error:
+            failure = str(error)
+            self.update(state='finishing', message=failure)
+        finally:
+            if touched:
+                try:
+                    require_idle(self.status())
+                    self.execute('M140 S0')
+                except Exception:
+                    failure = (failure or '') + ' Автоматическое выключение нагрева не подтверждено; проверьте температуру на принтере.'
+            if failure is not None:
+                self.update(state='failed', message=failure)
+
     def logs(self):
         return self.api('/server/gcode_store?count=1000')['gcode_store']
 
@@ -131,7 +216,7 @@ class CalibrationJobs:
             if token and self.job.get('token') == token:
                 return self.state()
             plan = self.plans.get(token) if isinstance(token, str) else None
-            if not plan or time.monotonic() - plan['created'] > 30:
+            if not plan or plan.get('kind') == 'bed' or time.monotonic() - plan['created'] > 30:
                 raise ValueError('Подтверждение запуска устарело. Подтвердите запуск заново.')
             if self.active:
                 raise ValueError('Калибровка уже выполняется.')
@@ -210,7 +295,10 @@ class CalibrationJobs:
             task, self.pending = self.pending, None
         if task:
             try:
-                store.handle(str(uuid.uuid4()), {'operation': 'calibration', 'payload': task['payload']})
+                if task.get('kind') == 'bed':
+                    store.maintenance.record_bed(store, task['id'])
+                else:
+                    store.handle(str(uuid.uuid4()), {'operation': 'calibration', 'payload': task['payload']})
             except Exception as error:
                 task['error'] = str(error)
             finally:

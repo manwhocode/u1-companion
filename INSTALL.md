@@ -30,6 +30,8 @@ No personal library is preloaded. The release contains no owner's email, account
 
 Companion services start after U1 restores its persistent root overlay. The installer adds a marked startup block to the existing late init script `/etc/init.d/S99input-event-daemon`; the native script body is preserved. The helper starts only missing Companion processes and leaves printer services alone. Uninstall removes the marked block while preserving other edits. Startup diagnostics are in `/run/u1-companion-boot.log`.
 
+When external access was enabled, transient connection failures are retried with a delay from 5 seconds up to 5 minutes. Turning external access off cancels retries. A missing pairing code, unprotected gateway or incorrect runtime checksum stops the tunnel without retries. Temporary Cloudflare URLs can change after a restart; update the private Alexa skill endpoint if that happens.
+
 - Linux ARM64 U1 with root SSH access, stock Python 3.11+, nginx, OpenSSL and start-stop-daemon; internet access with valid system CA certificates.
 - CPU/memory cgroup isolation must already be available. AI, Alexa and the external-access service receive separate CPU/memory limits; printer services stay outside these groups.
 - At least 1.5 GiB free under `/userdata` for downloads, staging and backup. No automatic deletion of your existing files or old backups. Temporary runtime downloads are removed after success.

@@ -1645,5 +1645,10 @@
   "sb6dc320f8c167278": "Pokyny",
   "sa222c8b6d129cb21": "Příkazy spuštění a pohybu vyžadují potvrzení.",
   "s008567c5ab4f42b4": "Zjištěno zamotání filamentu. Odstraňte příčinu a potvrďte pokračování.",
-  "s23f97d2f46325fcf": "Příčina byla odstraněna a filament se volně podává"
+  "s23f97d2f46325fcf": "Příčina byla odstraněna a filament se volně podává",
+  "sc4ff11ffa73b7b43": "Spustit kalibraci",
+  "s15d55a1369dd0fd5": "Uvolněte podložku a nasaďte tiskový plát. U1 provede vestavěnou kalibraci s pohyby a ohřevem podložky na 55 °C. Úspěch se zaznamená automaticky. Toto okno můžete zavřít.",
+  "s1b2c184a6dc4802c": "Podložka je volná a tiskový plát je nasazen",
+  "se1b5f53bb9ec22ed": "Kalibrace podložky dokončena a automaticky zaznamenána.",
+  "s1ef81047694f8e0a": "Úspěšná kalibrace podložky nebyla potvrzena. Záznam se nezměnil."
 }

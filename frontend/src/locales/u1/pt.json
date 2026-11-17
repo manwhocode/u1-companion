@@ -1645,5 +1645,10 @@
   "sb6dc320f8c167278": "Instruções",
   "sa222c8b6d129cb21": "Os comandos de início e movimento exigem confirmação.",
   "s008567c5ab4f42b4": "Foi detetado filamento emaranhado. Resolva a causa e confirme para retomar.",
-  "s23f97d2f46325fcf": "O problema foi resolvido e o filamento avança livremente"
+  "s23f97d2f46325fcf": "O problema foi resolvido e o filamento avança livremente",
+  "sc4ff11ffa73b7b43": "Iniciar calibração",
+  "s15d55a1369dd0fd5": "Desobstrua a mesa e instale a placa de impressão. A U1 executará a calibração nativa, aquecendo a mesa a 55 °C e efetuando movimentos. O sucesso será registado automaticamente. Pode fechar esta janela.",
+  "s1b2c184a6dc4802c": "A mesa está desobstruída e a placa está instalada",
+  "se1b5f53bb9ec22ed": "Calibração da mesa concluída e registada automaticamente.",
+  "s1ef81047694f8e0a": "O sucesso da calibração da mesa não foi confirmado. O registo não foi alterado."
 }
