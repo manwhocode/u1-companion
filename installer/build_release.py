@@ -67,7 +67,7 @@ def main():
             upstream_constant=name in public_constants and sha(path)==public_constants[name]['sha256']
             if (CREDENTIAL.search(raw) and not upstream_constant) or any(v in raw.lower() for v in denied):
                 raise ValueError('Private data / key pattern in payload: '+name)
-    for required in ['backend/spool-accounting.py','backend/u1-alexa-bounded-launch.py','ui/index.html','alexa/bridge.cjs','remote/nginx-template.conf','licenses/Node.js-LICENSE.txt','licenses/Codex-LICENSE.txt','licenses/cloudflared-LICENSE.txt']:
+    for required in ['backend/spool-accounting.py','backend/u1-boot-start.py','backend/u1-alexa-bounded-launch.py','ui/index.html','alexa/bridge.cjs','remote/nginx-template.conf','licenses/Node.js-LICENSE.txt','licenses/Codex-LICENSE.txt','licenses/cloudflared-LICENSE.txt']:
         if required not in files:raise ValueError('Release source not staged: '+required)
     with (args.output/'u1-companion.tar.gz').open('wb') as raw,gzip.GzipFile(fileobj=raw,mode='wb',mtime=0,filename='') as gz,tarfile.open(fileobj=gz,mode='w') as tar:
         for name,path in sorted(files.items()):

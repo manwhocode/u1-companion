@@ -59,6 +59,7 @@ class Fixture(unittest.TestCase):
                      'exception_manager':{'exceptions':[]},'print_task_config':{k:[False]*4 for k in ['filament_type','filament_exist','filament_edit','filament_color_rgba']}}
         for n in ['extruder','extruder1','extruder2','extruder3','heater_bed']:self.status[n]={'target':0}
         self.put(m.PRINTER,b'# Native user config\n[printer]\nkinematics: corexy\n')
+        self.put(m.BOOT_TARGET,b'#!/bin/sh\n# Native late startup fixture\nexit 0\n')
         self.put('/etc/nginx/sites-available/fluidd',b'server {\n    listen 80;\n    location / {\n        root /home/lava/fluidd;\n    }\n}\n')
         self.p('/etc/nginx/sites-enabled').mkdir()
         self.put('/home/lava/klipper/klippy/extras/virtual_sdcard.py',b'# stock virtual sd\n')
@@ -73,6 +74,7 @@ class Fixture(unittest.TestCase):
             p=self.package/'backend'/name;p.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(REPO/'backend'/name,p)
         for name in m.MODULES:self.package_file('backend/'+name+'.py',b'# fixture module\n')
         self.package_file('backend/spool-accounting.py',b'# fixture accounting\n')
+        self.package_file('backend/u1-boot-start.py',(REPO/'backend/u1-boot-start.py').read_bytes())
         self.package_file('backend/u1_voice_messages.json',b'{"en":{"help":"fixture"}}')
         self.package_file('ui/index.html',b'<title>U1 Companion</title>')
         self.package_file('ui/config.json',b'{"endpoints":[],"hosted":false}')

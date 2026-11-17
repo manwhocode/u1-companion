@@ -1,11 +1,11 @@
 """Remove only inventoried Companion files; preserve all personal state."""
 from pathlib import Path
 import json,re,secrets,shutil,time
-from install import CORE,UI,DATA,PRINTER,MODULES,SERVICES,Transaction,sha,no_links,confirm
+from install import CORE,UI,DATA,PRINTER,MODULES,SERVICES,Transaction,sha,no_links,confirm,BOOT_TARGET,without_hook
 
 
 def allowed(name):
-    exact={PRINTER,'/oem/.debug','/etc/nginx/sites-available/fluidd',
+    exact={PRINTER,BOOT_TARGET,'/oem/.debug','/etc/nginx/sites-available/fluidd',
            '/etc/nginx/sites-enabled/u1-companion-local','/etc/nginx/sites-enabled/u1-companion-remote'}
     exact.update('/etc/init.d/'+s for s in SERVICES)
     exact.update('/oem/printer_data/config/'+v[0] for v in MODULES.values())
@@ -48,6 +48,9 @@ def uninstall(inst,yes=False):
     record=json.loads(registry.read_text())
     if record.get('version')!=1 or not isinstance(record.get('files'),dict):raise ValueError('Unsupported removal inventory')
     changes={PRINTER:config_without_addon(inst.p(PRINTER).read_bytes()),'/etc/nginx/sites-available/fluidd':nginx_without_addon(inst.p('/etc/nginx/sites-available/fluidd').read_bytes())}
+    if BOOT_TARGET in record['files']:
+        no_links(inst.p(BOOT_TARGET))
+        changes[BOOT_TARGET]=without_hook(inst.p(BOOT_TARGET).read_bytes())
     files=[]
     for name,expected in record['files'].items():
         if preserve(name):continue

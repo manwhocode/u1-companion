@@ -19,13 +19,19 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-alpha.16'
+VERSION = 'v0.1.1-alpha.17'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
 DATA = '/userdata/u1-addons'
 PRINTER = '/oem/printer_data/config/printer.cfg'
 SERVICES = ['S98u1-spool-accounting', 'S97u1-ai', 'S96u1-remote', 'S99u1-alexa-bridge']
+BOOT_TARGET = '/etc/init.d/S99input-event-daemon'
+BOOT_BEGIN = '# BEGIN U1 COMPANION LATE START\n'
+BOOT_END = '# END U1 COMPANION LATE START\n'
+BOOT_BLOCK = (BOOT_BEGIN + 'if [ "$1" = start ] && [ -f /home/lava/u1-addons/filament-ui/u1-boot-start.py ]; then\n'
+              '    /usr/bin/python3 /home/lava/u1-addons/filament-ui/u1-boot-start.py >> /run/u1-companion-boot.log 2>&1 &\n'
+              'fi\n' + BOOT_END)
 STATUS_REQUESTS = {'voice_state','companion_info','models_state','print_player_state','maintenance_state','night_state','alexa_state','dryer_state','dryer_profiles',
                    'magnet_state','recovery_state','timed_pause_state','schedule_state','calibration_run_state','feeder_state'}
 MODULES = {'u1_filament_profiles': ('u1-filament-profiles.cfg', '[u1_filament_profiles]\n'),
@@ -33,6 +39,23 @@ MODULES = {'u1_filament_profiles': ('u1-filament-profiles.cfg', '[u1_filament_pr
            'u1_magnet_pause': ('u1-magnet-pauses.cfg', '[u1_magnet_pause]\n')}
 NATIVE = {'/home/lava/printer_data/config/fluidd.cfg': 'ede05f50709c808e0775498f62e9c44a758f33c1f4684f51fb3cf0d87cb2b46e',
           '/home/lava/klipper/klippy/extras/virtual_sdcard.py': '38e769f078ee637c3393008e8d0dbb87dc4261ea1f1cd6ae9061fdb23673dc1e'}
+
+
+def without_hook(raw):
+    text = raw.decode('utf-8')
+    if BOOT_BEGIN not in text and BOOT_END not in text: return raw
+    if text.count(BOOT_BEGIN)!=1 or text.count(BOOT_END)!=1 or text.count(BOOT_BLOCK)!=1:
+        raise ValueError('Modified or ambiguous Companion boot hook')
+    return text.replace(BOOT_BLOCK,'',1).encode('utf-8')
+
+
+def with_hook(raw):
+    # rcS expands its init list before S01aoverlayfs restores newly added files.
+    original = without_hook(raw)
+    first, separator, rest = original.partition(b'\n')
+    if not separator or not first.startswith(b'#!') or b'/bin/sh' not in first:
+        raise ValueError('Unsupported U1 late startup script')
+    return first + separator + BOOT_BLOCK.encode('utf-8') + rest
 
 
 def confirm(prompt):
@@ -303,6 +326,9 @@ class Installer:
         return status
 
     def layout_check(self):
+        boot = self.p(BOOT_TARGET)
+        no_links(boot)
+        with_hook(boot.read_bytes())
         for site in self.p('/etc/nginx/sites-enabled').iterdir():
             if site.name not in ('u1-companion-local','u1-companion-remote') and re.search(r'(?m)^\s*listen\s+(?:[^;\s]*:)?(?:443|3443|8081|18088)\b', site.read_text()):
                 raise ValueError('Existing HTTPS/provisioning site needs migration before unified install: ' + site.name)
@@ -377,6 +403,7 @@ class Installer:
         sys.path.insert(0,str(package/'backend'))
         self.preflight(); user = pwd.getpwnam('lava'); owner = (user.pw_uid,user.pw_gid)
         self.layout_check()
+        if not (package/'backend/u1-boot-start.py').is_file(): raise ValueError('Release is missing the Companion boot starter')
         registry=self.p(CORE+'/managed-install.json')
         prior=json.loads(registry.read_text()) if registry.exists() else {'version':1,'files':{}}
         if prior.get('version')!=1 or not isinstance(prior.get('files'),dict):raise ValueError('Unknown installation registry')
@@ -409,6 +436,8 @@ class Installer:
                 tx.write(target, mode=0o755 if rel.startswith('services/') else 0o644, owner=(0,0), source=p)
             # Root service control is also shipped beside the standalone installer.
             tx.write(CORE+'/u1-service-stop.py',mode=0o644,owner=(0,0),source=Path(__file__).with_name('u1-service-stop.py'))
+            boot = self.p(BOOT_TARGET); stat = boot.stat()
+            tx.write(BOOT_TARGET,with_hook(boot.read_bytes()),stat.st_mode&0o777,(stat.st_uid,stat.st_gid))
             for name in ['filament-ui-data','ai-private','remote-private','alexa-private']:
                 directory = self.p(DATA + '/' + name)
                 no_links(directory)
