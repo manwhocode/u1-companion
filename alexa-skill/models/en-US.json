@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "printer helper",
+      "invocationName": "my printer",
       "intents": [
         {
           "name": "StatusIntent",
