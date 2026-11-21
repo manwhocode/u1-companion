@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Secagem; o temporizador conta enquanto a câmara está quente",
   "se07f73eb0257c1f9": "A temperatura-alvo deve ser de 25–55 °C e pelo menos 3 °C inferior ao limite de segurança",
   "s50aca356b0a70e97": "Windows: abrir certificado → Instalar certificado → Utilizador atual → Autoridades de certificação de raiz fidedigna. Firefox: Definições → Privacidade e segurança → Certificados → Ver certificados → Autoridades → Importar. macOS: abrir no Acesso a Porta-chaves e configurar a confiança SSL. Instale apenas o certificado da sua impressora.",
-  "s59715500df6a0e16": "Secagem; o temporizador conta enquanto a câmara está quente. a sessão completa está limitada a 8 horas, incluindo a espera. O aquecimento desliga-se ao atingir o limite da câmara, perante erros, perda do sensor ou desconexão do serviço. Retome manualmente apenas depois de a câmara arrefecer até 3 °C abaixo do limite. A secagem não é retomada após um reinício. Fechar a janela não interrompe a secagem."
+  "s59715500df6a0e16": "Secagem; o temporizador conta enquanto a câmara está quente. a sessão completa está limitada a 8 horas, incluindo a espera. O aquecimento desliga-se ao atingir o limite da câmara, perante erros, perda do sensor ou desconexão do serviço. Retome manualmente apenas depois de a câmara arrefecer até 3 °C abaixo do limite. A secagem não é retomada após um reinício. Fechar a janela não interrompe a secagem.",
+  "sfbcb22ef31b2c1cc": "Temperatura da mesa, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Mesa 30–100°C, duração de 1 min a 8 h, limite da câmara 25–60°C."
 }

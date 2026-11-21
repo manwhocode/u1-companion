@@ -13,6 +13,9 @@ self.addEventListener('message', (event) => {
   }
 })
 
+// A installed module update must not remain indefinitely in waiting state.
+self.addEventListener('install', () => { self.skipWaiting() })
+self.addEventListener('activate', event => { event.waitUntil(self.clients.claim()) })
 precacheAndRoute(self.__WB_MANIFEST)
 
 cleanupOutdatedCaches()

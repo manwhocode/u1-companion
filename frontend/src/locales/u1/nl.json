@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Drogen; de timer loopt zolang de kamer warm is",
   "se07f73eb0257c1f9": "De kamertemperatuur moet 25–55 °C zijn en minstens 3 °C onder de veiligheidsgrens liggen",
   "s50aca356b0a70e97": "Windows: open het certificaat → Certificaat installeren → Huidige gebruiker → Vertrouwde basiscertificeringsinstanties. Firefox: Instellingen → Privacy & Beveiliging → Certificaten → Certificaten bekijken → Autoriteiten → Importeren. macOS: open in Sleutelhangertoegang en stel SSL-vertrouwen in. Installeer alleen het certificaat van uw eigen printer.",
-  "s59715500df6a0e16": "Drogen; de timer loopt zolang de kamer warm is. de volledige sessie is beperkt tot 8 uur, inclusief wachten. De verwarming schakelt uit bij de kamergrens, fouten, sensorverlies of een verbroken dienstverbinding. Hervat uitsluitend handmatig nadat de kamer tot 3 °C onder de grens is afgekoeld. Drogen wordt na een herstart niet hervat. Het venster sluiten stopt het drogen niet."
+  "s59715500df6a0e16": "Drogen; de timer loopt zolang de kamer warm is. de volledige sessie is beperkt tot 8 uur, inclusief wachten. De verwarming schakelt uit bij de kamergrens, fouten, sensorverlies of een verbroken dienstverbinding. Hervat uitsluitend handmatig nadat de kamer tot 3 °C onder de grens is afgekoeld. Drogen wordt na een herstart niet hervat. Het venster sluiten stopt het drogen niet.",
+  "sfbcb22ef31b2c1cc": "Bedtemperatuur, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Bed 30–100°C, duur 1 min–8 u, kamergrens 25–60°C."
 }

@@ -7,7 +7,7 @@ from u1_dryer_service import Dryer
 class Core(unittest.TestCase):
  def setUp(self):self.s=Session();self.s.start(45,60,60,0)
  def test_bounds_and_nan(self):
-  for v in [(81,60,60),(40,28801,60),(40,60,61),(float('nan'),60,60),(True,60,60)]:
+  for v in [(101,60,60),(40,28801,60),(40,60,61),(float('nan'),60,60),(True,60,60)]:
    with self.assertRaises(ValueError):validate(*v)
  def test_timer_starts_after_warming(self):self.s.tick(5,30,25,target=45);self.assertEqual(self.s.remaining,60);self.s.tick(6,44,25,target=45);self.s.tick(7,44,25,target=45);self.assertEqual(self.s.remaining,59)
  def test_completion_switch_off_requested(self):
@@ -20,6 +20,11 @@ class Core(unittest.TestCase):
  def test_paused_timer_does_not_run(self):self.s.pause('user');self.s.heartbeat(20);self.s.tick(20,40,30);self.assertEqual(self.s.remaining,60)
  def test_changed_target_is_not_reapplied(self):self.assertTrue(self.s.tick(1,40,25,target=0));self.assertEqual(self.s.state,'paused')
  def test_bad_machine_stops(self):self.assertTrue(self.s.tick(1,40,25,reason='sensor fault'));self.assertEqual(self.s.message,'sensor fault')
+ def test_hundred_degree_bed_supported_in_both_modes(self):
+  for mode in ('bed','chamber'):
+   s=Session();s.start(100,600,60,0,mode,40);self.assertEqual(s.temp,100)
+   s.tick(36,100,30,target=100);self.assertEqual(s.state,'paused')
+
  def test_absolute_eight_hour_limit(self):self.s.heartbeat(28800);self.s.tick(28800,30,25);self.assertEqual(self.s.state,'completed')
  def test_resume_after_deadline_denied(self):
   self.s.pause('user')

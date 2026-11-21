@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Drying; the timer counts while the chamber is warm",
   "se07f73eb0257c1f9": "Chamber target must be 25–55 °C and at least 3 °C below the safety limit",
   "s50aca356b0a70e97": "Windows: open the certificate → Install Certificate → Current User → Trusted Root Certification Authorities. Firefox: Settings → Privacy & Security → Certificates → View Certificates → Authorities → Import. macOS: open the certificate in Keychain Access and configure SSL trust. Install only your own printer certificate.",
-  "s59715500df6a0e16": "Drying; the timer counts while the chamber is warm. the entire session is limited to 8 hours, including waiting. Heating turns off at the chamber threshold, on errors, sensor loss or service disconnection. Resume manually only after the chamber cools to 3 °C below the threshold. Drying does not resume after a restart. Closing the window does not stop drying."
+  "s59715500df6a0e16": "Drying; the timer counts while the chamber is warm. the entire session is limited to 8 hours, including waiting. Heating turns off at the chamber threshold, on errors, sensor loss or service disconnection. Resume manually only after the chamber cools to 3 °C below the threshold. Drying does not resume after a restart. Closing the window does not stop drying.",
+  "sfbcb22ef31b2c1cc": "Bed temperature, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Bed 30–100°C, duration 1 min–8 h, chamber limit 25–60°C."
 }

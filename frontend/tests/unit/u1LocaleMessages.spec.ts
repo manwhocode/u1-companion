@@ -24,6 +24,9 @@ describe('independent U1 Companion catalogs', () => {
     const i18n = instance('en')
     expect(translateU1(i18n, 'Пауза перед слоем 12: установка магнитов.')).toBe('Pause before layer 12: insert magnets.')
   })
+  it('translates the nested reason in historical mixed-language magnet events', () => {
+    expect(translateU1(instance('en'), 'Magnet pause: Нет активной печати.')).toBe('Pauses for magnets: No active print.')
+  })
   it('does not translate or mutate inventory, exported data or Alexa message templates', () => {
     const value = { message: 'Нет активной печати.', filename: 'Закрыть.gcode', name: 'Закрыть', hex: '#FFFFFF', data: { message: 'Закрыть' }, config: { message: 'Печать завершена' }, records: [{ message: 'Ошибка' }] }
     const before = JSON.stringify(value); const i18n = instance('en')

@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Sušení; časovač běží při zahřáté komoře",
   "se07f73eb0257c1f9": "Cílová teplota komory musí být 25–55 °C a alespoň 3 °C pod bezpečnostní mezí",
   "s50aca356b0a70e97": "Windows: otevřete certifikát → Nainstalovat certifikát → Aktuální uživatel → Důvěryhodné kořenové certifikační autority. Firefox: Nastavení → Soukromí a zabezpečení → Certifikáty → Zobrazit certifikáty → Autority → Importovat. macOS: otevřete v Klíčence a nastavte důvěru SSL. Instalujte pouze certifikát vlastní tiskárny.",
-  "s59715500df6a0e16": "Sušení; časovač běží při zahřáté komoře. celá relace je omezena na 8 hodin včetně čekání. Ohřev se vypne při dosažení limitu komory, chybách, ztrátě senzoru nebo odpojení služby. Ručně pokračujte až po ochlazení komory na 3 °C pod limitem. Po restartu sušení nepokračuje. Zavření okna sušení nezastaví."
+  "s59715500df6a0e16": "Sušení; časovač běží při zahřáté komoře. celá relace je omezena na 8 hodin včetně čekání. Ohřev se vypne při dosažení limitu komory, chybách, ztrátě senzoru nebo odpojení služby. Ručně pokračujte až po ochlazení komory na 3 °C pod limitem. Po restartu sušení nepokračuje. Zavření okna sušení nezastaví.",
+  "sfbcb22ef31b2c1cc": "Teplota podložky, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Podložka 30–100°C, doba 1 min–8 h, limit komory 25–60°C."
 }

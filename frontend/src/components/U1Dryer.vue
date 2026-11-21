@@ -14,7 +14,7 @@
         <v-alert dense type="warning">{{ $u1t("Выбирайте температуру и время по рекомендациям производителя филамента. Здесь задаётся температура стола: воздух и сама катушка могут быть холоднее. Проверьте термостойкость катушки и подставки; эффективность сушки зависит от прогрева и вентиляции.") }}</v-alert>
         <v-select v-model="mode" :items="[{value:'bed',text:$u1t('Температура стола')},{value:'chamber',text:$u1t('Максимальная температура камеры')}]" :label="$u1t('Режим сушки')" :disabled="active" outlined dense />
         <v-text-field v-if="mode === 'chamber'" v-model.number="chamberTarget" type="number" min="25" :max="Math.min(55,limit-3)" :label="$u1t('Максимальная температура камеры')" :hint="$u1t('Нагрев стола выключается у цели и возобновляется после снижения на 2 °C. Защитный порог остаётся отдельным.')" persistent-hint outlined dense :disabled="active" />
-        <v-text-field v-model.number="temperature" type="number" min="30" max="80" :label="$u1t('Температура стола, °C (30–80)')" outlined dense :disabled="active" />
+        <v-text-field v-model.number="temperature" type="number" min="30" max="100" :label="$u1t('Температура стола, °C (30–100)')" outlined dense :disabled="active" />
         <v-text-field v-model.number="hours" type="number" min="0.017" max="8" step="0.25" :label="$u1t('Таймер, часов (до 8)')" outlined dense :disabled="active" />
         <v-switch :input-value="true" disabled :label="$u1t('Контролировать температуру камеры — обязательно')" />
         <v-text-field v-model.number="limit" type="number" min="25" max="60" :label="$u1t('Порог камеры, °C (25–60)')" outlined dense :disabled="active" />

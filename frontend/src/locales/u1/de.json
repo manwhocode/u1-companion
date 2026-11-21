@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Trocknung; der Timer läuft bei warmer Kammer",
   "se07f73eb0257c1f9": "Kammerziel muss 25–55 °C und mindestens 3 °C unter der Sicherheitsgrenze liegen",
   "s50aca356b0a70e97": "Windows: Zertifikat öffnen → Zertifikat installieren → Aktueller Benutzer → Vertrauenswürdige Stammzertifizierungsstellen. Firefox: Einstellungen → Datenschutz & Sicherheit → Zertifikate → Zertifikate anzeigen → Zertifizierungsstellen → Importieren. macOS: Zertifikat in der Schlüsselbundverwaltung öffnen und SSL-Vertrauen einstellen. Nur das Zertifikat des eigenen Druckers installieren.",
-  "s59715500df6a0e16": "Trocknung; der Timer läuft bei warmer Kammer. die gesamte Sitzung ist einschließlich Wartezeiten auf 8 Stunden begrenzt. Beim Kammergrenzwert, Fehlern, Sensorverlust oder Dienstunterbrechung wird die Heizung abgeschaltet. Erst manuell fortsetzen, wenn die Kammer mindestens 3 °C unter den Grenzwert abgekühlt ist. Nach einem Neustart wird die Trocknung nicht fortgesetzt. Das Schließen des Fensters stoppt die Trocknung nicht."
+  "s59715500df6a0e16": "Trocknung; der Timer läuft bei warmer Kammer. die gesamte Sitzung ist einschließlich Wartezeiten auf 8 Stunden begrenzt. Beim Kammergrenzwert, Fehlern, Sensorverlust oder Dienstunterbrechung wird die Heizung abgeschaltet. Erst manuell fortsetzen, wenn die Kammer mindestens 3 °C unter den Grenzwert abgekühlt ist. Nach einem Neustart wird die Trocknung nicht fortgesetzt. Das Schließen des Fensters stoppt die Trocknung nicht.",
+  "sfbcb22ef31b2c1cc": "Betttemperatur, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Bett 30–100°C, Dauer 1 Min.–8 Std., Kammergrenze 25–60°C."
 }

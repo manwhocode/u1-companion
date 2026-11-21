@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Sušenje; časovnik odšteva, ko je komora ogreta",
   "se07f73eb0257c1f9": "Ciljna temperatura komore mora biti 25–55 °C in vsaj 3 °C pod varnostno mejo",
   "s50aca356b0a70e97": "Windows: odprite potrdilo → Namesti potrdilo → Trenutni uporabnik → Zaupanja vredni overitelji korenskih potrdil. Firefox: Nastavitve → Zasebnost in varnost → Potrdila → Preglej potrdila → Overitelji → Uvozi. macOS: odprite v Dostopu do verige ključev in nastavite zaupanje SSL. Namestite le potrdilo svojega tiskalnika.",
-  "s59715500df6a0e16": "Sušenje; časovnik odšteva, ko je komora ogreta. celotna seja je omejena na 8 ur, vključno s čakanjem. Gretje se izklopi ob doseženi mejni temperaturi komore, napakah, izgubi tipala ali prekinitvi povezave s storitvijo. Ročno nadaljujte šele, ko se komora ohladi na 3 °C pod mejno temperaturo. Po ponovnem zagonu se sušenje ne nadaljuje. Zapiranje okna ne ustavi sušenja."
+  "s59715500df6a0e16": "Sušenje; časovnik odšteva, ko je komora ogreta. celotna seja je omejena na 8 ur, vključno s čakanjem. Gretje se izklopi ob doseženi mejni temperaturi komore, napakah, izgubi tipala ali prekinitvi povezave s storitvijo. Ročno nadaljujte šele, ko se komora ohladi na 3 °C pod mejno temperaturo. Po ponovnem zagonu se sušenje ne nadaljuje. Zapiranje okna ne ustavi sušenja.",
+  "sfbcb22ef31b2c1cc": "Temperatura podlage, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Podlaga 30–100 °C, trajanje 1 min–8 h, meja komore 25–60 °C."
 }

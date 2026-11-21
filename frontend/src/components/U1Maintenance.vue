@@ -26,8 +26,8 @@
           <h3>{{ $u1t("Калибровка стола") }}</h3>
           <v-switch :input-value="state.value.bedEnabled" :disabled="saving" :label="$u1t('Напоминать о калибровке стола')" @change="toggleBed" />
           <p>{{ $u1t("Последнее подтверждение:") }} {{ date(state.value.bed?.time) }}<br>{{ $u1t("После калибровки:") }} {{ state.bedSeconds === null ? $u1t("неизвестно") : hours(state.bedSeconds) + $u1t(" ч") }} · {{ state.bedPrints === null ? $u1t("неизвестно") : state.bedPrints }} {{ $u1t("завершённых печатей.") }}<br>{{ intervalSummary('bed') }}</p>
-          <v-btn color="primary" class="mr-2 mb-2" :disabled="saving || state.calibrationActive" @click="bedConfirmOpen = true">{{ $u1t("Выполнить калибровку") }}</v-btn>
-          <v-btn color="primary" outlined :disabled="saving" @click="ask('bed')">{{ $u1t("Калибровка стола выполнена") }}</v-btn>
+          <div class="bed-calibration-actions"><v-btn color="primary" :disabled="saving || state.calibrationActive" @click="bedConfirmOpen = true">{{ $u1t("Выполнить калибровку") }}</v-btn>
+          <v-btn color="primary" outlined :disabled="saving" @click="ask('bed')">{{ $u1t("Калибровка стола выполнена") }}</v-btn></div>
           <p class="mt-2">{{ $u1t("Кнопка только фиксирует уже выполненную штатную калибровку. Отмена или ошибка печати не увеличивает число завершённых печатей, но потраченное активное время учитывается.") }}</p>
         </v-card>
         <h3>{{ $u1t("Что проверять на U1") }}</h3>
@@ -169,3 +169,5 @@ export default class U1Maintenance extends Vue {
 .maintenance-bed-notice { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
 .maintenance-bed-notice span { flex: 1 1 280px }
 </style>
+
+<style scoped>.bed-calibration-actions {display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}.bed-calibration-actions .v-btn {margin:0!important;min-height:40px;height:auto;white-space:normal;flex:1 1 240px}.bed-calibration-actions .v-btn >>> .v-btn__content {white-space:normal;padding:8px 0}</style>

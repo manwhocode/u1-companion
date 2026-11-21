@@ -300,8 +300,8 @@ export default class U1Filaments extends Vue {
   labelPng = ''
   labelFilename = ''
   get httpsUrl () { return `https://${window.location.hostname}/u1-filaments-ui/#/u1-filaments` }
-  get certificateUrl () { return `http://${window.location.hostname}:8081/U1-Camera.mobileconfig` }
-  get androidCertificateUrl () { return `http://${window.location.hostname}:8081/u1-local-ca.crt` }
+  get certificateUrl () { return '/u1-filaments-ui/U1-Camera.mobileconfig' }
+  get androidCertificateUrl () { return '/u1-filaments-ui/u1-local-ca.crt' }
   scanning = false
   photoBusy = false
   photoStatus = ''

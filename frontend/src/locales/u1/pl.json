@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Suszenie; zegar odlicza, gdy komora jest ciepła",
   "se07f73eb0257c1f9": "Cel komory musi wynosić 25–55 °C i być co najmniej 3 °C poniżej progu bezpieczeństwa",
   "s50aca356b0a70e97": "Windows: otwórz certyfikat → Zainstaluj certyfikat → Bieżący użytkownik → Zaufane główne urzędy certyfikacji. Firefox: Ustawienia → Prywatność i bezpieczeństwo → Certyfikaty → Wyświetl certyfikaty → Organy certyfikacji → Importuj. macOS: otwórz w Dostępie do pęku kluczy i ustaw zaufanie SSL. Instaluj wyłącznie certyfikat własnej drukarki.",
-  "s59715500df6a0e16": "Suszenie; zegar odlicza, gdy komora jest ciepła. cała sesja jest ograniczona do 8 godzin, łącznie z oczekiwaniem. Grzanie wyłącza się po osiągnięciu progu komory, przy błędach, utracie czujnika lub połączenia z usługą. Wznawiaj ręcznie dopiero po ochłodzeniu komory do 3 °C poniżej progu. Suszenie nie wznawia się po restarcie. Zamknięcie okna nie zatrzymuje suszenia."
+  "s59715500df6a0e16": "Suszenie; zegar odlicza, gdy komora jest ciepła. cała sesja jest ograniczona do 8 godzin, łącznie z oczekiwaniem. Grzanie wyłącza się po osiągnięciu progu komory, przy błędach, utracie czujnika lub połączenia z usługą. Wznawiaj ręcznie dopiero po ochłodzeniu komory do 3 °C poniżej progu. Suszenie nie wznawia się po restarcie. Zamknięcie okna nie zatrzymuje suszenia.",
+  "sfbcb22ef31b2c1cc": "Temperatura stołu, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Stół 30–100°C, czas 1 min–8 h, limit komory 25–60°C."
 }

@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Kurutuluyor; zamanlayıcı hazne sıcakken ilerler",
   "se07f73eb0257c1f9": "Hazne hedefi 25–55 °C olmalı ve güvenlik sınırından en az 3 °C düşük olmalıdır",
   "s50aca356b0a70e97": "Windows: sertifikayı açın → Sertifika Yükle → Geçerli Kullanıcı → Güvenilen Kök Sertifika Yetkilileri. Firefox: Ayarlar → Gizlilik ve Güvenlik → Sertifikalar → Sertifikaları görüntüle → Yetkililer → İçe aktar. macOS: Anahtar Zinciri Erişimi’nde açıp SSL güvenini ayarlayın. Yalnızca kendi yazıcınızın sertifikasını yükleyin.",
-  "s59715500df6a0e16": "Kurutuluyor; zamanlayıcı hazne sıcakken ilerler. bekleme dahil tüm oturum 8 saatle sınırlıdır. Hazne eşiğine ulaşıldığında, hatalarda, sensör kaybında veya hizmet bağlantısı kesildiğinde ısıtma kapanır. Yalnızca hazne eşik değerinin 3 °C altına soğuduktan sonra elle devam ettirin. Yeniden başlatma sonrasında kurutma devam etmez. Pencereyi kapatmak kurutmayı durdurmaz."
+  "s59715500df6a0e16": "Kurutuluyor; zamanlayıcı hazne sıcakken ilerler. bekleme dahil tüm oturum 8 saatle sınırlıdır. Hazne eşiğine ulaşıldığında, hatalarda, sensör kaybında veya hizmet bağlantısı kesildiğinde ısıtma kapanır. Yalnızca hazne eşik değerinin 3 °C altına soğuduktan sonra elle devam ettirin. Yeniden başlatma sonrasında kurutma devam etmez. Pencereyi kapatmak kurutmayı durdurmaz.",
+  "sfbcb22ef31b2c1cc": "Tabla sıcaklığı, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Tabla 30–100°C, süre 1 dk–8 sa., hazne sınırı 25–60°C."
 }

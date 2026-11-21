@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Essiccazione; il timer avanza quando la camera è calda",
   "se07f73eb0257c1f9": "La temperatura della camera deve essere tra 25 e 55 °C e almeno 3 °C sotto il limite di sicurezza",
   "s50aca356b0a70e97": "Windows: apri il certificato → Installa certificato → Utente corrente → Autorità di certificazione radice attendibili. Firefox: Impostazioni → Privacy e sicurezza → Certificati → Mostra certificati → Autorità → Importa. macOS: apri in Accesso Portachiavi e configura l’attendibilità SSL. Installa solo il certificato della tua stampante.",
-  "s59715500df6a0e16": "Essiccazione; il timer avanza quando la camera è calda. l'intera sessione è limitata a 8 ore, compresa l'attesa. Il riscaldamento si spegne al raggiungimento della soglia della camera, in caso di errori, perdita dei sensori o disconnessione del servizio. Riprendi manualmente soltanto dopo che la camera è scesa di 3 °C sotto la soglia. L'essiccazione non riprende dopo un riavvio. Chiudere la finestra non interrompe l'essiccazione."
+  "s59715500df6a0e16": "Essiccazione; il timer avanza quando la camera è calda. l'intera sessione è limitata a 8 ore, compresa l'attesa. Il riscaldamento si spegne al raggiungimento della soglia della camera, in caso di errori, perdita dei sensori o disconnessione del servizio. Riprendi manualmente soltanto dopo che la camera è scesa di 3 °C sotto la soglia. L'essiccazione non riprende dopo un riavvio. Chiudere la finestra non interrompe l'essiccazione.",
+  "sfbcb22ef31b2c1cc": "Temperatura del piano, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Piano 30–100°C, durata 1 min–8 h, limite camera 25–60°C."
 }

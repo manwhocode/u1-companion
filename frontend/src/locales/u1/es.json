@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Secando; el temporizador cuenta mientras la cámara está caliente",
   "se07f73eb0257c1f9": "El objetivo de la cámara debe ser de 25–55 °C y al menos 3 °C inferior al límite de seguridad",
   "s50aca356b0a70e97": "Windows: abrir el certificado → Instalar certificado → Usuario actual → Entidades de certificación raíz de confianza. Firefox: Ajustes → Privacidad y seguridad → Certificados → Ver certificados → Autoridades → Importar. macOS: abrir en Acceso a Llaveros y configurar la confianza SSL. Instala solo el certificado de tu impresora.",
-  "s59715500df6a0e16": "Secando; el temporizador cuenta mientras la cámara está caliente. la sesión completa se limita a 8 horas, incluida la espera. El calentamiento se apaga al alcanzar el umbral de la cámara, ante errores, pérdida del sensor o desconexión del servicio. Reanuda manualmente solo cuando la cámara se enfríe hasta 3 °C por debajo del umbral. El secado no se reanuda tras un reinicio. Cerrar la ventana no detiene el secado."
+  "s59715500df6a0e16": "Secando; el temporizador cuenta mientras la cámara está caliente. la sesión completa se limita a 8 horas, incluida la espera. El calentamiento se apaga al alcanzar el umbral de la cámara, ante errores, pérdida del sensor o desconexión del servicio. Reanuda manualmente solo cuando la cámara se enfríe hasta 3 °C por debajo del umbral. El secado no se reanuda tras un reinicio. Cerrar la ventana no detiene el secado.",
+  "sfbcb22ef31b2c1cc": "Temperatura de la cama, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Cama 30–100°C, duración de 1 min a 8 h, límite de cámara 25–60°C."
 }

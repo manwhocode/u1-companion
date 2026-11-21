@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Szárítás; az időzítő meleg kamrában számol vissza",
   "se07f73eb0257c1f9": "A kamra célértéke 25–55 °C legyen, legalább 3 °C-kal a biztonsági határ alatt",
   "s50aca356b0a70e97": "Windows: tanúsítvány megnyitása → Tanúsítvány telepítése → Aktuális felhasználó → Megbízható legfelső szintű hitelesítésszolgáltatók. Firefox: Beállítások → Adatvédelem és biztonság → Tanúsítványok → Tanúsítványok megtekintése → Hitelesítésszolgáltatók → Importálás. macOS: megnyitás a Kulcskarikában, SSL-bizalom beállítása. Csak saját nyomtatója tanúsítványát telepítse.",
-  "s59715500df6a0e16": "Szárítás; az időzítő meleg kamrában számol vissza. a teljes munkamenet várakozással együtt legfeljebb 8 óra. A fűtés a kamra küszöbhőmérsékleténél, hiba, érzékelővesztés vagy a szolgáltatás megszakadása esetén kikapcsol. Kézzel csak akkor folytassa, ha a kamra 3 °C-kal a küszöb alá hűlt. Újraindítás után a szárítás nem folytatódik. Az ablak bezárása nem állítja le a szárítást."
+  "s59715500df6a0e16": "Szárítás; az időzítő meleg kamrában számol vissza. a teljes munkamenet várakozással együtt legfeljebb 8 óra. A fűtés a kamra küszöbhőmérsékleténél, hiba, érzékelővesztés vagy a szolgáltatás megszakadása esetén kikapcsol. Kézzel csak akkor folytassa, ha a kamra 3 °C-kal a küszöb alá hűlt. Újraindítás után a szárítás nem folytatódik. Az ablak bezárása nem állítja le a szárítást.",
+  "sfbcb22ef31b2c1cc": "Asztal hőmérséklete, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Asztal 30–100 °C, időtartam 1 perc–8 óra, kamrakorlát 25–60 °C."
 }

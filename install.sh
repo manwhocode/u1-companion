@@ -2,7 +2,7 @@
 # Run on the printer over SSH. No desktop application or PC dependencies.
 set -eu
 umask 077
-VERSION=v0.1.1-alpha.19
+VERSION=v0.1.1-alpha.20
 WORK="/userdata/u1-addons/downloads/$VERSION"
 command -v python3 >/dev/null 2>&1 || { echo "Stock Python 3.11 is required on U1"; exit 1; }
 # Python uses the system CA store. No insecure TLS flags or shell pipelines.

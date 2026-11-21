@@ -1667,5 +1667,7 @@
   "s8b45a7603f63eff8": "Séchage ; le minuteur décompte lorsque la chambre est chaude",
   "se07f73eb0257c1f9": "La cible de chambre doit être comprise entre 25 et 55 °C et rester au moins 3 °C sous le seuil de sécurité",
   "s50aca356b0a70e97": "Windows : ouvrir le certificat → Installer un certificat → Utilisateur actuel → Autorités de certification racines de confiance. Firefox : Paramètres → Vie privée et sécurité → Certificats → Afficher les certificats → Autorités → Importer. macOS : ouvrir dans Trousseaux d’accès et régler la confiance SSL. Installez uniquement le certificat de votre imprimante.",
-  "s59715500df6a0e16": "Séchage ; le minuteur décompte lorsque la chambre est chaude. la session entière est limitée à 8 heures, attente comprise. Le chauffage s’arrête au seuil de l’enceinte, en cas d’erreur, de perte de capteur ou de déconnexion du service. Reprenez manuellement uniquement lorsque l’enceinte est redescendue à 3 °C sous le seuil. Le séchage ne reprend pas après un redémarrage. Fermer la fenêtre n’arrête pas le séchage."
+  "s59715500df6a0e16": "Séchage ; le minuteur décompte lorsque la chambre est chaude. la session entière est limitée à 8 heures, attente comprise. Le chauffage s’arrête au seuil de l’enceinte, en cas d’erreur, de perte de capteur ou de déconnexion du service. Reprenez manuellement uniquement lorsque l’enceinte est redescendue à 3 °C sous le seuil. Le séchage ne reprend pas après un redémarrage. Fermer la fenêtre n’arrête pas le séchage.",
+  "sfbcb22ef31b2c1cc": "Température du plateau, °C (30–100)",
+  "s64ff8e45d08f2ad0": "Plateau 30–100°C, durée 1 min–8 h, limite d’enceinte 25–60°C."
 }

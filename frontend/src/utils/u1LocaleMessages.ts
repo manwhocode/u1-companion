@@ -15,6 +15,8 @@ const patterns = Object.entries(russian).filter(([, text]) => /\{p\d+\}/.test(te
 
 export function translateU1 (i18n: VueI18n, source: unknown, values: Record<string, unknown> = {}): string {
   if (typeof source !== 'string') return source == null ? '' : String(source)
+  // Historical native events can contain an English envelope around a Russian reason.
+  if (source.startsWith('Magnet pause: ')) return translateU1(i18n, 'Паузы для магнитов') + ': ' + translateU1(i18n, source.slice(14))
   let key = sourceKeys[source]
   if (!key && /[А-Яа-яЁё]/.test(source)) {
     for (const pattern of patterns) {
@@ -24,7 +26,7 @@ export function translateU1 (i18n: VueI18n, source: unknown, values: Record<stri
   }
   if (!key && /[А-Яа-яЁё]/.test(source)) {
     const prefix = Object.entries(russian).filter(([, text]) => text.length >= 16 && /[:：]\s*$/.test(text) && source.startsWith(text)).sort((a, b) => b[1].length - a[1].length)[0]
-    if (prefix && source !== prefix[1]) return translateU1(i18n, prefix[1]) + source.slice(prefix[1].length)
+    if (prefix && source !== prefix[1]) return translateU1(i18n, prefix[1]) + translateU1(i18n, source.slice(prefix[1].length))
   }
   if (!key) return source
   const path = 'app.u1.' + key

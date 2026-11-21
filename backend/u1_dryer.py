@@ -7,8 +7,8 @@ DRYER_COMMAND_PREFIX='COMPANION_DRYER_'
 def validate(temp,seconds,limit):
     if any(type(v) not in (int,float) or not math.isfinite(v) for v in (temp,seconds,limit)):
         raise ValueError('Параметры должны быть числами.')
-    if not 30<=temp<=80 or not 60<=seconds<=28800 or not 25<=limit<=60:
-        raise ValueError('Стол 30–80°C, время 1 мин — 8 ч, предел камеры 25–60°C.')
+    if not 30<=temp<=100 or not 60<=seconds<=28800 or not 25<=limit<=60:
+        raise ValueError('Стол 30–100°C, время 1 мин — 8 ч, предел камеры 25–60°C.')
 
 class Session:
     def __init__(self):
