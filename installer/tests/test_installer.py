@@ -185,6 +185,13 @@ class Guards(Fixture):
     def test_persistence_consent_before_writes(self):
         with self.assertRaisesRegex(ValueError,'consent'):self.inst.install(self.package,self.work,'192.168.1.100')
         self.assertFalse(self.p('/oem/.debug').exists());self.assertFalse(self.p(m.CORE).exists())
+    def test_native_launcher_reloads_python_extras_on_install_and_rollback(self):
+        self.put('/etc/init.d/S60klipper',b'#!/bin/sh\nexit 0\n')
+        self.inst.restart_klipper(); self.inst.restore_ready()
+        command=(str(self.p('/etc/init.d/S60klipper')),'restart')
+        self.assertEqual(self.commands.count(command),2)
+        self.assertNotIn('/printer/restart',self.posts)
+
     def test_failed_restart_configuration_can_be_rolled_back(self):
         self.inst.api=lambda path,post=False:{'klippy_state':'error'} if path=='/server/info' else (_ for _ in ()).throw(ValueError('not ready'))
         self.inst.rollback_guard(True)

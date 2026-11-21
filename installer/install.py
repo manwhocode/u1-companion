@@ -471,7 +471,7 @@ class Installer:
             self.preflight()
             self.run('nginx','-t'); self.run('nginx','-s','reload')
             print('[5/7] Restarting idle Klipper and checking modules...')
-            restarted=True;self.api('/printer/restart',True)
+            restarted=True;self.restart_klipper()
             for _ in range(60):
                 try:
                     s = self.api('/printer/objects/query?webhooks&u1_filament_profiles&u1_dryer&u1_magnet_pause')['status']
@@ -546,8 +546,17 @@ class Installer:
             if info.get('klippy_state') in ('error','shutdown','disconnected','startup'): return
         self.preflight()
 
+    def restart_klipper(self):
+        # RESTART recreates Printer objects, but retains imported Python extras.
+        # Use the stock process launcher when available so updates and rollback
+        # both load module code from disk. Older launchers retain the HTTP path.
+        launcher=self.p('/etc/init.d/S60klipper')
+        if launcher.is_symlink(): raise ValueError('Unexpected native Klipper launcher symlink')
+        if launcher.is_file(): self.run(str(launcher),'restart')
+        else: self.api('/printer/restart',True)
+
     def restore_ready(self):
-        self.api('/printer/restart',True)
+        self.restart_klipper()
         for _ in range(60):
             try:
                 if self.api('/printer/objects/query?webhooks')['status']['webhooks']['state']=='ready': return
