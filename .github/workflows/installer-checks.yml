@@ -18,6 +18,8 @@ jobs:
       - run: python -m unittest discover -s installer/tests -v
       - run: python -m unittest test-u1-bed-calibration.py test-u1-maintenance.py test-u1-calibration-jobs.py
         working-directory: backend
+      - run: python -m unittest test-u1-purchase-and-dryer.py test-u1-dryer.py test-u1-data-store.py test-spool-accounting.py
+        working-directory: backend
       - run: python backend/test-u1-timed-pause.py
         env:
           PYTHONPATH: backend

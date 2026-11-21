@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Ürítse ki az asztalt, és helyezze fel a nyomtatólapot. Az U1 végrehajtja a gyári kalibrálást, mozgásokkal és az asztal 55 °C-ra fűtésével. A sikeres eredményt automatikusan rögzíti. Az ablak bezárható.",
   "s1b2c184a6dc4802c": "Az asztal üres, és a nyomtatólap a helyén van",
   "se1b5f53bb9ec22ed": "Az asztalkalibrálás befejeződött, és automatikusan rögzítésre került.",
-  "s1ef81047694f8e0a": "Az asztalkalibrálás sikere nem lett megerősítve. A bejegyzés nem változott."
+  "s1ef81047694f8e0a": "Az asztalkalibrálás sikere nem lett megerősítve. A bejegyzés nem változott.",
+  "sf0eb9e24258f1df1": "Tekercs vételára, €",
+  "s48450b40ea906dcf": "Vásárolt filament tömege, g",
+  "s822099878a5e905d": "Vételár öröklése a könyvtárból",
+  "sd8098a28bdae0fc2": "Filament beszerzési költsége",
+  "s70ecd60461cac470": "Ügyfélár",
+  "s5f710aa63649bca5": "Ügyfélár grammonként, €",
+  "s30c0346803a70c16": "Szárítási mód",
+  "s12397de06a3fa9f7": "Asztalhőmérséklet",
+  "sd65d6a792b4f55f2": "Kamra maximális hőmérséklete",
+  "s11dda6e4a5db23e9": "Böngészőtanúsítvány letöltése",
+  "s3dc1f803564a407d": "Adjon meg pozitív tömeget és legalább 0 € árat",
+  "s1d38f7705e541be4": "Az asztalfűtés a kamra célhőmérsékletén kikapcsol, majd 2 °C lehűlés után visszakapcsol. A biztonsági határérték külön marad.",
+  "sa93f6ea6a68f5c86": "Kamra felfűtése",
+  "s8b45a7603f63eff8": "Szárítás; az időzítő meleg kamrában számol vissza",
+  "se07f73eb0257c1f9": "A kamra célértéke 25–55 °C legyen, legalább 3 °C-kal a biztonsági határ alatt",
+  "s50aca356b0a70e97": "Windows: tanúsítvány megnyitása → Tanúsítvány telepítése → Aktuális felhasználó → Megbízható legfelső szintű hitelesítésszolgáltatók. Firefox: Beállítások → Adatvédelem és biztonság → Tanúsítványok → Tanúsítványok megtekintése → Hitelesítésszolgáltatók → Importálás. macOS: megnyitás a Kulcskarikában, SSL-bizalom beállítása. Csak saját nyomtatója tanúsítványát telepítse.",
+  "s59715500df6a0e16": "Szárítás; az időzítő meleg kamrában számol vissza. a teljes munkamenet várakozással együtt legfeljebb 8 óra. A fűtés a kamra küszöbhőmérsékleténél, hiba, érzékelővesztés vagy a szolgáltatás megszakadása esetén kikapcsol. Kézzel csak akkor folytassa, ha a kamra 3 °C-kal a küszöb alá hűlt. Újraindítás után a szárítás nem folytatódik. Az ablak bezárása nem állítja le a szárítást."
 }

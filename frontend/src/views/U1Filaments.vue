@@ -9,13 +9,16 @@
           <p>{{ $u1t("Катушки, печать и обслуживание вашего U1.") }}</p>
           </div>
         </div>
-        <div class="companion-main-menu"><u1-program-settings class="companion-settings" @gpt="openGpt">
-          <template #installer><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.12/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p><u1-update-check /></template>
+        <div class="companion-main-menu"><u1-update-check compact /><u1-program-settings class="companion-settings" @gpt="openGpt">
+          <template #installer><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.12/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p></template>
           <template #connection>
 <v-expansion-panels accordion flat class="connection-sections">
 
 <v-expansion-panel><v-expansion-panel-header>{{ $u1t("Установить сертификат") }}</v-expansion-panel-header><v-expansion-panel-content><p>{{ $u1t("Он позволяет открыть дополнение через доверенный HTTPS. Это нужно для прямого сканирования QR камерой и чтения/записи NFC-меток из браузера на поддерживаемом Android.") }}</p>
         
+        <h3>Windows / macOS / Firefox</h3>
+        <p><a :href="androidCertificateUrl" download>{{ $u1t('Скачать сертификат браузера') }}</a></p>
+        <p>{{ $u1t('Windows: откройте файл сертификата → Установить сертификат → Текущий пользователь → Доверенные корневые центры сертификации. Firefox: Настройки → Приватность и защита → Сертификаты → Просмотр сертификатов → Центры сертификации → Импорт. macOS: откройте сертификат в Связке ключей и настройте доверие для SSL. Устанавливайте только сертификат своего принтера.') }}</p>
         <h3>iPhone</h3>
         <p><a :href="certificateUrl">{{ $u1t("Скачать профиль iPhone") }}</a></p>
         <p class="mt-2">{{ $u1t("Откройте Настройки → Основные → VPN и управление устройством → загруженный профиль → Установить. Затем в разделе Основные → Об этом устройстве → Доверие сертификатам включите доверие «U1 Local Camera CA».") }}</p>
@@ -164,8 +167,8 @@
           <img :src="labelPng" :alt="$u1t('Готовая QR-этикетка PNG')" style="display:block;max-width:100%;margin-top:8px">
           <p>{{ $u1t("На iPhone и Android также можно удержать изображение и сохранить его через меню браузера.") }}</p>
         </div>
-        <label class="d-block my-4">{{ $u1t("Сканировать фото QR") }} <input type="file" accept="image/*" capture="environment" :disabled="photoBusy" @change="scanImage"></label>
-        <p role="status">{{ photoStatus }}</p>
+        <label class="d-block my-4 v-btn v-btn--outlined" for="u1-qr-photo-upload">{{ $u1t("Сканировать фото QR") }} <input id="u1-qr-photo-upload" style="display:none" type="file" accept="image/*" capture="environment" :disabled="photoBusy" @change="scanImage"></label>
+        <p role="status">{{ $u1t(photoStatus) }}</p>
         <v-btn v-if="photoBusy" @click="photoAbort?.abort()">{{ $u1t("Отменить сканирование") }}</v-btn>
         <v-btn v-if="cameraAvailable" class="mb-3" @click="startCamera">{{ $u1t("Сканировать камерой") }}</v-btn>
         <p v-else>{{ $u1t("На HTTP используйте фото QR: браузер не разрешает прямой доступ к камере.") }}</p>
@@ -286,7 +289,9 @@ export default class U1Filaments extends Vue {
     return this.heads.map((head, slot) => {
       const spool = head.loaded && inventory?.spools.find(spool =>
         spool.id === inventory.heads[slot] && spool.hex === head.liveHex && spool.material === head.liveMaterial)
-      return spool ? { ...spool, grams: remainingGrams(spool, this.usageTotals) } : undefined
+        const basis = !spool ? undefined : spool.inheritPurchasePrice === false ? spool : this.colors.find(c => c.id === spool.colorId)
+        const purchasePerGram = basis?.purchasePrice == null ? undefined : basis.purchasePrice / (basis.purchaseWeight ?? 1000)
+        return spool ? { ...spool, purchasePerGram, grams: remainingGrams(spool, this.usageTotals) } : undefined
     })
   }
   qrSlot: number | null = null

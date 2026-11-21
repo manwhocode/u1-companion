@@ -93,7 +93,7 @@
       <u1-dialog-close @close="closeSpoolQr(false)" />
       <h2>QR · {{ qrSpool.name }}</h2>
       <p>{{ $u1t("Этикетка 7 × 7 см со ссылкой на эту катушку.") }}</p>
-      <v-alert v-if="qrStatus" dense type="info">{{ qrStatus }}</v-alert>
+      <v-alert v-if="qrStatus" dense type="info">{{ $u1t(qrStatus) }}</v-alert>
       <img v-if="qrPng" class="spool-qr-image" :src="qrPng" :alt="$u1t('QR-этикетка катушки')">
       <v-text-field ref="qrAddress" :value="qrAddress" :label="$u1t('Адрес метки без протокола')" readonly />
       <v-btn v-if="qrPng" class="ma-1" :href="qrPng" :download="'U1-spool-' + qrSpool.id + '-70mm.png'">{{ $u1t("Скачать QR PNG") }}</v-btn>
@@ -136,7 +136,13 @@
       <v-btn small text :disabled="busy" @click="editCore()">{{ $u1t("Создать пустую катушку") }}</v-btn>
       <v-text-field v-model="spoolGrams" type="number" min="0" step="any" :label="$u1t('Остаток филамента без катушки, г')" dense :disabled="busy" />
       <v-text-field :value="grossGrams" type="number" :min="spoolDraft.tare" step="any" :label="$u1t('Общий вес на весах, г')" dense :disabled="busy || !spoolDraft.coreId" @input="setGross" />
-      <v-text-field v-model="spoolPrice" type="number" min="0" step="any" :label="$u1t('Цена за грамм, €')" dense :disabled="busy" />
+      <p v-if="spoolDraft.inheritPurchasePrice !== false">{{ $u1t('Цена покупки катушки, €') }}: {{ colors.find(c => c.id === spoolDraft?.colorId)?.purchasePrice ?? '—' }}</p>
+      <v-checkbox :input-value="spoolDraft.inheritPurchasePrice !== false" :label="$u1t('Наследовать закупочную цену из библиотеки')" @change="$set(spoolDraft, 'inheritPurchasePrice', $event)" />
+      <template v-if="spoolDraft.inheritPurchasePrice === false">
+        <v-text-field v-model.number="spoolDraft.purchasePrice" type="number" min="0" :label="$u1t('Цена покупки катушки, €')" />
+        <v-text-field v-model.number="spoolDraft.purchaseWeight" type="number" min="1" :label="$u1t('Масса купленного филамента, г')" />
+      </template>
+      <v-text-field v-model="spoolPrice" type="number" min="0" step="any" :label="$u1t('Цена для клиента за грамм, €')" dense :disabled="busy" />
       <v-alert v-if="draftError" type="error">{{ draftError }}</v-alert>
       <v-btn :disabled="busy" @click="spoolDraft = null">{{ $u1t("Отмена") }}</v-btn>
       <v-btn color="primary" :loading="busy" @click="saveSpool">{{ $u1t("Сохранить") }}</v-btn>
@@ -178,7 +184,7 @@ import { calibrationSummary } from '@/utils/u1Calibration'
 
 interface Color extends FilamentPreset { id: string; name: string; nozzleTemperature?: number; bedTemperature?: number }
 interface Core { id: string; name: string; kind: string; grams: number }
-export interface Spool extends Color { colorId: string; coreId: string; coreName: string; grams: number; tare: number; accountedGrams?: number; pricePerGram?: number }
+export interface Spool extends Color { colorId: string; coreId: string; coreName: string; grams: number; tare: number; accountedGrams?: number; pricePerGram?: number; inheritPurchasePrice?: boolean }
 export function remainingGrams (spool: Spool, totals: Record<string, number>) {
   const spent = Math.max(0, (totals[spool.id] || 0) - (spool.accountedGrams || 0))
   return Math.max(0, Number((spool.grams - spent).toFixed(3)))
@@ -387,6 +393,10 @@ export default class U1SpoolInventory extends Vue {
           if (!Number.isFinite(value) || value < low || value > high) throw new Error(u1t("Температура {p0}: от {p1} до {p2} °C", { p0: field === 'nozzleTemperature' ? u1t("сопла") : u1t("стола"), p1: low, p2: high }))
           spool[field] = value
         }
+      }
+      for (const field of ['purchasePrice','purchaseWeight'] as const) {
+        const raw = spool[field]; if (raw == null || String(raw).trim() === '') delete spool[field];
+        else { const n = Number(raw); if (!Number.isFinite(n) || n < 0 || (field === 'purchaseWeight' && n === 0)) throw new Error(u1t('Введите положительную массу и цену от 0 €')); spool[field] = n }
       }
       const rawPrice = this.spoolPrice.trim().replace(',', '.')
       if (rawPrice) {

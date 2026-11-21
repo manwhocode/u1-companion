@@ -63,9 +63,9 @@ def rows(value, field, maximum=20000):
 
 
 def preset(value, spool=False):
-    allowed = 'id name manufacturer material hex secondaryHex fullSpectrum calibration nozzleTemperature bedTemperature'
+    allowed = 'id name manufacturer material hex secondaryHex fullSpectrum calibration nozzleTemperature bedTemperature purchasePrice purchaseWeight'
     if spool:
-        allowed += ' colorId coreId coreName grams tare accountedGrams pricePerGram'
+        allowed += ' colorId coreId coreName grams tare accountedGrams pricePerGram inheritPurchasePrice'
     fields(value, allowed, 'карточка')
     text(value.get('id'), 'ID', 120)
     text(value.get('name'), 'название', 100)
@@ -87,6 +87,11 @@ def preset(value, spool=False):
             number(value[field], field, maximum)
             if value[field] < minimum:
                 raise ValueError('Температура вне допустимого диапазона: ' + field)
+    for field in ('purchasePrice', 'purchaseWeight'):
+        if field in value:
+            number(value[field], field)
+            if field == 'purchaseWeight' and value[field] <= 0: raise ValueError('Purchase weight must be positive')
+    if 'inheritPurchasePrice' in value and type(value['inheritPurchasePrice']) is not bool: raise ValueError('Invalid purchase price inheritance')
     if spool:
         for field in ('colorId', 'coreId', 'coreName'):
             text(value.get(field), field, 120)
@@ -182,11 +187,11 @@ def validate_data(source):
         if record.get('state') not in ('applied', 'review') or record.get('method') not in ('measured', 'estimate', 'manual'):
             raise ValueError('Неизвестный статус расхода.')
         for row in rows(record.get('rows'), 'расход по головкам', 4):
-            fields(row, 'head required mm spoolId name pricePerGram grams colorId colorName', 'строка расхода')
+            fields(row, 'head required mm spoolId name pricePerGram purchasePerGram grams colorId colorName', 'строка расхода')
             text(row.get('spoolId'), 'ID катушки', 120)
             if type(row.get('head')) is not int or row['head'] not in range(4):
                 raise ValueError('Некорректная головка в расходе.')
-            for field in ('required', 'mm', 'grams', 'pricePerGram'):
+            for field in ('required', 'mm', 'grams', 'pricePerGram', 'purchasePerGram'):
                 if field in row:
                     number(row[field], field)
             if 'grams' not in row:

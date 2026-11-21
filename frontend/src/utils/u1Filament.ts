@@ -1,7 +1,7 @@
 import { u1t } from '@/plugins/i18n'
 export const materials = ['PLA', 'PETG', 'ABS', 'ASA', 'TPU', 'PVA', 'PA', 'PC']
 import type { FilamentCalibration } from './u1Calibration'
-export interface FilamentPreset { material: string; hex: string; manufacturer?: string; calibration?: FilamentCalibration }
+export interface FilamentPreset { material: string; hex: string; manufacturer?: string; calibration?: FilamentCalibration; purchasePrice?: number; purchaseWeight?: number }
 
 export function groupFilaments<T extends Pick<FilamentPreset, 'material' | 'manufacturer'>> (entries: readonly T[]) {
   const manufacturers = new Map<string, Map<string, T[]>>()

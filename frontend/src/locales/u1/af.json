@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Maak die bed skoon en plaas die bouplaat. U1 sal sy ingeboude kalibrasie uitvoer, met bewegings en verhitting van die bed tot 55 °C. Sukses word outomaties aangeteken. Jy kan hierdie venster sluit.",
   "s1b2c184a6dc4802c": "Die bed is leeg en die bouplaat is geplaas",
   "se1b5f53bb9ec22ed": "Bedkalibrasie voltooi en outomaties aangeteken.",
-  "s1ef81047694f8e0a": "Suksesvolle bedkalibrasie is nie bevestig nie. Die inskrywing is nie verander nie."
+  "s1ef81047694f8e0a": "Suksesvolle bedkalibrasie is nie bevestig nie. Die inskrywing is nie verander nie.",
+  "sf0eb9e24258f1df1": "Spoel se aankoopprys, €",
+  "s48450b40ea906dcf": "Gekoopte filamentmassa, g",
+  "s822099878a5e905d": "Erf aankoopprys uit biblioteek",
+  "sd8098a28bdae0fc2": "Filament se aankoopkoste",
+  "s70ecd60461cac470": "Kliëntprys",
+  "s5f710aa63649bca5": "Kliëntprys per gram, €",
+  "s30c0346803a70c16": "Droogmodus",
+  "s12397de06a3fa9f7": "Bedtemperatuur",
+  "sd65d6a792b4f55f2": "Maksimum kamertemperatuur",
+  "s11dda6e4a5db23e9": "Laai blaaiersertifikaat af",
+  "s3dc1f803564a407d": "Voer ’n positiewe massa en ’n prys vanaf €0 in",
+  "s1d38f7705e541be4": "Bedverhitting skakel by die kamerdoel af en hervat ná ’n daling van 2 °C. Die veiligheidsgrens bly apart.",
+  "sa93f6ea6a68f5c86": "Kamer word verhit",
+  "s8b45a7603f63eff8": "Droging; die tydhouer tel af terwyl die kamer warm is",
+  "se07f73eb0257c1f9": "Die kamerdoel moet 25–55 °C en minstens 3 °C onder die veiligheidsgrens wees",
+  "s50aca356b0a70e97": "Windows: maak die sertifikaat oop → Installeer sertifikaat → Huidige gebruiker → Vertroude wortelsertifiseringsowerhede. Firefox: Instellings → Privaatheid en sekuriteit → Sertifikate → Bekyk sertifikate → Owerhede → Voer in. macOS: maak in Sleutelhangertoegang oop en stel SSL-vertroue in. Installeer slegs jou eie drukker se sertifikaat.",
+  "s59715500df6a0e16": "Droging; die tydhouer tel af terwyl die kamer warm is. die hele sessie is tot 8 uur beperk, wagtyd ingesluit. Verhitting skakel af by die kamerdrempel, foute, verlies van sensors of diensontkoppeling. Hervat slegs handmatig nadat die kamer tot 3 °C onder die drempel afgekoel het. Droging hervat nie ná 'n herbegin nie. Om die venster te sluit, stop nie droging nie."
 }

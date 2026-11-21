@@ -1,13 +1,13 @@
-import { u1t } from '@/plugins/i18n'
-export interface UsageRow { head: number; name: string; grams: number; spoolId?: string; colorId?: string; colorName?: string; pricePerGram?: number }
+import i18n, { u1t } from '@/plugins/i18n'
+export interface UsageRow { head: number; name: string; grams: number; spoolId?: string; colorId?: string; colorName?: string; pricePerGram?: number; purchasePerGram?: number }
 export interface UsageRecord { id: string; filename: string; status: string; time: number; rows: UsageRow[]; state: 'review' | 'applied'; method: string }
 export type UsagePeriod = 'job' | 'day' | 'month' | 'year'
 
-const euros = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'EUR' })
-const unitEuros = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'EUR', maximumFractionDigits: 6 })
+const euros = () => new Intl.NumberFormat(i18n.locale, { style: 'currency', currency: 'EUR' })
+const unitEuros = () => new Intl.NumberFormat(i18n.locale, { style: 'currency', currency: 'EUR', maximumFractionDigits: 6 })
 
-export function formatCost (value: number) { return euros.format(value) }
-export function formatUnitPrice (value: number) { return unitEuros.format(value) }
+export function formatCost (value: number) { return euros().format(value) }
+export function formatUnitPrice (value: number) { return unitEuros().format(value) }
 
 export function usageRows (records: UsageRecord[], period: UsagePeriod) {
   const groups = new Map<string, { key: string; time: number; name: string; jobs: number; grams: number; cost: number; pricedGrams: number }>()

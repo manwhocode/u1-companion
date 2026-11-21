@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Uvolněte podložku a nasaďte tiskový plát. U1 provede vestavěnou kalibraci s pohyby a ohřevem podložky na 55 °C. Úspěch se zaznamená automaticky. Toto okno můžete zavřít.",
   "s1b2c184a6dc4802c": "Podložka je volná a tiskový plát je nasazen",
   "se1b5f53bb9ec22ed": "Kalibrace podložky dokončena a automaticky zaznamenána.",
-  "s1ef81047694f8e0a": "Úspěšná kalibrace podložky nebyla potvrzena. Záznam se nezměnil."
+  "s1ef81047694f8e0a": "Úspěšná kalibrace podložky nebyla potvrzena. Záznam se nezměnil.",
+  "sf0eb9e24258f1df1": "Nákupní cena cívky, €",
+  "s48450b40ea906dcf": "Hmotnost zakoupeného filamentu, g",
+  "s822099878a5e905d": "Převzít nákupní cenu z knihovny",
+  "sd8098a28bdae0fc2": "Nákupní náklady filamentu",
+  "s70ecd60461cac470": "Cena pro zákazníka",
+  "s5f710aa63649bca5": "Cena pro zákazníka za gram, €",
+  "s30c0346803a70c16": "Režim sušení",
+  "s12397de06a3fa9f7": "Teplota podložky",
+  "sd65d6a792b4f55f2": "Maximální teplota komory",
+  "s11dda6e4a5db23e9": "Stáhnout certifikát prohlížeče",
+  "s3dc1f803564a407d": "Zadejte kladnou hmotnost a cenu od 0 €",
+  "s1d38f7705e541be4": "Ohřev podložky se vypne při dosažení cílové teploty komory a obnoví po poklesu o 2 °C. Bezpečnostní mez zůstává samostatná.",
+  "sa93f6ea6a68f5c86": "Ohřev komory",
+  "s8b45a7603f63eff8": "Sušení; časovač běží při zahřáté komoře",
+  "se07f73eb0257c1f9": "Cílová teplota komory musí být 25–55 °C a alespoň 3 °C pod bezpečnostní mezí",
+  "s50aca356b0a70e97": "Windows: otevřete certifikát → Nainstalovat certifikát → Aktuální uživatel → Důvěryhodné kořenové certifikační autority. Firefox: Nastavení → Soukromí a zabezpečení → Certifikáty → Zobrazit certifikáty → Autority → Importovat. macOS: otevřete v Klíčence a nastavte důvěru SSL. Instalujte pouze certifikát vlastní tiskárny.",
+  "s59715500df6a0e16": "Sušení; časovač běží při zahřáté komoře. celá relace je omezena na 8 hodin včetně čekání. Ohřev se vypne při dosažení limitu komory, chybách, ztrátě senzoru nebo odpojení služby. Ručně pokračujte až po ochlazení komory na 3 °C pod limitem. Po restartu sušení nepokračuje. Zavření okna sušení nezastaví."
 }

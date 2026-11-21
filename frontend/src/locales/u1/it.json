@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Liberare il piano e installare la piastra di stampa. U1 eseguirà la calibrazione integrata con movimenti e riscaldamento del piano a 55 °C. Il completamento verrà registrato automaticamente. È possibile chiudere questa finestra.",
   "s1b2c184a6dc4802c": "Il piano è libero e la piastra è installata",
   "se1b5f53bb9ec22ed": "Calibrazione del piano completata e registrata automaticamente.",
-  "s1ef81047694f8e0a": "Il completamento della calibrazione del piano non è stato confermato. La registrazione non è cambiata."
+  "s1ef81047694f8e0a": "Il completamento della calibrazione del piano non è stato confermato. La registrazione non è cambiata.",
+  "sf0eb9e24258f1df1": "Prezzo di acquisto della bobina, €",
+  "s48450b40ea906dcf": "Massa del filamento acquistato, g",
+  "s822099878a5e905d": "Eredita il prezzo di acquisto dalla libreria",
+  "sd8098a28bdae0fc2": "Costo di acquisto del filamento",
+  "s70ecd60461cac470": "Prezzo per il cliente",
+  "s5f710aa63649bca5": "Prezzo per il cliente al grammo, €",
+  "s30c0346803a70c16": "Modalità di essiccazione",
+  "s12397de06a3fa9f7": "Temperatura del piano",
+  "sd65d6a792b4f55f2": "Temperatura massima della camera",
+  "s11dda6e4a5db23e9": "Scarica certificato del browser",
+  "s3dc1f803564a407d": "Inserisci una massa positiva e un prezzo pari o superiore a 0 €",
+  "s1d38f7705e541be4": "Il riscaldamento del piano si arresta al raggiungimento della temperatura della camera e riprende dopo un calo di 2 °C. Il limite di sicurezza resta separato.",
+  "sa93f6ea6a68f5c86": "Riscaldamento della camera",
+  "s8b45a7603f63eff8": "Essiccazione; il timer avanza quando la camera è calda",
+  "se07f73eb0257c1f9": "La temperatura della camera deve essere tra 25 e 55 °C e almeno 3 °C sotto il limite di sicurezza",
+  "s50aca356b0a70e97": "Windows: apri il certificato → Installa certificato → Utente corrente → Autorità di certificazione radice attendibili. Firefox: Impostazioni → Privacy e sicurezza → Certificati → Mostra certificati → Autorità → Importa. macOS: apri in Accesso Portachiavi e configura l’attendibilità SSL. Installa solo il certificato della tua stampante.",
+  "s59715500df6a0e16": "Essiccazione; il timer avanza quando la camera è calda. l'intera sessione è limitata a 8 ore, compresa l'attesa. Il riscaldamento si spegne al raggiungimento della soglia della camera, in caso di errori, perdita dei sensori o disconnessione del servizio. Riprendi manualmente soltanto dopo che la camera è scesa di 3 °C sotto la soglia. L'essiccazione non riprende dopo un riavvio. Chiudere la finestra non interrompe l'essiccazione."
 }

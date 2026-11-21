@@ -13,9 +13,12 @@ def validate(temp,seconds,limit):
 class Session:
     def __init__(self):
         self.state='idle';self.remaining=0.;self.temp=0.;self.limit=60.;self.message='Сушка выключена';self.last=0.;self.lease=0.;self.deadline=0.
-    def start(self,temp,seconds,limit,now):
+    def start(self,temp,seconds,limit,now,mode='bed',chamber_target=None):
         validate(temp,seconds,limit)
+        if mode not in ('bed','chamber'): raise ValueError('Invalid drying mode')
+        if mode == 'chamber' and (type(chamber_target) not in (int,float) or not math.isfinite(chamber_target) or not 25 <= chamber_target <= min(55,limit-3)): raise ValueError('Chamber target must be 25–55 °C and below the safety limit by 3 °C')
         if self.state in ACTIVE:raise ValueError('Сначала завершите текущую сушку.')
+        self.mode, self.chamber_target, self.heating = mode, chamber_target, True
         self.temp,self.remaining,self.limit=temp,seconds,limit
         self.state='heating';self.message='Нагрев стола';self.last=now;self.lease=now+35;self.deadline=now+28800
     def heartbeat(self,now):self.lease=now+35
@@ -24,6 +27,7 @@ class Session:
         if self.state!='paused':raise ValueError('Сессия не на паузе.')
         if now>=self.deadline or self.remaining<=0:raise ValueError('Срок сессии истёк. Создайте новую сессию.')
         if chamber>=self.limit-3:raise ValueError('Камера должна остыть ниже порога минимум на 3°C.')
+        self.heating=True
         self.state='heating';self.message='Нагрев после паузы';self.last=now;self.heartbeat(now)
     def tick(self,now,bed,chamber,reason='',target=None):
         dt=max(0,now-self.last);self.last=now
@@ -35,8 +39,16 @@ class Session:
         if chamber>=self.limit:
             self.pause('Достигнут предел температуры камеры.');return True
         if self.state=='paused':return False
-        if target is not None and abs(target-self.temp)>.01:
+        if target is not None and abs(target-(self.temp if getattr(self,'heating',True) else 0))>.01:
             self.pause('Штатная система или пользователь изменили нагрев.');return True
+        if getattr(self,'mode','bed') == 'chamber':
+            if chamber >= self.chamber_target: self.heating = False
+            elif chamber <= self.chamber_target-2: self.heating = True
+            if chamber >= self.chamber_target-2:
+                self.state='running';self.message='Идёт сушка; таймер отсчитывается при нагретой камере';self.remaining=max(0,self.remaining-dt)
+            else: self.state='heating';self.message='Нагрев камеры'
+            if self.remaining<=0:self.state='completed';self.message='Таймер завершён; нагрев выключен.';return True
+            return False
         if self.state=='heating' and bed>=self.temp-2:self.state='running';self.message='Идёт сушка; таймер отсчитывается при нагретом столе'
         elif self.state=='running':
             if bed<self.temp-5:self.state='heating';self.message='Восстановление температуры стола'
@@ -115,7 +127,8 @@ class U1Dryer:
             validate(temp,duration,limit)
             if bed>temp+5:raise ValueError('Стол слишком горячий для выбранной температуры. Дождитесь охлаждения.')
             if chamber>=limit-3:raise ValueError('Камера слишком горячая для старта.')
-            self.session.start(temp,duration,limit,self.reactor.monotonic());self.persist()
+            mode=getattr(gcmd,'get',lambda k,d:d)('MODE','bed');chamber_target=gcmd.get_float('CHAMBER',0)
+            self.session.start(temp,duration,limit,self.reactor.monotonic(),mode,chamber_target);self.persist()
             self.original_timeout=self.printer.lookup_object('idle_timeout').idle_timeout
             self.gcode.run_script_from_command('SET_IDLE_TIMEOUT TIMEOUT=30000')
             self.heat_started=self.reactor.monotonic();self.set_heat(temp)
@@ -151,6 +164,9 @@ class U1Dryer:
                 reason='Стол не достиг температуры за 30 минут.' if self.session.state=='heating' and now-self.heat_started>1800 else ''
                 off=self.session.tick(now,bed,chamber,reason,target)
                 if off:self.stop_heat();self.persist()
+                elif self.session.state in ('heating','running') and getattr(self.session,'mode','bed') == 'chamber':
+                    wanted=self.session.temp if self.session.heating else 0
+                    if target != wanted:self.set_heat(wanted)
                 if self.session.state=='paused' and target!=0:self.stop_heat()
                 if now-self.last_saved>30:self.persist();self.last_saved=now
             except Exception as error:
@@ -162,6 +178,6 @@ class U1Dryer:
         if self.bed is not None and self.chamber is not None:
             self.bed_read=self.bed.get_temp(self.reactor.monotonic())[0]
             self.chamber_read=self.chamber.get_status(self.reactor.monotonic()).get('temperature')
-        return {'version':1,'commandVersion':2,**self.session.status(),'bedTemperature':self.bed_read,'chamberTemperature':self.chamber_read,'watchdogSeconds':35}
+        return {'version':1,'commandVersion':3,**self.session.status(),'bedTemperature':self.bed_read,'chamberTemperature':self.chamber_read,'watchdogSeconds':35}
 
 def load_config(config):return U1Dryer(config)

@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Izpraznite mizo in namestite tiskalno ploščo. U1 bo izvedel vgrajeno umerjanje s premiki in segrevanjem mize na 55 °C. Uspeh bo samodejno zabeležen. To okno lahko zaprete.",
   "s1b2c184a6dc4802c": "Miza je prazna in tiskalna plošča je nameščena",
   "se1b5f53bb9ec22ed": "Umerjanje mize je končano in samodejno zabeleženo.",
-  "s1ef81047694f8e0a": "Uspešno umerjanje mize ni bilo potrjeno. Zapis ni spremenjen."
+  "s1ef81047694f8e0a": "Uspešno umerjanje mize ni bilo potrjeno. Zapis ni spremenjen.",
+  "sf0eb9e24258f1df1": "Nakupna cena koluta, €",
+  "s48450b40ea906dcf": "Masa kupljenega filamenta, g",
+  "s822099878a5e905d": "Podeduj nakupno ceno iz knjižnice",
+  "sd8098a28bdae0fc2": "Nabavni strošek filamenta",
+  "s70ecd60461cac470": "Cena za stranko",
+  "s5f710aa63649bca5": "Cena za stranko na gram, €",
+  "s30c0346803a70c16": "Način sušenja",
+  "s12397de06a3fa9f7": "Temperatura mize",
+  "sd65d6a792b4f55f2": "Najvišja temperatura komore",
+  "s11dda6e4a5db23e9": "Prenesi potrdilo za brskalnik",
+  "s3dc1f803564a407d": "Vnesite pozitivno maso in ceno od 0 €",
+  "s1d38f7705e541be4": "Gretje mize se izklopi pri ciljni temperaturi komore in znova vklopi po padcu za 2 °C. Varnostna meja ostane ločena.",
+  "sa93f6ea6a68f5c86": "Ogrevanje komore",
+  "s8b45a7603f63eff8": "Sušenje; časovnik odšteva, ko je komora ogreta",
+  "se07f73eb0257c1f9": "Ciljna temperatura komore mora biti 25–55 °C in vsaj 3 °C pod varnostno mejo",
+  "s50aca356b0a70e97": "Windows: odprite potrdilo → Namesti potrdilo → Trenutni uporabnik → Zaupanja vredni overitelji korenskih potrdil. Firefox: Nastavitve → Zasebnost in varnost → Potrdila → Preglej potrdila → Overitelji → Uvozi. macOS: odprite v Dostopu do verige ključev in nastavite zaupanje SSL. Namestite le potrdilo svojega tiskalnika.",
+  "s59715500df6a0e16": "Sušenje; časovnik odšteva, ko je komora ogreta. celotna seja je omejena na 8 ur, vključno s čakanjem. Gretje se izklopi ob doseženi mejni temperaturi komore, napakah, izgubi tipala ali prekinitvi povezave s storitvijo. Ročno nadaljujte šele, ko se komora ohladi na 3 °C pod mejno temperaturo. Po ponovnem zagonu se sušenje ne nadaljuje. Zapiranje okna ne ustavi sušenja."
 }

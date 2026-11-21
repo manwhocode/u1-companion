@@ -1,4 +1,5 @@
 import qrcode from 'qrcode-generator'
+import { u1t } from '@/plugins/i18n'
 qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8']
 export async function renderPlainQr (payload: string, caption: string, manufacturer = '') {
   const qr = qrcode(0, 'H'); qr.addData(payload); qr.make()
@@ -13,7 +14,7 @@ export async function renderPlainQr (payload: string, caption: string, manufactu
     if (qr.isDark(row, col)) ctx.fillRect(border + col * unit, border + row * unit, unit, unit)
   }
   ctx.restore(); ctx.fillStyle = '#111111'; ctx.textAlign = 'center'
-  ctx.font = 'bold 26px sans-serif'; ctx.fillText(manufacturer || 'Производитель не указан', 413.5, 763, 770)
+  ctx.font = 'bold 26px sans-serif'; ctx.fillText(manufacturer || u1t('Производитель не указан'), 413.5, 763, 770)
   ctx.font = 'bold 28px sans-serif'; ctx.fillText(caption, 413.5, 802, 770)
   ctx.strokeStyle = '#444444'; ctx.lineWidth = 1.5; ctx.setLineDash([8, 5]); ctx.strokeRect(5, 5, 817, 817)
   return canvas

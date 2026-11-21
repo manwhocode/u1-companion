@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Räumen Sie das Bett frei und setzen Sie die Druckplatte ein. U1 führt die integrierte Kalibrierung mit Bewegungen und einer Betttemperatur von 55 °C aus. Der Erfolg wird automatisch vermerkt. Sie können dieses Fenster schließen.",
   "s1b2c184a6dc4802c": "Das Bett ist frei und die Druckplatte ist eingesetzt",
   "se1b5f53bb9ec22ed": "Bettkalibrierung abgeschlossen und automatisch vermerkt.",
-  "s1ef81047694f8e0a": "Eine erfolgreiche Bettkalibrierung wurde nicht bestätigt. Der Eintrag bleibt unverändert."
+  "s1ef81047694f8e0a": "Eine erfolgreiche Bettkalibrierung wurde nicht bestätigt. Der Eintrag bleibt unverändert.",
+  "sf0eb9e24258f1df1": "Kaufpreis der Spule, €",
+  "s48450b40ea906dcf": "Gekaufte Filamentmasse, g",
+  "s822099878a5e905d": "Kaufpreis aus Bibliothek übernehmen",
+  "sd8098a28bdae0fc2": "Filament-Einkaufskosten",
+  "s70ecd60461cac470": "Kundenpreis",
+  "s5f710aa63649bca5": "Kundenpreis pro Gramm, €",
+  "s30c0346803a70c16": "Trocknungsmodus",
+  "s12397de06a3fa9f7": "Betttemperatur",
+  "sd65d6a792b4f55f2": "Maximale Kammertemperatur",
+  "s11dda6e4a5db23e9": "Browserzertifikat herunterladen",
+  "s3dc1f803564a407d": "Eine positive Masse und einen Preis ab 0 € eingeben",
+  "s1d38f7705e541be4": "Die Bettheizung schaltet am Kammerziel ab und nach einer Abkühlung um 2 °C wieder ein. Die Sicherheitsgrenze bleibt separat.",
+  "sa93f6ea6a68f5c86": "Kammer wird aufgeheizt",
+  "s8b45a7603f63eff8": "Trocknung; der Timer läuft bei warmer Kammer",
+  "se07f73eb0257c1f9": "Kammerziel muss 25–55 °C und mindestens 3 °C unter der Sicherheitsgrenze liegen",
+  "s50aca356b0a70e97": "Windows: Zertifikat öffnen → Zertifikat installieren → Aktueller Benutzer → Vertrauenswürdige Stammzertifizierungsstellen. Firefox: Einstellungen → Datenschutz & Sicherheit → Zertifikate → Zertifikate anzeigen → Zertifizierungsstellen → Importieren. macOS: Zertifikat in der Schlüsselbundverwaltung öffnen und SSL-Vertrauen einstellen. Nur das Zertifikat des eigenen Druckers installieren.",
+  "s59715500df6a0e16": "Trocknung; der Timer läuft bei warmer Kammer. die gesamte Sitzung ist einschließlich Wartezeiten auf 8 Stunden begrenzt. Beim Kammergrenzwert, Fehlern, Sensorverlust oder Dienstunterbrechung wird die Heizung abgeschaltet. Erst manuell fortsetzen, wenn die Kammer mindestens 3 °C unter den Grenzwert abgekühlt ist. Nach einem Neustart wird die Trocknung nicht fortgesetzt. Das Schließen des Fensters stoppt die Trocknung nicht."
 }

@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Opróżnij stół i załóż płytę roboczą. U1 wykona fabryczną kalibrację z ruchami i nagrzewaniem stołu do 55 °C. Powodzenie zostanie zapisane automatycznie. Możesz zamknąć to okno.",
   "s1b2c184a6dc4802c": "Stół jest pusty, a płyta robocza założona",
   "se1b5f53bb9ec22ed": "Kalibracja stołu zakończona i zapisana automatycznie.",
-  "s1ef81047694f8e0a": "Nie potwierdzono pomyślnej kalibracji stołu. Wpis nie został zmieniony."
+  "s1ef81047694f8e0a": "Nie potwierdzono pomyślnej kalibracji stołu. Wpis nie został zmieniony.",
+  "sf0eb9e24258f1df1": "Cena zakupu szpuli, €",
+  "s48450b40ea906dcf": "Masa kupionego filamentu, g",
+  "s822099878a5e905d": "Dziedzicz cenę zakupu z biblioteki",
+  "sd8098a28bdae0fc2": "Koszt zakupu filamentu",
+  "s70ecd60461cac470": "Cena dla klienta",
+  "s5f710aa63649bca5": "Cena dla klienta za gram, €",
+  "s30c0346803a70c16": "Tryb suszenia",
+  "s12397de06a3fa9f7": "Temperatura stołu",
+  "sd65d6a792b4f55f2": "Maksymalna temperatura komory",
+  "s11dda6e4a5db23e9": "Pobierz certyfikat przeglądarki",
+  "s3dc1f803564a407d": "Podaj dodatnią masę i cenę od 0 €",
+  "s1d38f7705e541be4": "Grzanie stołu wyłącza się po osiągnięciu celu komory i włącza po spadku o 2 °C. Próg bezpieczeństwa pozostaje oddzielny.",
+  "sa93f6ea6a68f5c86": "Nagrzewanie komory",
+  "s8b45a7603f63eff8": "Suszenie; zegar odlicza, gdy komora jest ciepła",
+  "se07f73eb0257c1f9": "Cel komory musi wynosić 25–55 °C i być co najmniej 3 °C poniżej progu bezpieczeństwa",
+  "s50aca356b0a70e97": "Windows: otwórz certyfikat → Zainstaluj certyfikat → Bieżący użytkownik → Zaufane główne urzędy certyfikacji. Firefox: Ustawienia → Prywatność i bezpieczeństwo → Certyfikaty → Wyświetl certyfikaty → Organy certyfikacji → Importuj. macOS: otwórz w Dostępie do pęku kluczy i ustaw zaufanie SSL. Instaluj wyłącznie certyfikat własnej drukarki.",
+  "s59715500df6a0e16": "Suszenie; zegar odlicza, gdy komora jest ciepła. cała sesja jest ograniczona do 8 godzin, łącznie z oczekiwaniem. Grzanie wyłącza się po osiągnięciu progu komory, przy błędach, utracie czujnika lub połączenia z usługą. Wznawiaj ręcznie dopiero po ochłodzeniu komory do 3 °C poniżej progu. Suszenie nie wznawia się po restarcie. Zamknięcie okna nie zatrzymuje suszenia."
 }

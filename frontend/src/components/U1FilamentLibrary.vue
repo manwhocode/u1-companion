@@ -104,6 +104,8 @@
       <v-combobox v-model="draft.manufacturer" :items="manufacturers" :label="$u1t('Производитель (название папки)')" :disabled="busy" />
       <v-select v-model="draft.material" :items="materials" :label="$u1t('Материал')" :disabled="busy" />
       <v-text-field v-model="draft.hex" label="HEX" maxlength="7" :disabled="busy" />
+      <v-text-field v-model.number="draft.purchasePrice" type="number" min="0" :label="$u1t('Цена покупки катушки, €')" :disabled="busy" />
+      <v-text-field v-model.number="draft.purchaseWeight" type="number" min="1" :label="$u1t('Масса купленного филамента, г')" :disabled="busy" />
       <input v-model="draft.hex" type="color" :disabled="busy">
       <v-text-field v-model="draft.nozzleTemperature" :label="$u1t('Температура сопла, °C')" type="number" min="150" max="300" step="1" inputmode="decimal" :hint="$u1t('150–300 °C. Пусто — значение из слайсера.')" persistent-hint :disabled="busy" />
       <v-text-field v-model="draft.bedTemperature" :label="$u1t('Температура стола, °C')" type="number" min="20" max="100" step="1" inputmode="decimal" :hint="$u1t('20–100 °C. Пусто — значение из слайсера.')" persistent-hint :disabled="busy" />
@@ -263,7 +265,7 @@ export default class U1FilamentLibrary extends Vue {
     catch (e) { this.failed = true; this.message = String(e) }
     finally { this.busy = false }
   }
-  editNew () { this.editError = ''; this.draft = { id: uuid(), name: '', manufacturer: '', material: 'PLA', hex: '#FFFFFF' } }
+  editNew () { this.editError = ''; this.draft = { id: uuid(), name: '', manufacturer: '', material: 'PLA', hex: '#FFFFFF', purchaseWeight:1000 } }
   addFromHead (preset: FilamentPreset, slot: number) { this.editError = ''; this.draft = { ...validatePreset(preset), id: uuid(), name: u1t("Головка {p0} · {p1} {p2}", { p0: slot + 1, p1: preset.material, p2: preset.hex }) } }
   addFromTag (preset: FilamentPreset & {name?: string; manufacturer?: string}) { this.editError = ''; this.draft = { ...validatePreset(preset), id: uuid(), name: preset.name || `${preset.material} ${preset.hex}`, manufacturer: preset.manufacturer || '' } }
   async persist (entries: Entry[], trash: Entry[]) {
@@ -281,6 +283,10 @@ export default class U1FilamentLibrary extends Vue {
     if (!this.draft || this.busy) return
     this.busy = true; this.editError = ''
     try {
+      for (const field of ['purchasePrice','purchaseWeight'] as const) {
+        const raw = this.draft[field]; if (raw == null || String(raw).trim() === '') delete this.draft[field];
+        else { const n = Number(raw); if (!Number.isFinite(n) || n < 0 || (field === 'purchaseWeight' && n === 0)) throw new Error(u1t('Введите положительную массу и цену от 0 €')); this.draft[field] = n }
+      }
       const entry = { ...this.draft, ...validatePreset(this.draft), name: this.draft.name.trim(), manufacturer: String(this.draft.manufacturer || '').trim().slice(0, 80) }
       if (!entry.name) throw new Error(u1t("Введите название"))
       for (const [field, low, high] of [['nozzleTemperature', 150, 300], ['bedTemperature', 20, 100]] as const) {

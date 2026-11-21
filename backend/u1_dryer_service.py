@@ -29,7 +29,9 @@ class Dryer:
   key=payload.get('key','')
   if not re.fullmatch(r'(?:material:[A-Z0-9_-]{1,20}|color:[a-zA-Z0-9_-]{1,120})',key):raise ValueError('Не выбрана основа профиля.')
   temp,seconds,limit=payload.get('temperature'),payload.get('seconds'),payload.get('limit');validate(temp,seconds,limit)
-  value['entries'][key]={'temperature':temp,'seconds':seconds,'limit':limit};value['revision']=str(uuid.uuid4())
+  mode=payload.get('mode','bed');chamber=payload.get('chamberTarget',40)
+  if mode not in ('bed','chamber') or (mode == 'chamber' and (type(chamber) not in (int,float) or not math.isfinite(chamber) or not 25<=chamber<=min(55,limit-3))):raise ValueError('Invalid chamber target')
+  value['entries'][key]={'temperature':temp,'seconds':seconds,'limit':limit,'mode':mode,'chamberTarget':chamber};value['revision']=str(uuid.uuid4())
   if self.file.exists():atomic(self.folder/('before-'+str(uuid.uuid4())+'.json'),self.file.read_bytes())
   atomic(self.file,json.dumps(value,ensure_ascii=False).encode());return value
  def action(self,store,payload):
@@ -46,7 +48,12 @@ class Dryer:
   script=DRYER_COMMAND_PREFIX+action.upper()
   if action=='start':
    temp,seconds,limit=payload.get('temperature'),payload.get('seconds'),payload.get('limit');validate(temp,seconds,limit)
-   script+=' TEMP=%g SECONDS=%g LIMIT=%g CONFIRM=1'%(temp,seconds,limit)
+   mode=payload.get('mode','bed');chamber=payload.get('chamberTarget',0)
+   if mode not in ('bed','chamber'):raise ValueError('Invalid drying mode')
+   if mode=='chamber':
+    if self.state().get('commandVersion',0)<3:raise ValueError('Модуль сушки требует обновления команд. Обновление разрешено только после окончания печати.')
+    if type(chamber) not in (int,float) or not math.isfinite(chamber) or not 25<=chamber<=min(55,limit-3):raise ValueError('Chamber target must be 25–55 °C and below the safety limit by 3 °C')
+   script+=' TEMP=%g SECONDS=%g LIMIT=%g CONFIRM=1 MODE=%s CHAMBER=%g'%(temp,seconds,limit,mode,chamber)
   elif action=='resume':script+=' CONFIRM=1'
   self.execute(script)
   result=self.state()

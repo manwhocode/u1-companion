@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Dégagez le plateau et installez la plaque. U1 exécutera son calibrage intégré, avec des mouvements et un chauffage du plateau à 55 °C. La réussite sera enregistrée automatiquement. Vous pouvez fermer cette fenêtre.",
   "s1b2c184a6dc4802c": "Le plateau est dégagé et la plaque est installée",
   "se1b5f53bb9ec22ed": "Calibrage du plateau terminé et enregistré automatiquement.",
-  "s1ef81047694f8e0a": "La réussite du calibrage du plateau n’a pas été confirmée. L’enregistrement reste inchangé."
+  "s1ef81047694f8e0a": "La réussite du calibrage du plateau n’a pas été confirmée. L’enregistrement reste inchangé.",
+  "sf0eb9e24258f1df1": "Prix d’achat de la bobine, €",
+  "s48450b40ea906dcf": "Masse de filament achetée, g",
+  "s822099878a5e905d": "Hériter du prix d’achat de la bibliothèque",
+  "sd8098a28bdae0fc2": "Coût d’achat du filament",
+  "s70ecd60461cac470": "Prix client",
+  "s5f710aa63649bca5": "Prix client par gramme, €",
+  "s30c0346803a70c16": "Mode de séchage",
+  "s12397de06a3fa9f7": "Température du plateau",
+  "sd65d6a792b4f55f2": "Température maximale de la chambre",
+  "s11dda6e4a5db23e9": "Télécharger le certificat du navigateur",
+  "s3dc1f803564a407d": "Saisissez une masse positive et un prix supérieur ou égal à 0 €",
+  "s1d38f7705e541be4": "Le chauffage du plateau s’arrête à la température cible de la chambre et reprend après une baisse de 2 °C. Le seuil de sécurité reste distinct.",
+  "sa93f6ea6a68f5c86": "Chauffage de la chambre",
+  "s8b45a7603f63eff8": "Séchage ; le minuteur décompte lorsque la chambre est chaude",
+  "se07f73eb0257c1f9": "La cible de chambre doit être comprise entre 25 et 55 °C et rester au moins 3 °C sous le seuil de sécurité",
+  "s50aca356b0a70e97": "Windows : ouvrir le certificat → Installer un certificat → Utilisateur actuel → Autorités de certification racines de confiance. Firefox : Paramètres → Vie privée et sécurité → Certificats → Afficher les certificats → Autorités → Importer. macOS : ouvrir dans Trousseaux d’accès et régler la confiance SSL. Installez uniquement le certificat de votre imprimante.",
+  "s59715500df6a0e16": "Séchage ; le minuteur décompte lorsque la chambre est chaude. la session entière est limitée à 8 heures, attente comprise. Le chauffage s’arrête au seuil de l’enceinte, en cas d’erreur, de perte de capteur ou de déconnexion du service. Reprenez manuellement uniquement lorsque l’enceinte est redescendue à 3 °C sous le seuil. Le séchage ne reprend pas après un redémarrage. Fermer la fenêtre n’arrête pas le séchage."
 }

@@ -87,6 +87,10 @@ def snapshot(job, task, inventory, library=None):
                 color = colors.get(spool['colorId'])
                 if color:
                     row['colorName'] = color['name']
+            basis = colors.get(spool.get('colorId'), {}) if spool.get('inheritPurchasePrice', True) else spool
+            purchase, weight = basis.get('purchasePrice'), basis.get('purchaseWeight', 1000)
+            if type(purchase) in (int,float) and type(weight) in (int,float) and math.isfinite(purchase) and math.isfinite(weight) and purchase >= 0 and weight > 0:
+                row['purchasePerGram'] = purchase / weight
             price = spool.get('pricePerGram')
             if type(price) in (int, float) and math.isfinite(price) and price >= 0:
                 row['pricePerGram'] = price

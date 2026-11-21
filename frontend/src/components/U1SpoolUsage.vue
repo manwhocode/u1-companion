@@ -31,8 +31,9 @@
               <template v-if="estimated"> {{ $u1t("Замена примерно") }} {{ eta(estimated * row.available / row.required) }} {{ $u1t("от начала печати по среднему расходу.") }}</template>
             </template>
           </template>
-          <div v-if="row.cost !== null">{{ $u1t("Стоимость пластика") }} {{ formatCost(row.cost) }}</div>
+          <div v-if="row.cost !== null">{{ $u1t('Стоимость для клиента') }} {{ formatCost(row.cost) }}</div>
         </v-alert>
+        <p v-if="plannedPurchaseCost !== null"><strong>{{ $u1t('Себестоимость пластика') }}: {{ formatCost(plannedPurchaseCost) }}</strong></p>
         <p v-if="plannedCost !== null"><strong>{{ $u1t("Стоимость пластика на весь файл ·") }} {{ formatCost(plannedCost) }}</strong></p>
       </v-card-text>
       
@@ -76,12 +77,13 @@
         <div class="stats-summary">
           <div><small>{{ $u1t("Списано") }} {{ rangeActive ? $u1t("за период") : $u1t("за всё время") }}</small><strong>{{ format(totalGrams) }} {{ $u1t("г") }}</strong></div>
           <div><small>{{ $u1t("Заданий в журнале") }}</small><strong>{{ selectedJobs.length }}</strong></div>
-          <div><small>{{ $u1t("Пластик с указанной ценой") }}</small><strong>{{ pricedGrams ? formatCost(totalCost) : '—' }}</strong></div>
+          <div><small>{{ $u1t('Стоимость для клиента') }}</small><strong>{{ pricedGrams ? formatCost(totalCost) : '—' }}</strong></div>
         </div>
+        <p>{{ $u1t('Себестоимость пластика') }}: {{ purchasedGrams ? formatCost(purchaseCost) : '—' }} <small v-if="purchasedGrams < datedGrams">{{ $u1t('(частично)') }}</small></p>
         <p v-if="!rangeActive && totalGrams - datedGrams > 0.01">{{ format(totalGrams - datedGrams) }} {{ $u1t("г учтены в общем итоге, но в журнале нет дат этих списаний.") }}</p>
         <div class="stats-filters">
-          <v-text-field v-model="dateFrom" type="date" :label="$u1t('С даты')" dense outlined clearable />
-          <v-text-field v-model="dateTo" type="date" :label="$u1t('По дату включительно')" dense outlined clearable />
+          <v-text-field v-model="dateFrom" type="date" :lang="$i18n.locale" :label="$u1t('С даты')" dense outlined clearable />
+          <v-text-field v-model="dateTo" type="date" :lang="$i18n.locale" :label="$u1t('По дату включительно')" dense outlined clearable />
           <v-btn outlined @click="dateFrom = ''; dateTo = ''">{{ $u1t("Всё время") }}</v-btn>
         </div>
         <v-alert v-if="dateFrom && dateTo && dateFrom > dateTo" type="warning">{{ $u1t("Дата начала должна быть не позже даты окончания.") }}</v-alert>
@@ -99,6 +101,7 @@
             <small v-if="dimension === 'spool'" class="d-block">ID: {{ item.key }}</small>
           </template>
           <template #item.grams="{ item }">{{ format(item.grams) }} {{ $u1t("г") }}<small v-if="item.undatedGrams" class="d-block">{{ $u1t("Без даты:") }} {{ format(item.undatedGrams) }} {{ $u1t("г") }}</small></template>
+          <template #item.purchaseCost="{ item }">{{ item.purchaseGrams ? formatCost(item.purchaseCost) : '—' }}<small v-if="item.purchaseGrams && item.grams > item.purchaseGrams + 0.001">{{ $u1t('(частично)') }}</small></template>
           <template #item.cost="{ item }">
             {{ item.pricedGrams ? formatCost(item.cost) : '—' }}
             <small v-if="item.pricedGrams > 0 && item.grams - item.pricedGrams > 0.001"> {{ $u1t("(частично)") }}</small>
@@ -123,7 +126,7 @@ import { readU1Item, u1DataRequest } from '@/utils/u1DataClient'
 import { visibleLogRows } from '@/utils/u1LogLists'
 import { formatCost, usageRows, cumulativeRows, filterUsage, type UsageDimension, type UsagePeriod, type UsageRecord } from '@/utils/u1SpoolStats'
 
-interface SpoolBalance { name: string; grams: number; material: string; hex: string; pricePerGram?: number }
+interface SpoolBalance { name: string; grams: number; material: string; hex: string; pricePerGram?: number; purchasePerGram?: number }
 interface Active { paused: boolean; changed: boolean; rows: { head: number; name: string; shortage: number; seconds: number | null }[] }
 interface Usage { archivedRecords?: string[]; totals: { [id: string]: number }; records: UsageRecord[]; checkedAt?: number; active?: Active }
 interface Tool { index: number; grams: number; label: string }
@@ -182,24 +185,29 @@ export default class U1SpoolUsage extends Vue {
   get selectedRecords () { return filterUsage(this.records, this.dateFrom || '', this.dateTo || '') }
   get selectedJobs () { return usageRows(this.selectedRecords, 'job') }
   get statistics () {
-    return this.dimension === 'time' ? usageRows(this.selectedRecords, this.period) : cumulativeRows(this.selectedRecords, this.dimension, this.rangeActive ? {} : this.totals)
+    const costs = this.selectedRecords.map(r => ({...r,rows:r.rows.map(row=>({...row,pricePerGram:row.purchasePerGram}))}))
+    const purchase = this.dimension === 'time' ? usageRows(costs,this.period) : cumulativeRows(costs,this.dimension,this.rangeActive ? {} : this.totals)
+    const rows = this.dimension === 'time' ? usageRows(this.selectedRecords, this.period) : cumulativeRows(this.selectedRecords, this.dimension, this.rangeActive ? {} : this.totals)
+    return rows.map(row=>({...row,purchaseCost:purchase.find(p=>p.key===row.key)?.cost ?? 0,purchaseGrams:purchase.find(p=>p.key===row.key)?.pricedGrams ?? 0}))
   }
   get totalGrams () {
     return cumulativeRows(this.selectedRecords, 'spool', this.rangeActive ? {} : this.totals).reduce((sum, row) => sum + row.grams, 0)
   }
   get datedGrams () { return this.jobRows.reduce((sum, row) => sum + row.grams, 0) }
+  get purchaseCost () { return this.selectedRecords.filter(r => r.state === 'applied').flatMap(r => r.rows).reduce((sum,r) => sum + (r.purchasePerGram == null ? 0 : r.grams * r.purchasePerGram),0) }
+  get purchasedGrams () { return this.selectedRecords.filter(r => r.state === 'applied').flatMap(r => r.rows).reduce((sum,r) => sum + (r.purchasePerGram == null ? 0 : r.grams),0) }
   get totalCost () { return this.selectedJobs.reduce((sum, row) => sum + row.cost, 0) }
   get pricedGrams () { return this.selectedJobs.reduce((sum, row) => sum + row.pricedGrams, 0) }
   get statsHeaders () {
     if (this.dimension !== 'time') return [
       { text: this.dimension === 'spool' ? u1t("Катушка") : u1t("Цвет"), value: 'name' },
-      { text: u1t("Заданий в журнале"), value: 'jobs' }, { text: u1t("Расход"), value: 'grams' }, { text: u1t("Стоимость пластика"), value: 'cost' }
+      { text: u1t("Заданий в журнале"), value: 'jobs' }, { text: u1t("Расход"), value: 'grams' }, { text: u1t('Стоимость для клиента'), value: 'cost' }, {text:u1t('Себестоимость пластика'),value:'purchaseCost'}
     ]
     return [
       { text: u1t("Дата"), value: 'time' },
       this.period === 'job' ? { text: u1t("Файл"), value: 'name' } : { text: u1t("Заданий"), value: 'jobs' },
       { text: u1t("Расход"), value: 'grams' },
-      { text: u1t("Стоимость пластика"), value: 'cost' }
+      { text: u1t('Стоимость для клиента'), value: 'cost' }, {text:u1t('Себестоимость пластика'),value:'purchaseCost'}
     ]
   }
 
@@ -223,11 +231,16 @@ export default class U1SpoolUsage extends Vue {
     }
     return required.flatMap((grams, head) => {
       const available = this.spools[head]?.grams ?? null
+      const purchase = this.spools[head]?.purchasePerGram
       const price = this.spools[head]?.pricePerGram
-      return grams ? [{ head, required: grams, available, cost: price == null ? null : grams * price, deficit: available === null ? 0 : Math.max(0, grams - available) }] : []
+      return grams ? [{ head, required: grams, available, purchaseCost: purchase == null ? null : grams * purchase, cost: price == null ? null : grams * price, deficit: available === null ? 0 : Math.max(0, grams - available) }] : []
     })
   }
 
+  get plannedPurchaseCost () {
+    if (!this.needs.length || this.tools.some(tool => this.mapping[tool.index] === null) || this.needs.some(row => row.purchaseCost === null)) return null
+    return this.needs.reduce((sum,row)=>sum+(row.purchaseCost ?? 0),0)
+  }
   get plannedCost () {
     if (!this.needs.length || this.tools.some(tool => this.mapping[tool.index] === null) || this.needs.some(row => row.cost === null)) return null
     return this.needs.reduce((sum, row) => sum + (row.cost ?? 0), 0)

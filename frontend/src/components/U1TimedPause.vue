@@ -8,10 +8,10 @@
       <v-card-title>{{ $u1t("Пауза с таймером") }}</v-card-title>
       <v-card-text>
         <v-alert v-if="error" type="error" dense>{{ error }}</v-alert>
-        <v-alert v-if="job && job.state !== 'idle'" dense :type="active ? 'info' : 'warning'">{{ job.message }}<br v-if="job.resumeAt">{{ job.resumeAt ? $u1t("Продолжение: ") + date(job.resumeAt) : '' }}</v-alert>
+        <v-alert v-if="job && active" dense :type="active ? 'info' : 'warning'">{{ job.message }}<br v-if="job.resumeAt">{{ job.resumeAt ? $u1t("Продолжение: ") + date(job.resumeAt) : '' }}</v-alert>
         <p v-if="job?.currentFilename">{{ $u1t("Текущая печать:") }} <strong>{{ job.currentFilename }}</strong></p>
         <p>{{ $u1t("Поставьте текущую печать на штатную паузу и продолжите её автоматически через выбранный интервал. Для уже приостановленной печати можно установить только таймер.") }}</p>
-        <v-alert v-if="job && !job.eligible && !active" dense type="warning">{{ job.reason }}</v-alert>
+        <v-alert v-if="job && !job.eligible && !active && job.currentFilename" dense type="warning">{{ job.reason }}</v-alert>
         <v-text-field v-model.number="minutes" type="number" min="1" max="1440" :label="$u1t('Продолжить через, минут')" outlined dense :disabled="busy || active" @input="plan = null; confirmed = false" />
         <v-btn v-if="!active" outlined :disabled="busy || !job?.eligible" :loading="busy" @click="prepare">{{ $u1t("Проверить таймер") }}</v-btn>
         <template v-if="plan">
@@ -49,7 +49,7 @@ export default class U1TimedPause extends Vue {
   timer: number | null = null
   get active () { return !!this.job && ['pausing','waiting_pause','armed','resuming','checking_resume'].includes(this.job.state) }
   get countdown () { return Math.max(0, Math.ceil(((this.job?.resumeAt || 0) - (this.job?.now || 0)) / 60)) + u1t(" мин") }
-  date (value: number) { return new Date(value * 1000).toLocaleString('ru-RU') }
+  date (value: number) { return new Date(value * 1000).toLocaleString(this.$i18n.locale) }
   open () { this.opened = true; this.plan = null; this.confirmed = false; this.load() }
   async load () {
     if (this.loading || this.busy) return

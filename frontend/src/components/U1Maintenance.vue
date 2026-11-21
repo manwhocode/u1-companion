@@ -6,7 +6,7 @@
   </div>
   <v-alert v-if="state?.serviceDue" dense type="warning" class="mt-2 mb-1">{{ state.value?.service ? $u1t("Пора выполнить обслуживание U1.") : $u1t("Дата обслуживания неизвестна. Подтвердите выполненные работы в разделе «Обслуживание U1».") }}</v-alert>
   <v-alert v-if="state?.bedDue" dense type="info" class="mt-2 mb-1"><div class="maintenance-bed-notice"><span>{{ state.value?.bed ? $u1t("Пора выполнить штатную калибровку стола.") : $u1t("Последняя калибровка стола не отмечена. Подтвердите её после выполнения.") }}</span><v-btn small outlined :disabled="saving || state.calibrationActive" @click="bedConfirmOpen = true">{{ $u1t("Выполнить калибровку") }}</v-btn></div></v-alert>
-  <v-alert v-if="state?.bedCalibration?.message" dense :type="state.bedCalibration.state === 'failed' || state.bedCalibration.state === 'interrupted' ? 'warning' : 'info'" class="mt-2 mb-1">{{ state.bedCalibration.message }}</v-alert>
+  <v-alert v-if="state?.bedCalibration?.message && (state.calibrationActive || ['failed', 'interrupted'].includes(state.bedCalibration.state))" dense :type="state.bedCalibration.state === 'failed' || state.bedCalibration.state === 'interrupted' ? 'warning' : 'info'" class="mt-2 mb-1">{{ state.bedCalibration.message }}</v-alert>
   <v-alert v-if="error || state?.message" dense type="warning" class="mt-2">{{ error || state?.message }}</v-alert>
   <v-dialog v-model="opened" content-class="u1-maintenance-dialog u1-unified-dialog" max-width="760" scrollable>
     <v-card>

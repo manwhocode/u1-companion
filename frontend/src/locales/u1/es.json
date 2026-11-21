@@ -1650,5 +1650,22 @@
   "s15d55a1369dd0fd5": "Despeje la cama e instale la placa de impresión. U1 ejecutará su calibración nativa, calentando la cama a 55 °C y realizando movimientos. El éxito se registrará automáticamente. Puede cerrar esta ventana.",
   "s1b2c184a6dc4802c": "La cama está despejada y la placa está instalada",
   "se1b5f53bb9ec22ed": "Calibración de la cama completada y registrada automáticamente.",
-  "s1ef81047694f8e0a": "No se ha confirmado que la calibración de la cama haya finalizado correctamente. El registro no ha cambiado."
+  "s1ef81047694f8e0a": "No se ha confirmado que la calibración de la cama haya finalizado correctamente. El registro no ha cambiado.",
+  "sf0eb9e24258f1df1": "Precio de compra de la bobina, €",
+  "s48450b40ea906dcf": "Peso del filamento comprado, g",
+  "s822099878a5e905d": "Heredar precio de compra de la biblioteca",
+  "sd8098a28bdae0fc2": "Coste de compra del filamento",
+  "s70ecd60461cac470": "Precio para el cliente",
+  "s5f710aa63649bca5": "Precio para el cliente por gramo, €",
+  "s30c0346803a70c16": "Modo de secado",
+  "s12397de06a3fa9f7": "Temperatura de la cama",
+  "sd65d6a792b4f55f2": "Temperatura máxima de la cámara",
+  "s11dda6e4a5db23e9": "Descargar certificado del navegador",
+  "s3dc1f803564a407d": "Introduce un peso positivo y un precio de 0 € o más",
+  "s1d38f7705e541be4": "La cama deja de calentar al alcanzar el objetivo de la cámara y vuelve a calentar tras bajar 2 °C. El límite de seguridad es independiente.",
+  "sa93f6ea6a68f5c86": "Calentando la cámara",
+  "s8b45a7603f63eff8": "Secando; el temporizador cuenta mientras la cámara está caliente",
+  "se07f73eb0257c1f9": "El objetivo de la cámara debe ser de 25–55 °C y al menos 3 °C inferior al límite de seguridad",
+  "s50aca356b0a70e97": "Windows: abrir el certificado → Instalar certificado → Usuario actual → Entidades de certificación raíz de confianza. Firefox: Ajustes → Privacidad y seguridad → Certificados → Ver certificados → Autoridades → Importar. macOS: abrir en Acceso a Llaveros y configurar la confianza SSL. Instala solo el certificado de tu impresora.",
+  "s59715500df6a0e16": "Secando; el temporizador cuenta mientras la cámara está caliente. la sesión completa se limita a 8 horas, incluida la espera. El calentamiento se apaga al alcanzar el umbral de la cámara, ante errores, pérdida del sensor o desconexión del servicio. Reanuda manualmente solo cuando la cámara se enfríe hasta 3 °C por debajo del umbral. El secado no se reanuda tras un reinicio. Cerrar la ventana no detiene el secado."
 }
