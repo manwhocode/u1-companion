@@ -120,9 +120,9 @@ class Fixture(unittest.TestCase):
 
 
 class Guards(Fixture):
-    def test_enabled_voice_control_blocks_update_or_removal(self):
+    def test_saved_enabled_voice_control_does_not_block_installation(self):
         self.put(m.DATA+'/filament-ui-data/alexa-voice/config.json',b'{"enabled":true}')
-        with self.assertRaisesRegex(ValueError,'Disable Alexa voice'):self.inst.preflight()
+        self.inst.preflight()
         self.assertFalse(self.commands or self.posts)
     def test_ready_timeout_state_allowed_only_with_independent_idle_guards(self):
         self.status['idle_timeout']['state']='Ready'
@@ -176,8 +176,10 @@ class Guards(Fixture):
             p.unlink()
     def test_enabled_external_access_does_not_block_idle_update(self):
         config=self.put(m.DATA+'/remote-private/config.json',b'{"enabled":true}')
+        voice=self.put(m.DATA+'/filament-ui-data/alexa-voice/config.json',b'{"enabled":true}')
         self.inst.preflight()
         self.assertEqual(config.read_bytes(),b'{"enabled":true}')
+        self.assertEqual(voice.read_bytes(),b'{"enabled":true}')
         self.status['heater_bed']['target']=60
         with self.assertRaisesRegex(ValueError,'idle'):self.inst.preflight()
     def test_no_memory_isolation_rejected(self):

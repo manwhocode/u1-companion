@@ -19,7 +19,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-beta.2'
+VERSION = 'v0.1.1-beta.3'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'
@@ -306,8 +306,6 @@ class Installer:
             if path.exists() and json.loads(path.read_text()).get('state') in states: raise ValueError('Finish/cancel active ' + folder)
         night = self.p(DATA + '/filament-ui-data/night-mode/state.json')
         if night.exists() and (json.loads(night.read_text()).get('mode') != 'off' or json.loads(night.read_text()).get('saved')): raise ValueError('Turn night mode off first')
-        voice=self.p(DATA+'/filament-ui-data/alexa-voice/config.json')
-        if voice.exists() and json.loads(voice.read_text()).get('enabled'): raise ValueError('Disable Alexa voice control before updating or uninstalling')
         if any(sha(self.p(path)) != digest for path, digest in NATIVE.items()): raise ValueError('This firmware version has not been checked for full U1 Companion compatibility; no installation was performed')
         try: pending = self.api('/server/database/item?namespace=u1_addon_requests')['value']
         except urllib.error.HTTPError as error:
