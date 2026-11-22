@@ -13,6 +13,14 @@ Spools, printing and maintenance for Snapmaker U1. Unofficial companion UI built
 
 [Русский](README.ru.md) · [Installation guide](INSTALL.md) · [Установка по-русски](INSTALL.ru.md)
 
+## Planned features
+
+- Alexa voice control in English and German.
+- Resume printing after cancellation or a prolonged stoppage.
+- Start printing from a selected layer rather than the first layer.
+
+These features are planned or under development and are not yet presented as fully verified functionality.
+
 ## Install
 
 **Windows:** [Download the universal EXE](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-Setup.exe). Enable Root Access / SSH in the printer settings, enter its IP and choose Install, Update or Uninstall. The factory password is used automatically; check “I changed the SSH password” only if you need to enter your own. It includes a license/risk acknowledgement checkbox and always fetches the current module installer. [Details and limitations](desktop/README.md).
