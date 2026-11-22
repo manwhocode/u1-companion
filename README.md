@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/assets/u1-companion.png" width="144" height="144" alt="U1 Companion" /></p>
 
-**Public beta v0.1.1-beta.1.**
+**Public beta v0.1.1-beta.2.**
 
 Download the universal installers: **[Windows EXE](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-Setup.exe)** · **[macOS ZIP](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-macOS.zip)**. Installation, updating and removal are supported. This is beta software; physical print recovery remains experimental.
 

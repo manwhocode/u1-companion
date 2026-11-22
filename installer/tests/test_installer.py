@@ -174,8 +174,12 @@ class Guards(Fixture):
             p=self.put(m.DATA+'/filament-ui-data/'+folder+'/state.json',json.dumps({'state':state}).encode())
             with self.assertRaises(ValueError):self.inst.preflight()
             p.unlink()
-        self.put(m.DATA+'/remote-private/config.json',b'{"enabled":true}')
-        with self.assertRaisesRegex(ValueError,'external access'):self.inst.preflight()
+    def test_enabled_external_access_does_not_block_idle_update(self):
+        config=self.put(m.DATA+'/remote-private/config.json',b'{"enabled":true}')
+        self.inst.preflight()
+        self.assertEqual(config.read_bytes(),b'{"enabled":true}')
+        self.status['heater_bed']['target']=60
+        with self.assertRaisesRegex(ValueError,'idle'):self.inst.preflight()
     def test_no_memory_isolation_rejected(self):
         self.put('/sys/fs/cgroup/cgroup.controllers',b'cpu')
         with self.assertRaisesRegex(ValueError,'isolation'):self.inst.preflight()
