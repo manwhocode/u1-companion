@@ -36,6 +36,8 @@ import { ColorSetPlugin } from './plugins/colorSet'
 import App from './App.vue'
 import U1DialogClose from '@/components/U1DialogClose.vue'
 Vue.component('U1DialogClose', U1DialogClose)
+import U1DateField from '@/components/U1DateField.vue'
+Vue.component('U1DateField', U1DateField)
 
 // Register global directives.
 import SafeHtml from './directives/safe-html'

@@ -27,7 +27,7 @@
             <p>{{ individualSummary }}</p>
             <p>{{ commonSummary }}</p>
             <v-text-field v-model="pressureAdvance" label="Pressure Advance (K)" :placeholder="$u1t('Например, 0.024')" inputmode="decimal" outlined dense :disabled="busy" :hint="$u1t('От 0 до 1. Пустое поле — коэффициент не задан.')" persistent-hint />
-            <v-text-field v-model="date" type="date" :label="$u1t('Дата калибровки')" outlined dense :disabled="busy" />
+            <u1-date-field v-model="date" :label="$u1t('Дата калибровки')" outlined dense :disabled="busy" />
             <v-combobox v-model="method" :items="methods" :label="$u1t('Источник результата калибровки')" maxlength="100" outlined dense :disabled="busy" />
             <v-textarea v-model="notes" :label="$u1t('Сведения о тесте (необязательно)')" maxlength="1000" rows="2" outlined dense :disabled="busy" />
             <v-btn v-if="kind === 'spool' && assignedHead !== -1" small outlined :disabled="busy" @click="readCurrentK">{{ $u1t("Прочитать текущий K головки") }} {{ assignedHead + 1 }}</v-btn>

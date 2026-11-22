@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/assets/u1-companion.png" width="144" height="144" alt="U1 Companion" /></p>
 
-**Публичная бета v0.1.1-beta.4.**
+**Публичная бета v0.1.1-beta.5.**
 
 Скачать универсальные установщики: **[Windows EXE](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-Setup.exe)** · **[macOS ZIP](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-macOS.zip)**. Доступны установка, обновление и удаление. Это бета-версия; восстановление печати остаётся экспериментальным.
 

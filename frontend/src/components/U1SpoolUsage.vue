@@ -82,8 +82,8 @@
         <p>{{ $u1t('Себестоимость пластика') }}: {{ purchasedGrams ? formatCost(purchaseCost) : '—' }} <small v-if="purchasedGrams < datedGrams">{{ $u1t('(частично)') }}</small></p>
         <p v-if="!rangeActive && totalGrams - datedGrams > 0.01">{{ format(totalGrams - datedGrams) }} {{ $u1t("г учтены в общем итоге, но в журнале нет дат этих списаний.") }}</p>
         <div class="stats-filters">
-          <v-text-field v-model="dateFrom" type="date" :lang="$i18n.locale" :label="$u1t('С даты')" dense outlined clearable />
-          <v-text-field v-model="dateTo" type="date" :lang="$i18n.locale" :label="$u1t('По дату включительно')" dense outlined clearable />
+          <u1-date-field v-model="dateFrom" :label="$u1t('С даты')" dense outlined clearable />
+          <u1-date-field v-model="dateTo" :label="$u1t('По дату включительно')" dense outlined clearable />
           <v-btn outlined @click="dateFrom = ''; dateTo = ''">{{ $u1t("Всё время") }}</v-btn>
         </div>
         <v-alert v-if="dateFrom && dateTo && dateFrom > dateTo" type="warning">{{ $u1t("Дата начала должна быть не позже даты окончания.") }}</v-alert>

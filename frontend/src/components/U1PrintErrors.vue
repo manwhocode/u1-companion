@@ -19,8 +19,8 @@
           <v-text-field v-model="search" :label="$u1t('Поиск по сообщению, коду или файлу')" dense outlined clearable hide-details />
           <v-select v-model="spoolId" :items="spoolItems" :label="$u1t('Катушка')" dense outlined clearable hide-details />
           <v-select v-model="colorId" :items="colorItems" :label="$u1t('Цвет')" dense outlined clearable hide-details />
-          <v-text-field v-model="from" :label="$u1t('С даты')" type="date" :lang="$i18n.locale" dense outlined hide-details />
-          <v-text-field v-model="to" :label="$u1t('По дату')" type="date" :lang="$i18n.locale" dense outlined hide-details />
+          <u1-date-field v-model="from" :label="$u1t('С даты')" dense outlined hide-details />
+          <u1-date-field v-model="to" :label="$u1t('По дату')" dense outlined hide-details />
         </div>
         <v-btn small outlined class="my-2" :loading="loading" @click="load(false)">{{ $u1t("Обновить журнал") }}</v-btn>
         <v-btn small text class="my-2" @click="resetFilters">{{ $u1t("Сбросить фильтры") }}</v-btn>

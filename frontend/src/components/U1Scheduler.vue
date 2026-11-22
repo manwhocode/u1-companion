@@ -21,7 +21,7 @@
         <v-autocomplete v-model="filename" :items="files" :label="$u1t('G-code, уже загруженный на принтер')" outlined dense @change="clearPlan" />
         <v-select v-model="mode" :items="modes" :label="$u1t('Режим запуска')" outlined dense @change="clearPlan" />
         <v-text-field v-if="mode === 'delay'" v-model.number="delayMinutes" type="number" min="1" max="43200" :label="$u1t('Через сколько минут')" outlined dense @input="clearPlan" />
-        <v-text-field v-else v-model="when" type="datetime-local" :label="mode === 'finish' ? $u1t('Желаемое время окончания') : $u1t('Дата и время старта')" outlined dense @input="clearPlan" />
+        <u1-date-field v-else v-model="when" datetime :label="mode === 'finish' ? $u1t('Желаемое время окончания') : $u1t('Дата и время старта')" outlined dense @input="clearPlan" />
         <v-text-field v-model.number="preparationMinutes" type="number" min="0" max="120" :label="$u1t('Запас на прогрев и подготовку, минут')" outlined dense @input="clearPlan" />
         <p>{{ $u1t("Окончание — прогноз слайсера плюс этот запас, точное время не гарантировано. До запуска — от 1 минуты до 30 дней. Одновременно хранится одно активное расписание.") }}</p>
         <v-row dense>
@@ -86,8 +86,8 @@ export default class U1Scheduler extends Vue {
   timer: number | null = null
   clock: number | null = null
   clearPlan () { this.plan = null; this.consent = false; this.bedClear = false }
-  grams (value: number) { return value.toLocaleString('ru-RU', { maximumFractionDigits: 1 }) }
-  date (value?: number) { return value ? new Date(value * 1000).toLocaleString('ru-RU') : '—' }
+  grams (value: number) { return value.toLocaleString(this.$i18n.locale, { maximumFractionDigits: 1 }) }
+  date (value?: number) { return value ? new Date(value * 1000).toLocaleString(this.$i18n.locale) : '—' }
   status (value: string) { return ({ idle: u1t("Нет расписания"), armed: u1t("Ожидает старта"), starting: u1t("Передача запроса"), started: u1t("Запрос принят U1"), cancelled: u1t("Отменено"), blocked: u1t("Запуск отменён проверкой"), needs_review: u1t("Нужна проверка") } as Record<string, string>)[value] || value }
   get countdown () { const seconds = Math.max(0, Math.ceil((this.job?.startAt || 0) - this.serverNow)); return Math.floor(seconds / 3600) + u1t(" ч ") + Math.floor(seconds % 3600 / 60) + u1t(" мин ") + seconds % 60 + u1t(" с") }
   async open () {

@@ -19,7 +19,7 @@ import time
 import urllib.request
 import urllib.error
 
-VERSION = 'v0.1.1-beta.4'
+VERSION = 'v0.1.1-beta.5'
 RELEASE = 'https://github.com/manwhocode/u1-companion/releases/download/' + VERSION
 CORE = '/home/lava/u1-addons/filament-ui'
 UI = '/home/lava/fluidd/u1-filaments-ui'

@@ -28,7 +28,7 @@
         <p v-if="!points.length">{{ $u1t("Пока нет снимков. Они появятся при следующей печати.") }}</p>
         <v-card v-for="point in points.slice(0, 6)" :key="point.id" outlined class="pa-2 mb-2">
           <strong>{{ point.filename }}</strong><br>
-          {{ new Date(point.time * 1000).toLocaleString('ru-RU') }} {{ $u1t("· слой") }} {{ point.layer ?? $u1t("неизвестен") }} · {{ point.filePosition }} {{ $u1t("байт") }}
+          {{ new Date(point.time * 1000).toLocaleString($i18n.locale) }} {{ $u1t("· слой") }} {{ point.layer ?? $u1t("неизвестен") }} · {{ point.filePosition }} {{ $u1t("байт") }}
           <span v-if="point.endedAs"> · {{ point.endedAs === 'cancelled' ? $u1t("печать отменена") : point.endedAs === 'complete' ? $u1t("завершена") : $u1t("ошибка") }}</span>
         </v-card>
         <p>{{ $u1t("Для продолжения после отключения питания используется только текущая точка, подтверждённая U1 и микроконтроллерами. Не запускайте исходный файл заново поверх модели.") }}</p>
@@ -85,7 +85,7 @@ export default class U1Recovery extends Vue {
       const response = await u1DataRequest<{status: Status; points: Checkpoint[]}>('recovery_state')
       this.state = response.status
       this.points = response.points
-      this.checkedAt = new Date().toLocaleString('ru-RU')
+      this.checkedAt = new Date().toLocaleString(this.$i18n.locale)
       this.error = ''
     } catch { this.error = u1t("Не удалось получить состояние U1.") } finally { this.loading = false }
   }
