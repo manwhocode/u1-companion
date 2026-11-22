@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="companion-main-menu"><u1-update-check compact /><u1-program-settings class="companion-settings" @gpt="openGpt">
-          <template #installer><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.12/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p></template>
+          <template #installer><v-btn outlined color="primary" href="https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-Setup.exe" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать EXE") }}</v-btn><p class="mt-3"><v-btn outlined href="https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-macOS.zip" target="_blank" rel="noopener noreferrer">{{ $u1t("Скачать установщик macOS") }}</v-btn></p></template>
           <template #connection>
 <v-expansion-panels accordion flat class="connection-sections">
 

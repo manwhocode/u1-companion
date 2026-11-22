@@ -16,6 +16,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m unittest discover -s installer/tests -v
+      - run: python -m unittest discover -s desktop/tests -v
       - run: python -m unittest test-u1-bed-calibration.py test-u1-maintenance.py test-u1-calibration-jobs.py
         working-directory: backend
       - run: python -m unittest test-u1-purchase-and-dryer.py test-u1-dryer.py test-u1-data-store.py test-spool-accounting.py
@@ -24,4 +25,5 @@ jobs:
         env:
           PYTHONPATH: backend
       - run: node --test alexa/events.test.cjs alexa/speech.test.cjs alexa/speech-settings.test.cjs
+      - run: bash -n desktop/U1-Companion.command
       - run: sh -n install.sh && sh -n services/S96u1-remote && sh -n services/S97u1-ai && sh -n services/S98u1-spool-accounting && sh -n services/S99u1-alexa-bridge

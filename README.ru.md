@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/assets/u1-companion.png" width="144" height="144" alt="U1 Companion" /></p>
 
-**Публичная бета v0.1.1-beta.3.**
+**Публичная бета v0.1.1-beta.4.**
 
 Скачать универсальные установщики: **[Windows EXE](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-Setup.exe)** · **[macOS ZIP](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-macOS.zip)**. Доступны установка, обновление и удаление. Это бета-версия; восстановление печати остаётся экспериментальным.
 
@@ -13,7 +13,7 @@
 
 ## Установка
 
-**Windows:** [скачать универсальный EXE](https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe). Прочитайте соглашение, поставьте галочку, укажите IP принтера. Если SSH-пароль меняли, отметьте соответствующую галочку и введите свой пароль; иначе стандартный пароль используется автоматически. Доступны «Установить», «Обновить» и «Удалить». EXE каждый раз получает актуальный установщик — менять его при выпуске новой версии модуля не нужно.
+**Windows:** [скачать универсальный EXE](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-Setup.exe). Прочитайте соглашение, поставьте галочку, укажите IP принтера. Если SSH-пароль меняли, отметьте соответствующую галочку и введите свой пароль; иначе стандартный пароль используется автоматически. Доступны «Установить», «Обновить» и «Удалить». EXE каждый раз получает актуальный установщик — менять его при выпуске новой версии модуля не нужно.
 
 Программа переносная, Python и SSH-клиент уже внутри. Пароль не сохраняется. EXE пока без цифровой подписи; Windows может показать неизвестного издателя. Проверяйте контрольную сумму и скачивайте только из этого репозитория.
 
@@ -53,6 +53,6 @@ curl -fL https://raw.githubusercontent.com/manwhocode/u1-companion/main/install.
 
 Мои проекты и модели: [Instagram](https://www.instagram.com/3dlabstorex/) · [MakerWorld](https://makerworld.com/ru/@user_110109506) · [Snapmaker Space](https://space.snapmaker.com/en/creator/75133?tab=models).
 
-**Установщик macOS:** [U1-Companion-macOS.zip](https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.10/U1-Companion-macOS.zip). Распакуйте ZIP и откройте U1-Companion.command в Терминале. Встроенный SSH, установка, обновление и удаление. Запуск на Mac ещё не проверен.
+**Установщик macOS:** [U1-Companion-macOS.zip](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-macOS.zip). Распакуйте ZIP и откройте U1-Companion.command в Терминале. Встроенный SSH, установка, обновление и удаление. Запуск на Mac ещё не проверен.
 
 [Голосовые команды Alexa](alexa-skill/README.ru.md): управление, состояние и таймеры; немецкие и английские варианты фраз. Нужны личный навык Alexa-hosted и привязка. Проверка на Echo ещё предстоит.

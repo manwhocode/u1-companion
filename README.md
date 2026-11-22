@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/assets/u1-companion.png" width="144" height="144" alt="U1 Companion" /></p>
 
-**Public beta v0.1.1-beta.3.**
+**Public beta v0.1.1-beta.4.**
 
 Download the universal installers: **[Windows EXE](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-Setup.exe)** · **[macOS ZIP](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-macOS.zip)**. Installation, updating and removal are supported. This is beta software; physical print recovery remains experimental.
 
@@ -15,7 +15,7 @@ Spools, printing and maintenance for Snapmaker U1. Unofficial companion UI built
 
 ## Install
 
-**Windows:** [Download the universal EXE](https://github.com/manwhocode/u1-companion/releases/download/windows-installer-v1.0.1/U1-Companion-Setup.exe). Enable Root Access / SSH in the printer settings, enter its IP and choose Install, Update or Uninstall. The factory password is used automatically; check “I changed the SSH password” only if you need to enter your own. It includes a license/risk acknowledgement checkbox and always fetches the current module installer. [Details and limitations](desktop/README.md).
+**Windows:** [Download the universal EXE](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-Setup.exe). Enable Root Access / SSH in the printer settings, enter its IP and choose Install, Update or Uninstall. The factory password is used automatically; check “I changed the SSH password” only if you need to enter your own. It includes a license/risk acknowledgement checkbox and always fetches the current module installer. [Details and limitations](desktop/README.md).
 
 **Command line:** the SSH method below remains available on Windows/macOS/Linux.
 
@@ -103,6 +103,6 @@ Enjoying U1 Companion? Buy me a coffee! Your support helps me keep improving the
 
 Follow my projects and models: [Instagram](https://www.instagram.com/3dlabstorex/) · [MakerWorld](https://makerworld.com/ru/@user_110109506) · [Snapmaker Space](https://space.snapmaker.com/en/creator/75133?tab=models).
 
-**macOS installer:** [U1-Companion-macOS.zip](https://github.com/manwhocode/u1-companion/releases/download/v0.1.1-alpha.10/U1-Companion-macOS.zip). Extract the ZIP and open U1-Companion.command in Terminal. Uses built-in SSH; supports install, update and uninstall. macOS execution has not yet been verified on a Mac.
+**macOS installer:** [U1-Companion-macOS.zip](https://github.com/manwhocode/u1-companion/releases/latest/download/U1-Companion-macOS.zip). Extract the ZIP and open U1-Companion.command in Terminal. Uses built-in SSH; supports install, update and uninstall. macOS execution has not yet been verified on a Mac.
 
 [Personal Alexa voice skill setup](alexa-skill/README.md): control, status and timing commands with German/English sample phrases. Requires pairing and your own Alexa-hosted skill; physical Echo testing is pending.

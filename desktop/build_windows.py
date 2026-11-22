@@ -28,5 +28,5 @@ if compat.is_file():command[-1:-1]=['--add-binary',str(compat)+':.']
 subprocess.run(command,check=True,cwd=repo)
 exe=a.output/'U1-Companion-Setup.exe';subprocess.run([str(exe),'--self-test'],check=True)
 digest=hashlib.sha256(exe.read_bytes()).hexdigest();(a.output/'SHA256SUMS').write_text(digest+'  '+exe.name+'\n',encoding='ascii')
-(a.output/'BUILD.json').write_text(json.dumps({'sha256':digest,'bytes':exe.stat().st_size,'moduleVersion':'not embedded','bootstrap':'official repository main/install.sh','selfTest':'passed','codeSigned':False},indent=2)+'\n')
+(a.output/'BUILD.json').write_text(json.dumps({'sha256':digest,'bytes':exe.stat().st_size,'moduleVersion':'not embedded','bootstrap':'latest published release, version and SHA256 verified','selfTest':'passed','codeSigned':False},indent=2)+'\n')
 print('EXE built:',exe,exe.stat().st_size,'bytes')

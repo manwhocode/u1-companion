@@ -9,9 +9,7 @@ interface Info {installed:string;latest:string;updateAvailable:boolean;checkFail
 export default class U1UpdateCheck extends Vue {
   @Prop({type:Boolean,default:false}) readonly compact!: boolean
   get installerBase () {
-    const tag = this.result?.latest || 'v0.1.1-alpha.20'
-    const safe = /^v?\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?$/.test(tag) ? tag : 'v0.1.1-alpha.20'
-    return 'https://github.com/manwhocode/u1-companion/releases/download/' + encodeURIComponent(safe) + '/'
+    return 'https://github.com/manwhocode/u1-companion/releases/latest/download/'
   }
   updateIcon = mdiUpdate
   busy = false; error = ''; result: Info | null = null

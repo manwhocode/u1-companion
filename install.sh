@@ -2,7 +2,7 @@
 # Run on the printer over SSH. No desktop application or PC dependencies.
 set -eu
 umask 077
-VERSION=v0.1.1-beta.3
+VERSION=v0.1.1-beta.4
 WORK="/userdata/u1-addons/downloads/$VERSION"
 command -v python3 >/dev/null 2>&1 || { echo "Stock Python 3.11 is required on U1"; exit 1; }
 # Python uses the system CA store. No insecure TLS flags or shell pipelines.
@@ -36,7 +36,7 @@ for name in ('install.py','u1-service-stop.py'):
         if hashlib.sha256(temp.read_bytes()).hexdigest()!=checks[name]:raise ValueError('Checksum mismatch: '+name)
         temp.replace(target)
     finally:temp.unlink(missing_ok=True)
-print('U1 Companion - verified full SSH installer')
+print('U1 Companion - verified full SSH installer | '+sys.argv[2])
 PY
 # Keep the terminal as stdin so the single installation confirmation works.
 if [ "$#" -eq 0 ]; then set -- --install; fi

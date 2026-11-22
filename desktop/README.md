@@ -25,3 +25,5 @@ python desktop/build_windows.py --output desktop/dist
 ```
 
 The build runs `--self-test`, which checks packaged dependencies and license resources without accepting the agreement or contacting a printer. The author has successfully tested Windows installation, updating and removal on a physical U1. The macOS Terminal launcher uses the same verified SSH installer; its actual execution still requires a Mac test.
+
+The current launcher resolves the latest published GitHub release with a cache-busting request, verifies the bootstrap checksum and matching release version, and prints the selected version before preflight. Download the new launcher once to replace older launchers that used cached main/install.sh.

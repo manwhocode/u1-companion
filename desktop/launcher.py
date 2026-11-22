@@ -3,7 +3,6 @@ from pathlib import Path
 import argparse,base64,codecs,getpass,hashlib,locale,os,re,shlex,socket,sys,time
 import paramiko
 
-BOOTSTRAP='https://raw.githubusercontent.com/manwhocode/u1-companion/main/install.sh'
 DEFAULT_PASSWORD='snapmaker'
 ROOT=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parent.parent))
 TEXT={
@@ -93,17 +92,8 @@ def verify_host(host,key,ask,path=None):
 
 def remote_command(action):
     if action not in ('install','update','uninstall'):raise ValueError('Unknown action')
-    # Only the stable public bootstrap URL is embedded; it chooses the latest release.
-    code="""import os,pathlib,platform,urllib.request
-if os.geteuid()!=0 or platform.machine() not in ('aarch64','arm64') or not pathlib.Path('/oem/printer_data/config/printer.cfg').is_file():raise SystemExit('Connect as root to Snapmaker U1')
-p=pathlib.Path('/userdata/u1-companion-install.sh')
-if p.is_symlink() or p.parent.is_symlink():raise SystemExit('Unexpected installer symlink')
-with urllib.request.urlopen(URL,timeout=30) as response:data=response.read(65537)
-if len(data)>65536:raise SystemExit('Unexpected bootstrap size')
-t=p.with_name('.u1-bootstrap-'+str(os.getpid()))
-with t.open('xb') as output:output.write(data)
-os.chmod(t,0o700);os.replace(t,p)
-""".replace('URL',repr(BOOTSTRAP))
+    from bootstrap import CODE
+    code=CODE
     return 'python3 -c '+shlex.quote(code)+' && sh /userdata/u1-companion-install.sh --'+action
 
 
@@ -152,7 +142,7 @@ def main():
         assert connection_password(True,'custom')=='custom' and connection_password(True,'')==''
         assert (ROOT/'desktop/assets/u1-companion.ico').is_file() and (ROOT/'desktop/assets/u1-companion-64.png').is_file()
         assert 'GNU GENERAL PUBLIC LICENSE' in agreement('en')
-        assert '--uninstall' in remote_command('uninstall') and '/main/install.sh' in remote_command('update')
+        assert '--uninstall' in remote_command('uninstall') and '/releases/latest' in remote_command('update')
         print('SELF-TEST OK: SSH, Tk, licenses; no printer connection');return 0
     options=window()
     if not options:return 0
